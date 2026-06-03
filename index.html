@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>檔案迷霧</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="archiveCanvas" aria-hidden="true"></canvas>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">密</div>
+          <div>
+            <h1 id="appTitle">檔案迷霧</h1>
+            <p id="appSubtitle">解密詞條，連破關卡</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <div class="language-switch" role="group" aria-label="Language">
+            <button class="lang-btn" data-lang="tw">繁</button>
+            <button class="lang-btn" data-lang="cn">简</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+          </div>
+          <button id="soundToggle" class="icon-button" type="button" aria-label="Sound">♪</button>
+        </div>
+      </header>
+
+      <main id="gameRoot" class="game-root"></main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

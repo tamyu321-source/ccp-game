@@ -997,6 +997,7 @@ const PAUSE_COPY = {
   tw: {
     pause: "\u66ab\u505c",
     resume: "\u7e7c\u7e8c",
+    menu: "\u8fd4\u56de\u9078\u64c7",
     title: "\u66ab\u505c\u89e3\u5bc6",
     kicker: "\u96a8\u6a5f\u65c1\u767d",
     note: "\u8a08\u6642\u5df2\u505c\u6b62\uff0c\u9019\u6bb5\u65c1\u767d\u62bd\u81ea\u904a\u6232\u5167\u8a5e\u5eab\u3002"
@@ -1004,6 +1005,7 @@ const PAUSE_COPY = {
   cn: {
     pause: "\u6682\u505c",
     resume: "\u7ee7\u7eed",
+    menu: "\u8fd4\u56de\u9009\u62e9",
     title: "\u6682\u505c\u89e3\u5bc6",
     kicker: "\u968f\u673a\u65c1\u767d",
     note: "\u8ba1\u65f6\u5df2\u505c\u6b62\uff0c\u8fd9\u6bb5\u65c1\u767d\u62bd\u81ea\u6e38\u620f\u5185\u8bcd\u5e93\u3002"
@@ -1011,6 +1013,7 @@ const PAUSE_COPY = {
   en: {
     pause: "Pause",
     resume: "Resume",
+    menu: "Back to Menu",
     title: "Paused",
     kicker: "Random Archive Note",
     note: "The timer is stopped. This note is sampled from the in-game archive."
@@ -4291,7 +4294,7 @@ function createPauseFact() {
 }
 
 function pauseGame() {
-  if (!state.started || state.locked || state.modal) return;
+  if (!state.started || state.locked || state.modal || state.paused) return;
   state.paused = true;
   state.pauseFact = createPauseFact();
   render();
@@ -4301,6 +4304,18 @@ function resumeGame() {
   if (!state.paused) return;
   state.paused = false;
   state.pauseFact = null;
+  render();
+}
+
+function returnToStartMenu() {
+  if (!state.started && !state.paused) return;
+  stopTimer();
+  state.started = false;
+  state.paused = false;
+  state.pauseFact = null;
+  state.modal = null;
+  state.locked = false;
+  saveGame();
   render();
 }
 
@@ -4628,6 +4643,7 @@ function escapeHtml(value) {
 }
 
 function renderTopbar() {
+  document.body.classList.toggle("game-active", state.started);
   const copy = getCopy();
   titleEl.textContent = copy.title;
   subtitleEl.textContent = copy.subtitle;
@@ -4641,10 +4657,12 @@ function renderTopbar() {
 
 function updateTimerDisplay() {
   const timePercent = Math.max(0, Math.min(100, (state.timeLeft / state.maxTime) * 100));
-  const timeNode = document.querySelector(".meter-time");
-  const fillNode = document.querySelector(".meter-fill");
-  if (timeNode) timeNode.textContent = `${Math.ceil(state.timeLeft)}s`;
-  if (fillNode) fillNode.style.width = `${timePercent}%`;
+  document.querySelectorAll(".meter-time").forEach((timeNode) => {
+    timeNode.textContent = `${Math.ceil(state.timeLeft)}s`;
+  });
+  document.querySelectorAll(".meter-fill").forEach((fillNode) => {
+    fillNode.style.width = `${timePercent}%`;
+  });
 }
 
 function renderRouteSwitch(compact = false) {
@@ -4845,6 +4863,12 @@ function renderPuzzlePanel() {
           <span class="difficulty-pill">${difficulty}</span>
         </div>
       </div>
+      <div class="mobile-game-hud">
+        <span><small>${escapeHtml(copy.time)}</small><strong class="meter-time">${Math.ceil(state.timeLeft)}s</strong></span>
+        <span><small>${escapeHtml(copy.score)}</small><strong>${state.score}</strong></span>
+        <span><small>${escapeHtml(gameCopy.scan)}</small><strong>${state.hintsLeft}</strong></span>
+        <button class="ghost-button pause-button" type="button" data-action="pause">${escapeHtml(PAUSE_COPY[state.lang].pause)}</button>
+      </div>
       <div class="clue-block">
         <div class="panel-kicker">${escapeHtml(copy.clue)}</div>
         <p class="clue-text">${escapeHtml(getClue())}</p>
@@ -4882,7 +4906,6 @@ function renderPuzzlePanel() {
       </div>
       <div class="token-section">
         <div class="token-label">${escapeHtml(gameCopy.matrix)}</div>
-        <div class="matrix-help">${escapeHtml(copy.traceHint)}</div>
         <div class="merge-summary">
           <span>${escapeHtml(copy.currentLead)} ${boardLeft}</span>
           <span>${state.lastEvidenceHits.length ? `${escapeHtml(gameCopy.evidenceBoost)} ${escapeHtml(state.lastEvidenceHits.map((hit) => hit.label).join(" / "))}` : escapeHtml(leaderCopy.desc)}</span>
@@ -4921,7 +4944,7 @@ function renderPuzzlePanel() {
             return `<div class="tray-slot ${tile ? "filled" : ""} ${tile?.visualArt ? "image-slot" : ""}">${tile ? `<span>${escapeHtml(getTileDisplayLabel(tile))}</span>` : ""}</div>`;
           }).join("")}
         </div>
-        ${state.lastEvidenceHits.length ? `<div class="match-flash">${escapeHtml(gameCopy.evidenceBoost)} · ${escapeHtml(state.lastEvidenceHits.map((hit) => hit.label).join(" / "))}</div>` : ""}
+        <div class="match-flash ${state.lastEvidenceHits.length ? "" : "idle"}">${state.lastEvidenceHits.length ? `${escapeHtml(gameCopy.evidenceBoost)} · ${escapeHtml(state.lastEvidenceHits.map((hit) => hit.label).join(" / "))}` : "&nbsp;"}</div>
       </div>
       <div class="puzzle-actions">
         <button class="primary-button" type="button" data-action="hint">${escapeHtml(gameCopy.scan)} ${state.hintsLeft}</button>
@@ -5004,6 +5027,7 @@ function renderPauseOverlay() {
         </div>
         <p class="pause-note">${escapeHtml(pauseCopy.note)}</p>
         <div class="modal-actions">
+          <button class="ghost-button" type="button" data-action="menu">${escapeHtml(pauseCopy.menu)}</button>
           <button class="primary-button" type="button" data-action="resume">${escapeHtml(pauseCopy.resume)}</button>
         </div>
       </section>
@@ -5047,6 +5071,7 @@ function bindDynamicEvents() {
     if (action === "shuffle") button.addEventListener("click", shuffleTokens);
     if (action === "pause") button.addEventListener("click", pauseGame);
     if (action === "resume") button.addEventListener("click", resumeGame);
+    if (action === "menu") button.addEventListener("click", returnToStartMenu);
     if (action === "skip") button.addEventListener("click", skipLevel);
     if (action === "next") button.addEventListener("click", nextLevel);
     if (action === "retry") button.addEventListener("click", retryLevel);
@@ -5084,6 +5109,13 @@ window.addEventListener("keydown", (event) => {
     }
   }
 });
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) pauseGame();
+});
+
+window.addEventListener("pagehide", pauseGame);
+window.addEventListener("blur", pauseGame);
 
 soundToggle.addEventListener("click", async () => {
   await audio.start();

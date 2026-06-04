@@ -1071,6 +1071,9 @@ const state = {
   endlessLap: 0
 };
 
+let deferredSaveTimer = null;
+let touchPerformanceMedia = null;
+
 class AudioEngine {
   constructor() {
     this.ctx = null;
@@ -2770,6 +2773,14 @@ function writeSaveRoot(root) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(root));
 }
 
+function isTouchPerformanceMode() {
+  if (!window.matchMedia) return false;
+  if (!touchPerformanceMedia) {
+    touchPerformanceMedia = window.matchMedia("(hover: none), (pointer: coarse), (max-width: 680px)");
+  }
+  return touchPerformanceMedia.matches;
+}
+
 function loadSave() {
   const saved = readSaveRoot();
   if (saved.lang && TEXT[saved.lang]) state.lang = saved.lang;
@@ -2791,6 +2802,21 @@ function saveGame() {
   root.musicTrack = state.musicTrack;
   root.profiles[getProfileKey()] = profileSnapshot();
   writeSaveRoot(root);
+}
+
+function scheduleSaveGame() {
+  window.clearTimeout(deferredSaveTimer);
+  deferredSaveTimer = window.setTimeout(() => {
+    deferredSaveTimer = null;
+    saveGame();
+  }, isTouchPerformanceMode() ? 220 : 80);
+}
+
+function flushDeferredSave() {
+  if (!deferredSaveTimer) return;
+  window.clearTimeout(deferredSaveTimer);
+  deferredSaveTimer = null;
+  saveGame();
 }
 
 function getRankings() {
@@ -3830,7 +3856,8 @@ function tileStyle(tile) {
   const lockedDepth = tile.layer * 9;
   const shadowLift = 4 + tile.layer * 3;
   const shadowDrop = 12 + tile.layer * 5;
-  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-overlay:${cardVariantOverlayUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};--tile-accent:${identity.accent};--tile-accent-2:${identity.accent2};--tile-marker:${identity.marker};--tile-glow:${identity.glow};z-index:${10 + tile.layer};`;
+  const artOverlay = isTouchPerformanceMode() ? "none" : cardVariantOverlayUrl(art);
+  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-overlay:${artOverlay};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};--tile-accent:${identity.accent};--tile-accent-2:${identity.accent2};--tile-marker:${identity.marker};--tile-glow:${identity.glow};z-index:${10 + tile.layer};`;
 }
 
 function getLayerPositions(layer) {
@@ -4077,23 +4104,25 @@ function pushMatchBurst(matching, representative) {
   const art = getTileArtProfile(representative);
   const tuning = getArtVisualTuning(art);
   const id = `burst-${state.matchBurstSerial}`;
+  const compact = isTouchPerformanceMode();
   state.matchBurstSerial += 1;
-  state.matchBursts = state.matchBursts.slice(-2).concat({
+  state.matchBursts = state.matchBursts.slice(compact ? 0 : -2).concat({
     id,
     label: getTileDisplayLabel(representative),
     glyph: art.glyph,
-    image: cardArtImageUrl(art),
+    image: compact ? "none" : cardArtImageUrl(art),
     x: Math.max(8, Math.min(88, 4 + averageX * 12.5)),
     y: Math.max(8, Math.min(82, 5 + averageY * 13.5)),
     a: art.a,
     b: art.b,
     focus: tuning.focus,
-    zoom: tuning.zoom
+    zoom: tuning.zoom,
+    compact
   });
   window.setTimeout(() => {
     state.matchBursts = state.matchBursts.filter((burst) => burst.id !== id);
     if (state.started && !state.modal) render();
-  }, 1040);
+  }, compact ? 620 : 1040);
 }
 
 function ensurePlayableGrid() {
@@ -4381,7 +4410,7 @@ function handleCellClick(id) {
   if (!cell || cell.status !== "board") return;
   if (!isTileAvailable(cell)) {
     registerTraceMistake(cell?.id || id);
-    saveGame();
+    scheduleSaveGame();
     render();
     return;
   }
@@ -4416,7 +4445,7 @@ function handleCellClick(id) {
     failLevel();
     return;
   }
-  saveGame();
+  scheduleSaveGame();
   render();
 }
 
@@ -4435,7 +4464,7 @@ function useHint() {
   state.score = Math.max(0, state.score - 10);
   state.hintCellId = cell.id;
   state.lastEvidenceHits = [];
-  saveGame();
+  scheduleSaveGame();
   render();
   window.setTimeout(() => {
     if (state.hintCellId === cell.id) {
@@ -4468,7 +4497,7 @@ function shuffleTokens() {
   state.score = Math.max(0, state.score - 25);
   ensurePlayableGrid();
   updateRevealCount();
-  saveGame();
+  scheduleSaveGame();
   render();
 }
 
@@ -4821,6 +4850,17 @@ function renderStatusPanel() {
 
 function renderMatchBurst(burst) {
   const style = `--burst-x:${burst.x}%;--burst-y:${burst.y}%;--burst-a:${burst.a};--burst-b:${burst.b};--burst-img:${burst.image};--burst-focus:${burst.focus || "center"};--burst-zoom:${burst.zoom || "cover"};`;
+  if (burst.compact || isTouchPerformanceMode()) {
+    return `
+    <div class="match-burst-3d compact-burst" style="${style}" aria-hidden="true">
+      <span class="burst-ring"></span>
+      <span class="burst-core">${escapeHtml(burst.label)}</span>
+      <span class="burst-spark spark-a"></span>
+      <span class="burst-spark spark-b"></span>
+      <span class="burst-spark spark-c"></span>
+    </div>
+  `;
+  }
   return `
     <div class="match-burst-3d" style="${style}" aria-hidden="true">
       <span class="burst-wave wave-a"></span>
@@ -5111,11 +5151,20 @@ window.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) pauseGame();
+  if (document.hidden) {
+    flushDeferredSave();
+    pauseGame();
+  }
 });
 
-window.addEventListener("pagehide", pauseGame);
-window.addEventListener("blur", pauseGame);
+window.addEventListener("pagehide", () => {
+  flushDeferredSave();
+  pauseGame();
+});
+window.addEventListener("blur", () => {
+  flushDeferredSave();
+  pauseGame();
+});
 
 soundToggle.addEventListener("click", async () => {
   await audio.start();
@@ -5127,10 +5176,11 @@ function drawBackground() {
   const ctx = canvas.getContext("2d");
   let width = 0;
   let height = 0;
+  let lastFrameTime = 0;
   const glyphs = ["密", "史", "零", "牆", "禁", "檔", "64", "PRISM", "KGB", "1989"];
 
   function resize() {
-    const ratio = window.devicePixelRatio || 1;
+    const ratio = isTouchPerformanceMode() ? Math.min(window.devicePixelRatio || 1, 1.5) : (window.devicePixelRatio || 1);
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = Math.floor(width * ratio);
@@ -5141,6 +5191,12 @@ function drawBackground() {
   }
 
   function frame(time) {
+    const frameGap = isTouchPerformanceMode() && state.started ? 220 : 34;
+    if (time - lastFrameTime < frameGap) {
+      window.requestAnimationFrame(frame);
+      return;
+    }
+    lastFrameTime = time;
     ctx.clearRect(0, 0, width, height);
     ctx.globalAlpha = 0.16;
     ctx.strokeStyle = "#d4a34f";

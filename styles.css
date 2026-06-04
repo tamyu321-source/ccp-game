@@ -54,6 +54,7 @@ input {
 
 button {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #archiveCanvas {
@@ -2182,6 +2183,269 @@ p {
 
   body.game-active .puzzle-actions .pause-button {
     display: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 680px) {
+  #archiveCanvas {
+    opacity: 0.42;
+  }
+
+  .sheep-board {
+    perspective: none;
+    transform-style: flat;
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+      0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .sheep-board::before {
+    display: none;
+  }
+
+  .sheep-board::after {
+    box-shadow: inset 0 -24px 42px rgba(0, 0, 0, 0.22);
+  }
+
+  .sheep-tile,
+  .sheep-tile.image-tile,
+  .sheep-tile.photo-tile {
+    background-blend-mode: normal;
+    box-shadow:
+      0 3px 0 rgba(0, 0, 0, 0.42),
+      0 7px 13px rgba(0, 0, 0, 0.22),
+      0 0 0 1px var(--tile-accent),
+      inset 4px 0 0 var(--tile-accent),
+      inset 0 -10px 16px rgba(0, 0, 0, 0.2);
+    filter: none;
+    transform: translate3d(0, 0, 0) rotateZ(var(--rot)) scale(var(--tile-scale));
+    transform-style: flat;
+    transition:
+      transform 0.06s ease,
+      opacity 0.08s ease,
+      border-color 0.08s ease;
+    contain: layout paint style;
+  }
+
+  .sheep-tile.locked,
+  .sheep-tile.photo-tile.locked {
+    opacity: 0.5;
+    filter: none;
+    transform: translate3d(0, 0, 0) rotateZ(var(--rot)) scale(0.98);
+  }
+
+  .sheep-tile.available:hover,
+  .sheep-tile.available:focus-visible {
+    box-shadow:
+      0 3px 0 rgba(0, 0, 0, 0.42),
+      0 7px 13px rgba(0, 0, 0, 0.22),
+      0 0 0 1px var(--tile-accent),
+      inset 4px 0 0 var(--tile-accent);
+    transform: translate3d(0, 0, 0) rotateZ(var(--rot)) scale(var(--tile-scale));
+  }
+
+  .sheep-tile.available:active {
+    opacity: 0.88;
+    transform: translate3d(0, -2px, 0) rotateZ(var(--rot)) scale(1.02);
+  }
+
+  .sheep-tile.hint,
+  .sheep-tile.wrong {
+    box-shadow:
+      0 3px 0 rgba(0, 0, 0, 0.42),
+      0 7px 13px rgba(0, 0, 0, 0.22),
+      0 0 0 2px var(--tile-accent),
+      inset 4px 0 0 var(--tile-accent);
+    filter: none;
+  }
+
+  .sheep-tile.wrong {
+    animation: touchShake 0.18s ease;
+  }
+
+  .sheep-tile.photo-tile span {
+    backdrop-filter: none;
+  }
+
+  .tray-slot {
+    transform-style: flat;
+  }
+
+  .tray-slot.filled {
+    box-shadow:
+      0 4px 10px rgba(90, 191, 138, 0.1),
+      inset 0 1px 0 rgba(255, 247, 223, 0.16);
+    animation: trayPopFast 0.14s ease-out both;
+  }
+
+  .slot.filled {
+    animation: slotPopFast 0.14s ease-out both;
+  }
+
+  .match-flash {
+    box-shadow: inset 0 1px 0 rgba(255, 247, 223, 0.12);
+    animation: matchPopFast 0.22s ease-out both;
+  }
+
+  .match-burst-3d.compact-burst {
+    width: 94px;
+    height: 78px;
+    perspective: none;
+    transform-style: flat;
+    will-change: transform, opacity;
+    contain: layout paint style;
+    animation: compactBurstLift 0.58s ease-out both;
+  }
+
+  .compact-burst .burst-ring {
+    inset: 17px 12px;
+    border-width: 2px;
+    box-shadow: 0 0 18px rgba(212, 163, 79, 0.32);
+    animation: compactBurstRing 0.58s ease-out both;
+  }
+
+  .compact-burst .burst-core {
+    left: 21px;
+    top: 18px;
+    width: 52px;
+    height: 42px;
+    background:
+      linear-gradient(180deg, rgba(255, 247, 223, 0.22), rgba(0, 0, 0, 0.34)),
+      linear-gradient(145deg, var(--burst-a), var(--burst-b));
+    box-shadow:
+      0 0 20px rgba(255, 247, 223, 0.18),
+      0 10px 20px rgba(0, 0, 0, 0.34);
+    animation: compactBurstCore 0.58s ease-out both;
+  }
+
+  .compact-burst .burst-spark {
+    width: 6px;
+    height: 6px;
+    box-shadow: 0 0 10px rgba(212, 163, 79, 0.62);
+  }
+
+  .compact-burst .spark-a {
+    left: 45px;
+    top: 35px;
+    animation: compactSparkA 0.48s ease-out both;
+  }
+
+  .compact-burst .spark-b {
+    left: 45px;
+    top: 35px;
+    animation: compactSparkB 0.48s ease-out both;
+  }
+
+  .compact-burst .spark-c {
+    left: 45px;
+    top: 35px;
+    animation: compactSparkC 0.48s ease-out both;
+  }
+}
+
+@keyframes trayPopFast {
+  from {
+    opacity: 0.65;
+    transform: translateY(-3px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slotPopFast {
+  from {
+    transform: scale(0.94);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes matchPopFast {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes compactBurstLift {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -56%) scale(1.03);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -76%) scale(1.16);
+  }
+}
+
+@keyframes compactBurstRing {
+  from {
+    opacity: 0.86;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+@keyframes compactBurstCore {
+  0% {
+    opacity: 0;
+    transform: scale(0.58);
+  }
+  24% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.74);
+  }
+}
+
+@keyframes compactSparkA {
+  to {
+    opacity: 0;
+    transform: translate(-34px, -12px) scale(0.3);
+  }
+}
+
+@keyframes compactSparkB {
+  to {
+    opacity: 0;
+    transform: translate(30px, -18px) scale(0.3);
+  }
+}
+
+@keyframes compactSparkC {
+  to {
+    opacity: 0;
+    transform: translate(4px, 28px) scale(0.3);
+  }
+}
+
+@keyframes touchShake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateZ(var(--rot)) scale(var(--tile-scale));
+  }
+  35% {
+    transform: translate3d(-4px, 0, 0) rotateZ(var(--rot)) scale(var(--tile-scale));
+  }
+  70% {
+    transform: translate3d(4px, 0, 0) rotateZ(var(--rot)) scale(var(--tile-scale));
   }
 }
 

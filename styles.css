@@ -727,13 +727,14 @@ p {
   background:
     linear-gradient(132deg, rgba(255, 247, 223, 0.2), transparent 34%),
     radial-gradient(circle at 72% 16%, rgba(255, 247, 223, 0.24), transparent 18%),
+    var(--art-overlay),
     var(--art-img),
     repeating-linear-gradient(135deg, rgba(255, 247, 223, 0.055) 0 1px, transparent 1px 9px),
     linear-gradient(145deg, var(--art-a), var(--art-b));
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, no-repeat;
-  background-size: cover, cover, var(--art-zoom, cover), auto, cover;
-  background-position: center, center, var(--art-focus, center), center, center;
-  background-blend-mode: screen, soft-light, normal, normal, normal;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+  background-size: cover, cover, cover, var(--art-zoom, cover), auto, cover;
+  background-position: center, center, center, var(--art-focus, center), center, center;
+  background-blend-mode: screen, soft-light, screen, normal, normal, normal;
   color: var(--paper-strong);
   padding: 5px;
   text-align: center;
@@ -863,12 +864,13 @@ p {
   border-color: rgba(255, 247, 223, 0.3);
   background:
     linear-gradient(180deg, rgba(5, 6, 6, 0.06), var(--art-shade, rgba(5, 6, 6, 0.38)) 62%, rgba(5, 6, 6, 0.72)),
+    var(--art-overlay),
     var(--art-img),
     linear-gradient(145deg, var(--art-a), var(--art-b));
   background-repeat: no-repeat;
-  background-size: cover, var(--art-zoom, cover), cover;
-  background-position: center, var(--art-focus, center), center;
-  background-blend-mode: normal, normal, multiply;
+  background-size: cover, cover, var(--art-zoom, cover), cover;
+  background-position: center, center, var(--art-focus, center), center;
+  background-blend-mode: normal, screen, normal, multiply;
   box-shadow:
     0 var(--shadow-lift) 0 rgba(0, 0, 0, 0.44),
     0 var(--shadow-drop) 24px rgba(0, 0, 0, 0.32),
@@ -910,6 +912,16 @@ p {
   padding: 2px 4px;
   font-size: clamp(0.62rem, 1.05vw, 0.76rem);
   line-height: 1.05;
+}
+
+.sheep-tile.key-tile.image-tile span {
+  align-self: center;
+  justify-self: center;
+  min-width: 1.45em;
+  border-color: rgba(255, 247, 223, 0.24);
+  background: rgba(5, 6, 6, 0.7);
+  padding: 3px 7px;
+  font-size: clamp(0.94rem, 1.8vw, 1.24rem);
 }
 
 .sheep-tile.photo-tile span {

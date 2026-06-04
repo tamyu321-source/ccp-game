@@ -560,7 +560,43 @@ WORD_BANK.push(
   entry("電視認罪", "电视认罪", "Televised Confession", "審判還沒開播，懺悔先上黃金檔。", "审判还没开播，忏悔先上黄金档。", "The trial has not aired; repentance gets prime time first.", 4, "ccpMetaphor", "2010s", "被拘押者在媒體上認罪的做法被批評為未審先判和輿論審判。", "被拘押者在媒体上认罪的做法被批评为未审先判和舆论审判。", "Televised confessions are criticized as trial by media before due process."),
   entry("境外敵對勢力", "境外敌对势力", "Hostile Foreign Forces", "鍋太大，國界外比較好放。", "锅太大，国界外比较好放。", "When the blame is too large, it fits better outside the border.", 4, "ccpMetaphor", "2000s", "境外勢力敘事常用於解釋抗議、維權或輿論壓力，網民用它嘲諷外部歸因。", "境外势力叙事常用于解释抗议、维权或舆论压力，网民用它嘲讽外部归因。", "Hostile-foreign-force narratives explain protests or rights pressure through external blame and are widely mocked."),
   entry("檔案不存在", "档案不存在", "File Does Not Exist", "查無此人，查無此事，查無此記憶。", "查无此人，查无此事，查无此记忆。", "No such person, no such event, no such memory.", 4, "ccpMetaphor", "2020s", "這個詞形容敏感事件、人物或報導在公開資料中突然消失。", "这个词形容敏感事件、人物或报道在公开资料中突然消失。", "The phrase describes sensitive events, people, or reports disappearing from public records."),
-  entry("冷處理", "冷处理", "Cold Treatment", "火不能撲，就把溫度計拿走。", "火不能扑，就把温度计拿走。", "If the fire cannot be put out, remove the thermometer.", 3, "ccpMetaphor", "2000s", "冷處理指用拖延、沉默、降熱搜和不回應讓公共事件自然退潮。", "冷处理指用拖延、沉默、降热搜和不回应让公共事件自然退潮。", "Cold treatment uses delay, silence, lowered visibility, and non-response to let public anger fade.")
+  entry("冷處理", "冷处理", "Cold Treatment", "火不能撲，就把溫度計拿走。", "火不能扑，就把温度计拿走。", "If the fire cannot be put out, remove the thermometer.", 3, "ccpMetaphor", "2000s", "冷處理指用拖延、沉默、降熱搜和不回應讓公共事件自然退潮。", "冷处理指用拖延、沉默、降热搜和不回应让公共事件自然退潮。", "Cold treatment uses delay, silence, lowered visibility, and non-response to let public anger fade."),
+  entry("胡錦濤", "胡锦涛", "Hu Jintao", "一位看似低音量的總書記，最後在高音量年代被鏡頭記住。", "一位看似低音量的总书记，最后在高音量年代被镜头记住。", "A low-volume party chief remembered most sharply by a loud later scene.", 2, "ccp", "2002-2012", "起因是江澤民之後的接班安排需要平穩過渡；經過是胡錦濤以總書記和國家主席身份執政十年，強調集體領導、發展與穩定；結果是他裸退後影響力迅速淡出，後來常被拿來和習近平時代的權力集中對照。", "起因是江泽民之后的接班安排需要平稳过渡；经过是胡锦涛以总书记和国家主席身份执政十年，强调集体领导、发展与稳定；结果是他裸退后影响力迅速淡出，后来常被拿来和习近平时代的权力集中对照。", "Hu's rise came from the post-Jiang succession plan; he governed for a decade with collective leadership, development, and stability as themes; after fully retiring, his influence faded and became a contrast with Xi-era centralization."),
+  entry("科學發展觀", "科学发展观", "Scientific Outlook On Development", "聽起來像政策白皮書，也像幹部考試必背題。", "听起来像政策白皮书，也像干部考试必背题。", "It sounds like a white paper and a cadre exam question at once.", 2, "ccp", "2003", "起因是粗放增長造成貧富差距、環境和地方債等壓力；經過是胡錦濤提出以人為本、全面協調可持續的發展口號；結果是它進入黨章和官方教材，但在權力邏輯上仍難約束地方 GDP 衝動。", "起因是粗放增长造成贫富差距、环境和地方债等压力；经过是胡锦涛提出以人为本、全面协调可持续的发展口号；结果是它进入党章和官方教材，但在权力逻辑上仍难约束地方 GDP 冲动。", "The slogan responded to inequality, environmental damage, and debt from growth-at-all-costs; Hu promoted people-centered and sustainable development; it entered party doctrine but did not fully restrain GDP-driven governance."),
+  entry("和諧社會", "和谐社会", "Harmonious Society", "所有矛盾都叫不和諧，所有刪帖都叫調音。", "所有矛盾都叫不和谐，所有删帖都叫调音。", "Every conflict is disharmony; every deletion is sound mixing.", 2, "ccpMetaphor", "2005", "起因是改革後社會衝突、維權和貧富差距增多；經過是胡溫時期用和諧社會包裝治理目標，也讓和諧變成網路審查代稱；結果是口號留下，網民則把被刪帖稱為被和諧。", "起因是改革后社会冲突、维权和贫富差距增多；经过是胡温时期用和谐社会包装治理目标，也让和谐变成网络审查代称；结果是口号留下，网民则把被删帖称为被和谐。", "The slogan answered rising disputes and inequality; Hu-Wen governance framed order as harmony, while users turned harmonized into a censorship joke; the word became both doctrine and meme."),
+  entry("被和諧", "被和谐", "Harmonized Away", "帖子不是沒了，是去參加合唱團了。", "帖子不是没了，是去参加合唱团了。", "The post did not vanish; it joined the harmony choir.", 3, "ccpMetaphor", "2000s", "起因是胡錦濤時代和諧社會口號與網路審查同時升溫；經過是敏感文章、評論和帳號被刪除或限制；結果是被和諧成為中文網路最經典的審查黑話之一。", "起因是胡锦涛时代和谐社会口号与网络审查同时升温；经过是敏感文章、评论和账号被删除或限制；结果是被和谐成为中文网络最经典的审查黑话之一。", "The meme came from harmony rhetoric meeting internet censorship; sensitive posts and accounts were removed or limited; harmonized away became a classic Chinese censorship euphemism."),
+  entry("不折騰", "不折腾", "No Tossing Around", "最高級的政治願望，竟然是別再亂按按鈕。", "最高级的政治愿望，竟然是别再乱按按钮。", "The highest political wish is simply: stop pressing random buttons.", 3, "ccpMetaphor", "2008", "起因是改革三十年後社會期待穩定路線；經過是胡錦濤在紀念改革開放講話中提出不動搖、不懈怠、不折騰；結果是不折騰被網民記住，後來常用來反諷政策急轉彎。", "起因是改革三十年后社会期待稳定路线；经过是胡锦涛在纪念改革开放讲话中提出不动摇、不懈怠、不折腾；结果是不折腾被网民记住，后来常用来反讽政策急转弯。", "Hu used no tossing around during reform-anniversary rhetoric; users remembered it as a plea for policy restraint; it later became satire when policy swings returned."),
+  entry("團派時代", "团派时代", "Tuanpai Era", "共青團履歷像政治簡歷模板，填滿了溫和中層感。", "共青团履历像政治简历模板，填满了温和中层感。", "The Youth League resume looked like a political template with cautious-manager energy.", 3, "ccp", "2000s", "起因是胡錦濤早年在共青團系統上升；經過是許多團派幹部在胡時期進入地方和中央職位；結果是團派被視為一股技術官僚力量，但在習近平時代遭到邊緣化。", "起因是胡锦涛早年在共青团系统上升；经过是许多团派干部在胡时期进入地方和中央职位；结果是团派被视为一股技术官僚力量，但在习近平时代遭到边缘化。", "Hu rose through the Youth League; many officials with similar backgrounds advanced during his era; Tuanpai became a technocratic factional label and later lost ground under Xi."),
+  entry("胡溫新政", "胡温新政", "Hu Wen New Deal", "看起來像補課型政府，哪裡破了就貼一塊膠布。", "看起来像补课型政府，哪里破了就贴一块胶布。", "A make-up-class government, patching each leak with policy tape.", 2, "ccp", "2000s", "起因是九十年代改革留下農村、民生和社保壓力；經過是胡錦濤與溫家寶推動免農業稅、新農合、低保和西部政策等調整；結果是民生補丁增加，但政治改革和權力約束仍停滯。", "起因是九十年代改革留下农村、民生和社保压力；经过是胡锦涛与温家宝推动免农业税、新农合、低保和西部政策等调整；结果是民生补丁增加，但政治改革和权力约束仍停滞。", "Hu and Wen responded to rural and welfare pressures with tax relief and social-policy programs; the state patched many livelihood gaps; political reform and power constraints remained stalled."),
+  entry("九常委九龍治水", "九常委九龙治水", "Nine Dragons Governing Water", "水龍頭很多，誰都能開，誰都不想關。", "水龙头很多，谁都能开，谁都不想关。", "Many faucets, many hands, not much accountability.", 4, "ccpMetaphor", "2002-2012", "起因是胡時期政治局常委分工龐雜、權力分散；經過是政法、宣傳、軍隊和經濟等系統各自形成山頭；結果是集體領導降低個人獨裁風險，也造成決策慢和部門坐大。", "起因是胡时期政治局常委分工庞杂、权力分散；经过是政法、宣传、军队和经济等系统各自形成山头；结果是集体领导降低个人独裁风险，也造成决策慢和部门坐大。", "Hu-era top power was dispersed among many Standing Committee portfolios; security, propaganda, military, and economic systems built their own turf; it reduced one-man rule but created fragmentation."),
+  entry("集體領導", "集体领导", "Collective Leadership", "會議桌很長，責任書很短。", "会议桌很长，责任书很短。", "A long conference table and a short accountability sheet.", 3, "ccp", "2000s", "起因是中共在毛時代後嘗試避免個人獨裁重演；經過是胡錦濤時期延續常委分權、退休年齡和接班梯隊慣例；結果是制度化表面更強，但派系平衡也讓改革難以推進。", "起因是中共在毛时代后尝试避免个人独裁重演；经过是胡锦涛时期延续常委分权、退休年龄和接班梯队惯例；结果是制度化表面更强，但派系平衡也让改革难以推进。", "The CCP tried to avoid Mao-style personal rule; Hu's era kept norms around retirement, succession, and divided portfolios; institutional appearance strengthened but reform became harder."),
+  entry("悶聲治國", "闷声治国", "Quiet Governance", "不是沒有聲音，是麥克風被放在文件櫃裡。", "不是没有声音，是麦克风被放在文件柜里。", "There is sound; the microphone is just inside a filing cabinet.", 3, "ccpMetaphor", "2000s", "起因是胡錦濤個人風格低調、語言高度官樣；經過是重大政策多以文件、會議和集體名義推出；結果是他被網民塑造成悶聲領導，和後來強烈個人化宣傳形成反差。", "起因是胡锦涛个人风格低调、语言高度官样；经过是重大政策多以文件、会议和集体名义推出；结果是他被网民塑造成闷声领导，和后来强烈个人化宣传形成反差。", "Hu's style was restrained and bureaucratic; policy came through documents and collective procedure; online memory frames him as quiet, especially beside Xi-era personalization."),
+  entry("裸退樣板", "裸退样板", "Full Retirement Model", "退得乾淨到像交接文件被消毒。", "退得干净到像交接文件被消毒。", "He retired so fully it looked like the handover file had been sterilized.", 3, "ccp", "2012-2013", "起因是中共高層交接需要處理老領導留任軍權的慣例；經過是胡錦濤在十八大後交出總書記和軍委主席，次年卸任國家主席；結果是裸退被視為少見的完整交權，後來更顯突兀。", "起因是中共高层交接需要处理老领导留任军权的惯例；经过是胡锦涛在十八大后交出总书记和军委主席，次年卸任国家主席；结果是裸退被视为少见的完整交权，后来更显突兀。", "Hu fully handed over party and military posts after the 18th Congress and the presidency the next year; the clean retirement contrasted with earlier elders retaining influence and later centralized rule."),
+  entry("二十大架走", "二十大架走", "Twentieth Congress Escort Out", "前任坐在台上，現任年代把他請成了世界名場面。", "前任坐在台上，现任年代把他请成了世界名场面。", "A former leader sat on stage; the new era turned his exit into a global scene.", 4, "ccp", "2022", "起因是二十大閉幕會上胡錦濤坐在主席台習近平身旁；經過是工作人員在鏡頭前將他扶起並帶離會場，官方媒體後稱他身體不適；結果是畫面引發外界對健康、權力象徵和高層政治的各種解讀。", "起因是二十大闭幕会上胡锦涛坐在主席台习近平身旁；经过是工作人员在镜头前将他扶起并带离会场，官方媒体后称他身体不适；结果是画面引发外界对健康、权力象征和高层政治的各种解读。", "At the 20th Party Congress closing session, Hu was seated beside Xi; staff lifted and escorted him out on camera, while official media later cited health; the scene sparked debate over health, symbolism, and elite politics."),
+  entry("退休被請出", "退休被请出", "Retired And Removed", "退休不是終點，還可能有臨時退場動畫。", "退休不是终点，还可能有临时退场动画。", "Retirement is not the end; it may include an exit animation.", 4, "ccpMetaphor", "2022", "起因是胡錦濤早已裸退卻仍以元老身份出席二十大；經過是他被帶離主席台的影像在海外迅速傳播；結果是退休被請出成為網民嘲諷權力無情和元老失勢的短語。", "起因是胡锦涛早已裸退却仍以元老身份出席二十大；经过是他被带离主席台的影像在海外迅速传播；结果是退休被请出成为网民嘲讽权力无情和元老失势的短语。", "Hu had fully retired but attended as an elder; the exit video spread widely abroad; the phrase jokes about the vulnerability of retired elders under concentrated power."),
+  entry("胡不開口", "胡不开口", "Hu Does Not Speak", "嘴巴還在，麥克風已經移除權限。", "嘴巴还在，麦克风已经移除权限。", "The mouth remains; microphone permission has been revoked.", 4, "ccpMetaphor", "2022", "起因是胡錦濤二十大退場後沒有公開完整說明；經過是相關討論在中國大陸被高度限制；結果是胡不開口成為網民形容前任沉默和政治謎語的黑色幽默。", "起因是胡锦涛二十大退场后没有公开完整说明；经过是相关讨论在中国大陆被高度限制；结果是胡不开口成为网民形容前任沉默和政治谜语的黑色幽默。", "After the 20th Congress exit, Hu did not give a public explanation and domestic discussion was restricted; the meme frames silence as political riddle."),
+  entry("河蟹上岸", "河蟹上岸", "River Crab Ashore", "和諧變河蟹，螃蟹爬過來就知道帖子要沒了。", "和谐变河蟹，螃蟹爬过来就知道帖子要没了。", "Harmony became a river crab; when it crawls over, the post is gone.", 4, "ccpMetaphor", "2000s", "起因是和諧與河蟹諧音；經過是網民用河蟹圖像和文字躲避審查；結果是河蟹成為胡時代審查文化的代表性吉祥物。", "起因是和谐与河蟹谐音；经过是网民用河蟹图像和文字躲避审查；结果是河蟹成为胡时代审查文化的代表性吉祥物。", "The pun turns harmony into river crab; users used the crab to mock and evade censorship; it became a mascot of Hu-era internet control."),
+  entry("草泥馬衝塔", "草泥马冲塔", "Grass Mud Horse Charge", "神獸不住動物園，住在敏感詞邊界。", "神兽不住动物园，住在敏感词边界。", "The mythical beast lives not in a zoo but on the edge of blocked words.", 4, "ccpMetaphor", "2009", "起因是網路審查催生大量諧音暗語；經過是草泥馬以歌曲、影片和表情包形式走紅，用低俗諧音對抗河蟹；結果是它成為中文互聯網反審查文化的標誌。", "起因是网络审查催生大量谐音暗语；经过是草泥马以歌曲、视频和表情包形式走红，用低俗谐音对抗河蟹；结果是它成为中文互联网反审查文化的标志。", "Censorship produced coded puns; Grass Mud Horse spread through songs and memes as a vulgar anti-harmony joke; it became a symbol of Chinese anti-censorship culture."),
+  entry("SARS瞞報", "SARS瞒报", "SARS Cover Up", "病毒先跑，通報後到，公信力被隔離。", "病毒先跑，通报后到，公信力被隔离。", "The virus moved first, notices arrived later, and credibility went into quarantine.", 2, "ccp", "2003", "起因是非典疫情早期地方和部門隱瞞或低估資訊；經過是疫情擴散到北京、香港和海外後中央撤換官員並加強通報；結果是公共衛生體系受到衝擊，也暴露威權體制下資訊延遲的風險。", "起因是非典疫情早期地方和部门隐瞒或低估信息；经过是疫情扩散到北京、香港和海外后中央撤换官员并加强通报；结果是公共卫生体系受到冲击，也暴露威权体制下信息延迟的风险。", "Early SARS reporting was concealed or minimized; after spread to Beijing, Hong Kong, and abroad, officials were removed and reporting tightened; the crisis exposed the danger of delayed information."),
+  entry("奧運維穩", "奥运维稳", "Olympic Stability Maintenance", "鳥巢很亮，周邊的紅線更亮。", "鸟巢很亮，周边的红线更亮。", "The Bird's Nest shone brightly, and so did the red lines around it.", 3, "ccp", "2008", "起因是北京奧運承載國家形象工程；經過是安保、上訪管控、異議壓制和城市治理一起加碼；結果是奧運展示了國力，也讓大型活動維穩模式更制度化。", "起因是北京奥运承载国家形象工程；经过是安保、上访管控、异议压制和城市治理一起加码；结果是奥运展示了国力，也让大型活动维稳模式更制度化。", "The Beijing Olympics carried national-image goals; security, petition control, dissent pressure, and urban management intensified; the event showcased power and normalized mega-event stability control."),
+  entry("西藏三一四", "西藏三一四", "Tibet March Fourteenth", "火炬還沒到，邊疆治理已經起火。", "火炬还没到，边疆治理已经起火。", "Before the Olympic torch arrived, frontier governance was already on fire.", 3, "ccp", "2008", "起因是西藏長期宗教、民族和政治控制矛盾累積；經過是 2008 年拉薩抗議和騷亂後當局大規模鎮壓並強化管控；結果是西藏議題在北京奧運前國際化，也讓民族地區高壓治理升級。", "起因是西藏长期宗教、民族和政治控制矛盾累积；经过是 2008 年拉萨抗议和骚乱后当局大规模镇压并强化管控；结果是西藏议题在北京奥运前国际化，也让民族地区高压治理升级。", "Long-running tensions over religion, ethnicity, and control fed the 2008 Lhasa unrest; authorities cracked down and tightened control; the Tibet issue internationalized before the Olympics."),
+  entry("七五事件", "七五事件", "Urumqi July Fifth", "民族矛盾被拖到街頭，後來被拖進更大的監控網。", "民族矛盾被拖到街头，后来被拖进更大的监控网。", "Ethnic tension reached the streets, then entered a larger surveillance net.", 3, "ccp", "2009", "起因是新疆民族矛盾、治安壓力和韶關事件後的抗議情緒疊加；經過是烏魯木齊發生大規模暴力衝突與鎮壓；結果是新疆治理轉向更高壓的維穩與監控路線。", "起因是新疆民族矛盾、治安压力和韶关事件后的抗议情绪叠加；经过是乌鲁木齐发生大规模暴力冲突与镇压；结果是新疆治理转向更高压的维稳与监控路线。", "Ethnic tensions, security pressure, and anger after the Shaoguan incident fed unrest in Urumqi; violence and crackdown followed; Xinjiang governance moved toward harsher stability and surveillance."),
+  entry("微博元年", "微博元年", "Weibo First Year", "廣場搬到手機裡，河蟹也學會了滑螢幕。", "广场搬到手机里，河蟹也学会了滑屏幕。", "The square moved into phones, and the river crab learned to swipe.", 2, "current", "2009-2011", "起因是微博等社交媒體在胡時代後期快速普及；經過是公共事件、維權和爆料在網路上高速擴散；結果是輿論空間短暫活躍，也迫使審查和實名管理升級。", "起因是微博等社交媒体在胡时代后期快速普及；经过是公共事件、维权和爆料在网络上高速扩散；结果是舆论空间短暂活跃，也迫使审查和实名管理升级。", "Microblogging spread quickly late in Hu's era; public incidents and exposés traveled fast; a brief online public sphere emerged while censorship and real-name controls tightened."),
+  entry("維穩預算", "维稳预算", "Stability Budget", "穩定不是形容詞，是可以報銷的名詞。", "稳定不是形容词，是可以报销的名词。", "Stability is not an adjective; it is a reimbursable noun.", 3, "ccpMetaphor", "2000s", "起因是群體事件、上訪和網路輿情讓地方治理壓力上升；經過是維穩系統擴張，投入警力、監控和基層管控；結果是維穩成為制度化支出，也把社會矛盾轉化為安保成本。", "起因是群体事件、上访和网络舆情让地方治理压力上升；经过是维稳系统扩张，投入警力、监控和基层管控；结果是维稳成为制度化支出，也把社会矛盾转化为安保成本。", "Rising petitions, protests, and online opinion pushed local control spending; stability maintenance expanded through police, monitoring, and grassroots control; social conflict became a security budget line."),
+  entry("聯合利劍外送", "联合利剑外送", "Joint Sword Delivery", "解放軍的外送範圍很大，餐點叫威嚇，運費叫軍演。", "解放军的外送范围很大，餐点叫威吓，运费叫军演。", "A delivery zone around Taiwan where the meal is intimidation and the fee is a drill.", 4, "current", "2024", "起因是北京反對賴清德就職後的兩岸表述；經過是解放軍在台灣周邊發動聯合利劍系列軍演；結果是軍演成為台海政治訊號和網路梗，被嘲諷成定期外送。", "起因是北京反对赖清德就职后的两岸表述；经过是解放军在台湾周边发动联合利剑系列军演；结果是军演成为台海政治信号和网络梗，被嘲讽成定期外送。", "After Beijing objected to Lai Ching-te's cross-strait framing, the PLA held Joint Sword drills around Taiwan; the exercises became both coercive signal and delivery-style meme."),
+  entry("圍台直播間", "围台直播间", "Taiwan Encirclement Livestream", "每次畫箭頭都像開台，觀眾負責刷緊張。", "每次画箭头都像开播，观众负责刷紧张。", "Each arrow map feels like a livestream; viewers supply the panic comments.", 4, "current", "2024", "起因是台海軍演常伴隨路線圖和官方宣傳；經過是媒體用箭頭、包圍圈和即時戰報呈現；結果是網民把它戲稱為圍台直播間，嘲諷軍事威嚇的媒體化。", "起因是台海军演常伴随路线图和官方宣传；经过是媒体用箭头、包围圈和即时战报呈现；结果是网民把它戏称为围台直播间，嘲讽军事威吓的媒体化。", "PLA drills are packaged with maps, arrows, and real-time messaging; users joke about an encirclement livestream, mocking the media spectacle around coercion."),
+  entry("懲獨套餐", "惩独套餐", "Punish Independence Combo", "刑法、軍機、通稿一起上桌，套餐名叫震懾。", "刑法、军机、通稿一起上桌，套餐名叫震慑。", "Criminal law, aircraft, and press releases served as one intimidation combo meal.", 4, "current", "2024", "起因是北京強化對台獨的法律和政治壓力；經過是 2024 年發布懲治台獨頑固分子意見，並與軍演和輿論戰並行；結果是它成為兩岸威嚇語言，也被網民戲稱套餐。", "起因是北京强化对台独的法律和政治压力；经过是 2024 年发布惩治台独顽固分子意见，并与军演和舆论战并行；结果是它成为两岸威吓语言，也被网民戏称套餐。", "Beijing tightened legal and political pressure on Taiwan independence advocacy, issuing punishment guidelines in 2024 alongside drills and messaging; users compress it into a combo-meal joke."),
+  entry("橙色旅遊燈", "橙色旅游灯", "Orange Travel Light", "旅遊攻略忽然變成政治紅綠燈，顏色越暖越不想出門。", "旅游攻略忽然变成政治红绿灯，颜色越暖越不想出门。", "Travel advice became a political traffic light: the warmer the color, the colder the trip.", 3, "taiwan", "2024", "起因是中國公布懲治台獨文件後，台灣擔心赴陸、港、澳風險上升；經過是陸委會把相關旅遊警示調高；結果是顏色警示成為兩岸政治溫度計。", "起因是中国公布惩治台独文件后，台湾担心赴陆、港、澳风险上升；经过是陆委会把相关旅游警示调高；结果是颜色警示成为两岸政治温度计。", "After China's punishment guidelines, Taiwan warned travel to China, Hong Kong, and Macau carried higher risk; the warning color became a cross-strait political thermometer."),
+  entry("互不隸屬復讀機", "互不隶属复读机", "Mutual Non Subordination Repeater", "一句話講完，北京血壓機就開始自動加壓。", "一句话讲完，北京血压计就开始自动加压。", "One phrase is enough to make Beijing's pressure gauge pump itself.", 4, "taiwan", "2024", "起因是賴清德就任後延續中華民國與中華人民共和國互不隸屬表述；經過是北京批評其台獨立場並加大軍政壓力；結果是這句話成為兩岸論述戰的高頻按鈕。", "起因是赖清德就任后延续中华民国与中华人民共和国互不隶属表述；经过是北京批评其台独立场并加大军政压力；结果是这句话成为两岸论述战的高频按钮。", "Lai continued the line that the ROC and PRC are not subordinate to each other; Beijing condemned it and raised pressure; the phrase became a hot button in narrative warfare."),
+  entry("青鳥露營區", "青鸟露营区", "Bluebird Camp", "民主夜市開在立院外，帳篷比議程還準時。", "民主夜市开在立院外，帐篷比议程还准时。", "A democracy night market outside parliament, with tents more punctual than agendas.", 3, "taiwan", "2024", "起因是台灣立法院改革法案引發程序和權力爭議；經過是大批民眾在立院外集會，青鳥成為抗議符號；結果是它成為台灣年輕政治參與和藍白綠對抗的新梗。", "起因是台湾立法院改革法案引发程序和权力争议；经过是大批民众在立院外集会，青鸟成为抗议符号；结果是它成为台湾年轻政治参与和蓝白绿对抗的新梗。", "Legislative reform disputes over procedure and power triggered large protests outside Taiwan's legislature; Bluebird became a symbol of youth civic action and partisan confrontation."),
+  entry("立院功夫片", "立院功夫片", "Legislature Kung Fu Film", "法案還沒三讀，武打指導先上班。", "法案还没三读，武术指导先上班。", "Before the bill finishes readings, the fight choreographer clocks in.", 3, "taiwan", "2024", "起因是台灣國會改革、朝野席次和程序衝突加劇；經過是立法院爆發推擠、搶案和肢體衝突；結果是民主程序被網民剪成動作片梗，也反映制度信任危機。", "起因是台湾国会改革、朝野席次和程序冲突加剧；经过是立法院爆发推挤、抢案和肢体冲突；结果是民主程序被网民剪成动作片梗，也反映制度信任危机。", "Taiwan's parliamentary reform fight produced physical clashes and procedural battles; users edited the legislature into action-film memes while trust in procedure suffered."),
+  entry("藍白便當會", "蓝白便当会", "Blue White Bento Caucus", "合作像便當，菜色很多，帳單常常各付。", "合作像盒饭，菜色很多，账单常常各付。", "A coalition lunchbox with many dishes and separate checks.", 3, "taiwan", "2024", "起因是國民黨和民眾黨在立法院形成多數合作空間；經過是兩黨在國會改革、預算和監督上多次合流；結果是藍白合作被支持者視為制衡，也被反對者嘲笑成政治便當拼盤。", "起因是国民党和民众党在立法院形成多数合作空间；经过是两党在国会改革、预算和监督上多次合流；结果是蓝白合作被支持者视为制衡，也被反对者嘲笑成政治盒饭拼盘。", "The KMT and TPP gained room to cooperate as a legislative majority; they aligned on reforms and oversight; supporters call it checks and balances, critics call it a bento coalition."),
+  entry("芒果乾續杯", "芒果干续杯", "Mango Dried Refill", "亡國感喝完一杯，選舉店員自動續杯。", "亡国感喝完一杯，选举店员自动续杯。", "Finish one glass of national-doom anxiety and election staff refill it.", 4, "taiwan", "2020s", "起因是台灣選舉常把中國威脅和國家認同動員在一起；經過是芒果乾以亡國感諧音流行；結果是它既描述真實安全焦慮，也嘲諷政黨動員恐懼。", "起因是台湾选举常把中国威胁和国家认同动员在一起；经过是芒果干以亡国感谐音流行；结果是它既描述真实安全焦虑，也嘲讽政党动员恐惧。", "Taiwan campaigns often mobilize identity and China threat; mango dried puns on national-doom feeling; it captures real security anxiety and mocks fear-based campaigning."),
+  entry("九二共識貼紙", "九二共识贴纸", "Consensus Sticker", "萬物都能貼，貼完就假裝規格相容。", "万物都能贴，贴完就假装规格兼容。", "Stick it on anything and pretend the systems are compatible.", 3, "taiwan", "1992-2020s", "起因是兩岸對九二共識含義長期各說各話；經過是不同政黨把它當成交流通行證或政治緊箍咒；結果是貼紙梗嘲諷一個標籤承載太多互不相容的期待。", "起因是两岸对九二共识含义长期各说各话；经过是不同政党把它当成交流通行证或政治紧箍咒；结果是贴纸梗嘲讽一个标签承载太多互不兼容的期待。", "Both sides and parties define the 1992 Consensus differently; it works as both pass and shackle; the sticker joke mocks a label asked to solve incompatible politics."),
+  entry("國台辦鬧鐘", "国台办闹钟", "Taiwan Affairs Alarm Clock", "每天準點提醒你：又有人傷害了感情。", "每天准点提醒你：又有人伤害了感情。", "A daily alarm reminding you that feelings were harmed again.", 4, "current", "2020s", "起因是國台辦定期回應台灣政治和國際互動；經過是譴責、警告和反對措辭高度模板化；結果是網民把它形容成準點響起的政治鬧鐘。", "起因是国台办定期回应台湾政治和国际互动；经过是谴责、警告和反对措辞高度模板化；结果是网民把它形容成准点响起的政治闹钟。", "China's Taiwan Affairs Office responds regularly to Taiwan politics and foreign contacts with formulaic warnings; users joke it functions like a punctual political alarm."),
+  entry("金門快艇劇本殺", "金门快艇剧本杀", "Kinmen Boat Script Game", "一艘快艇翻出多套劇本，海風都看不完聲明。", "一艘快艇翻出多套剧本，海风都看不完声明。", "One boat produced so many scripts even the sea breeze could not read them all.", 4, "current", "2024", "起因是金門附近執法追逐導致中國快艇翻覆和人員死亡；經過是兩岸就責任、執法和海域管理互相指責；結果是事件升高前線摩擦，也被網民嘲諷成各方搶劇本。", "起因是金门附近执法追逐导致中国快艇翻覆和人员死亡；经过是两岸就责任、执法和海域管理互相指责；结果是事件升高前线摩擦，也被网民嘲讽成各方抢剧本。", "A Chinese boat capsized during a chase near Kinmen, causing deaths; both sides disputed responsibility and maritime enforcement; the incident raised frontline tensions and spawned script-game jokes."),
+  entry("海峽天氣預報", "海峡天气预报", "Strait Weather Forecast", "今日多雲，局部軍演，晚間可能有譴責。", "今日多云，局部军演，晚间可能有谴责。", "Today's forecast: cloudy, local drills, possible condemnations by evening.", 4, "current", "2020s", "起因是台海周邊軍機、軍艦和政治警告常態化；經過是媒體每天統計架次、航跡和聲明；結果是網民把緊張局勢寫成天氣預報，嘲諷危機日常化。", "起因是台海周边军机、军舰和政治警告常态化；经过是媒体每天统计架次、航迹和声明；结果是网民把紧张局势写成天气预报，嘲讽危机日常化。", "Military aircraft, ships, and warnings around Taiwan became routine; media count sorties and statements daily; users turn the tension into a weather forecast meme."),
+  entry("抗中保台健身環", "抗中保台健身环", "Resist China Fitness Ring", "口號每天拉伸，選票肌肉才不會萎縮。", "口号每天拉伸，选票肌肉才不会萎缩。", "Stretch the slogan daily so electoral muscles do not atrophy.", 4, "taiwan", "2020s", "起因是中國威脅成為台灣選舉和身份政治的重要議題；經過是各黨圍繞抗中、和平、交流和國防互相攻防；結果是口號被支持者視為安全動員，也被嘲諷成選舉健身器材。", "起因是中国威胁成为台湾选举和身份政治的重要议题；经过是各党围绕抗中、和平、交流和国防互相攻防；结果是口号被支持者视为安全动员，也被嘲讽成选举健身器材。", "China threat is central to Taiwan elections and identity politics; parties fight over resistance, peace, exchange, and defense; the slogan is both security mobilization and campaign-workout satire.")
 );
 
 const EXTRA_DECOYS = {
@@ -776,6 +812,47 @@ Object.assign(ENTRY_TAGS, {
   "Millennium Pie": ["xi"]
 });
 
+[
+  "Hu Jintao",
+  "Scientific Outlook On Development",
+  "Harmonious Society",
+  "Harmonized Away",
+  "No Tossing Around",
+  "Tuanpai Era",
+  "Hu Wen New Deal",
+  "Nine Dragons Governing Water",
+  "Collective Leadership",
+  "Quiet Governance",
+  "Full Retirement Model",
+  "Twentieth Congress Escort Out",
+  "Retired And Removed",
+  "Hu Does Not Speak",
+  "River Crab Ashore",
+  "Grass Mud Horse Charge",
+  "SARS Cover Up",
+  "Olympic Stability Maintenance",
+  "Tibet March Fourteenth",
+  "Urumqi July Fifth",
+  "Weibo First Year",
+  "Stability Budget",
+  "Joint Sword Delivery",
+  "Taiwan Encirclement Livestream",
+  "Punish Independence Combo",
+  "Orange Travel Light",
+  "Mutual Non Subordination Repeater",
+  "Bluebird Camp",
+  "Legislature Kung Fu Film",
+  "Blue White Bento Caucus",
+  "Mango Dried Refill",
+  "Consensus Sticker",
+  "Taiwan Affairs Alarm Clock",
+  "Kinmen Boat Script Game",
+  "Strait Weather Forecast",
+  "Resist China Fitness Ring"
+].forEach((key) => {
+  ENTRY_TAGS[key] = [...(ENTRY_TAGS[key] || []), "global"];
+});
+
 const GAME_COPY = {
   tw: {
     progress: "解密進度",
@@ -964,7 +1041,7 @@ class AudioEngine {
     this.volume = 0.62;
     this.muted = false;
     this.stepDuration = 0.18;
-    this.patternLength = 256;
+    this.patternLength = 384;
     this.scale = [196, 220, 246.94, 261.63, 293.66, 329.63, 369.99, 392, 440, 493.88, 523.25, 587.33, 659.25, 739.99, 783.99];
     this.anthemMelody = [
       [0, 7, 3], [3, 8, 1], [4, 9, 4], [8, 11, 4], [12, 9, 4],
@@ -992,6 +1069,7 @@ class AudioEngine {
     ];
     this.anthemBass = [0, 4, 5, 3, 0, 4, 5, 0, 4, 5, 2, 4, 0, 5, 3, 0];
     this.trackId = "flag";
+    this.trackScores = this.createTrackScores();
     this.musicTracks = this.createMusicTracks();
     this.applyTrack(this.trackId);
   }
@@ -1020,14 +1098,105 @@ class AudioEngine {
     return shifted.map((_, index) => shifted[(index + rotate + shifted.length) % shifted.length]);
   }
 
+  expandMelody(phrases, phraseLength = 64) {
+    return phrases
+      .flatMap((phrase, phraseIndex) => phrase.map(([position, index, duration]) => [
+        phraseIndex * phraseLength + position,
+        this.clampScaleIndex(index),
+        duration
+      ]))
+      .sort((a, b) => a[0] - b[0]);
+  }
+
+  repeatProgression(progression, repeats = 2) {
+    return Array.from({ length: repeats }, () => progression)
+      .flat()
+      .map((indexes) => indexes.map((index) => this.clampScaleIndex(index)));
+  }
+
+  repeatBass(values, repeats = 2) {
+    return Array.from({ length: repeats }, () => values).flat().map((index) => this.clampScaleIndex(index));
+  }
+
+  createTrackScores() {
+    const flagPhrases = [
+      [[0, 7, 4], [4, 9, 4], [8, 11, 4], [12, 12, 4], [16, 11, 4], [20, 9, 4], [24, 7, 8], [32, 8, 4], [36, 10, 4], [40, 12, 8], [48, 11, 4], [52, 9, 4], [56, 7, 8]],
+      [[0, 9, 4], [4, 11, 4], [8, 12, 4], [12, 14, 4], [16, 12, 6], [22, 11, 2], [24, 9, 8], [32, 10, 4], [36, 12, 4], [40, 11, 8], [48, 9, 4], [52, 8, 4], [56, 7, 8]],
+      [[0, 7, 3], [3, 8, 1], [4, 9, 4], [8, 10, 4], [12, 12, 8], [20, 11, 4], [24, 9, 8], [32, 8, 4], [36, 9, 4], [40, 11, 4], [44, 12, 4], [48, 14, 8], [56, 12, 8]],
+      [[0, 11, 4], [4, 12, 4], [8, 14, 8], [16, 12, 4], [20, 11, 4], [24, 9, 8], [32, 10, 4], [36, 12, 4], [40, 11, 4], [44, 9, 4], [48, 8, 8], [56, 7, 8]],
+      [[0, 7, 4], [4, 10, 4], [8, 12, 4], [12, 11, 4], [16, 9, 6], [22, 8, 2], [24, 7, 8], [32, 9, 4], [36, 12, 4], [40, 14, 8], [48, 12, 4], [52, 11, 4], [56, 9, 8]],
+      [[0, 10, 4], [4, 12, 4], [8, 14, 8], [16, 13, 4], [20, 12, 4], [24, 11, 8], [32, 12, 4], [36, 11, 4], [40, 9, 8], [48, 7, 4], [52, 9, 4], [56, 7, 8]]
+    ];
+    const gospelPhrases = [
+      [[0, 5, 8], [8, 7, 6], [14, 8, 2], [16, 9, 8], [24, 7, 8], [32, 5, 6], [38, 7, 2], [40, 9, 8], [48, 10, 6], [54, 9, 2], [56, 7, 8]],
+      [[0, 4, 8], [8, 5, 8], [16, 7, 6], [22, 9, 2], [24, 10, 8], [32, 9, 8], [40, 7, 8], [48, 5, 6], [54, 4, 2], [56, 5, 8]],
+      [[0, 7, 8], [8, 9, 8], [16, 12, 10], [28, 10, 4], [32, 9, 8], [40, 7, 8], [48, 5, 8], [56, 7, 8]],
+      [[0, 8, 8], [8, 10, 8], [16, 12, 8], [24, 13, 8], [32, 12, 8], [40, 10, 8], [48, 9, 8], [56, 7, 8]],
+      [[0, 5, 8], [8, 8, 8], [16, 10, 8], [24, 9, 8], [32, 7, 8], [40, 5, 8], [48, 4, 8], [56, 5, 8]],
+      [[0, 7, 8], [8, 9, 8], [16, 10, 10], [28, 12, 4], [32, 10, 8], [40, 9, 8], [48, 7, 8], [56, 5, 8]]
+    ];
+    const processionPhrases = [
+      [[0, 8, 2], [2, 9, 2], [4, 10, 4], [8, 12, 2], [10, 10, 2], [12, 9, 4], [16, 8, 2], [18, 10, 2], [20, 12, 4], [24, 13, 4], [28, 12, 4], [32, 10, 2], [34, 12, 2], [36, 14, 4], [40, 12, 4], [44, 10, 4], [48, 9, 4], [52, 10, 4], [56, 12, 8]],
+      [[0, 12, 2], [2, 13, 2], [4, 14, 4], [8, 12, 4], [12, 10, 4], [16, 9, 2], [18, 10, 2], [20, 12, 4], [24, 10, 4], [28, 8, 4], [32, 7, 4], [36, 9, 4], [40, 10, 4], [44, 12, 4], [48, 11, 4], [52, 9, 4], [56, 8, 8]],
+      [[0, 8, 2], [2, 11, 2], [4, 12, 4], [8, 14, 4], [12, 12, 4], [16, 11, 2], [18, 12, 2], [20, 14, 4], [24, 13, 4], [28, 12, 4], [32, 10, 4], [36, 11, 4], [40, 12, 4], [44, 10, 4], [48, 9, 4], [52, 8, 4], [56, 7, 8]],
+      [[0, 7, 2], [2, 8, 2], [4, 10, 4], [8, 11, 4], [12, 12, 4], [16, 14, 4], [20, 12, 4], [24, 10, 4], [28, 9, 4], [32, 8, 2], [34, 10, 2], [36, 12, 4], [40, 13, 4], [44, 12, 4], [48, 10, 4], [52, 9, 4], [56, 8, 8]],
+      [[0, 9, 2], [2, 10, 2], [4, 12, 4], [8, 14, 4], [12, 13, 4], [16, 12, 2], [18, 10, 2], [20, 9, 4], [24, 10, 4], [28, 12, 4], [32, 14, 4], [36, 12, 4], [40, 10, 4], [44, 9, 4], [48, 8, 4], [52, 10, 4], [56, 12, 8]],
+      [[0, 14, 4], [4, 13, 4], [8, 12, 4], [12, 10, 4], [16, 9, 4], [20, 8, 4], [24, 7, 8], [32, 8, 4], [36, 10, 4], [40, 12, 8], [48, 10, 4], [52, 9, 4], [56, 8, 8]]
+    ];
+    const memorialPhrases = [
+      [[0, 8, 12], [16, 7, 8], [28, 5, 4], [32, 4, 12], [48, 5, 8], [56, 7, 8]],
+      [[0, 9, 12], [16, 8, 8], [28, 7, 4], [32, 5, 12], [48, 4, 8], [56, 5, 8]],
+      [[0, 10, 12], [16, 8, 8], [28, 7, 4], [32, 6, 12], [48, 5, 8], [56, 4, 8]],
+      [[0, 7, 12], [16, 5, 8], [28, 4, 4], [32, 3, 12], [48, 4, 8], [56, 5, 8]],
+      [[0, 8, 16], [20, 10, 6], [28, 9, 4], [32, 7, 12], [48, 5, 8], [56, 7, 8]],
+      [[0, 9, 12], [16, 7, 8], [28, 5, 4], [32, 4, 12], [48, 5, 8], [56, 7, 8]]
+    ];
+    const recessionalPhrases = [
+      [[0, 7, 3], [3, 11, 3], [6, 12, 4], [12, 11, 4], [16, 9, 3], [19, 12, 3], [22, 14, 6], [32, 12, 4], [36, 11, 4], [40, 9, 8], [48, 8, 4], [52, 9, 4], [56, 11, 8]],
+      [[0, 9, 3], [3, 12, 3], [6, 13, 4], [12, 12, 4], [16, 10, 3], [19, 13, 3], [22, 14, 6], [32, 13, 4], [36, 12, 4], [40, 10, 8], [48, 9, 4], [52, 10, 4], [56, 12, 8]],
+      [[0, 11, 3], [3, 12, 3], [6, 14, 6], [16, 13, 4], [20, 12, 4], [24, 11, 8], [32, 9, 3], [35, 11, 3], [38, 12, 6], [48, 11, 4], [52, 9, 4], [56, 7, 8]],
+      [[0, 8, 3], [3, 10, 3], [6, 12, 6], [16, 11, 4], [20, 10, 4], [24, 8, 8], [32, 10, 3], [35, 12, 3], [38, 14, 6], [48, 12, 4], [52, 10, 4], [56, 8, 8]],
+      [[0, 9, 3], [3, 12, 3], [6, 14, 6], [16, 12, 4], [20, 11, 4], [24, 9, 8], [32, 8, 3], [35, 11, 3], [38, 13, 6], [48, 11, 4], [52, 9, 4], [56, 8, 8]],
+      [[0, 12, 4], [4, 14, 4], [8, 13, 4], [12, 12, 4], [16, 11, 4], [20, 9, 4], [24, 7, 8], [32, 9, 4], [36, 11, 4], [40, 12, 8], [48, 11, 4], [52, 9, 4], [56, 7, 8]]
+    ];
+    return {
+      flag: {
+        melody: this.expandMelody(flagPhrases),
+        chords: this.repeatProgression([[0, 2, 4], [4, 6, 8], [5, 7, 9], [3, 5, 7], [0, 4, 7], [5, 8, 10], [4, 6, 9], [0, 2, 7], [2, 5, 9], [5, 7, 10], [4, 7, 11], [0, 4, 7]], 2),
+        bass: this.repeatBass([0, 4, 5, 3, 0, 5, 4, 0, 2, 5, 4, 0], 2)
+      },
+      gospel: {
+        melody: this.expandMelody(gospelPhrases),
+        chords: this.repeatProgression([[0, 3, 7], [5, 7, 10], [2, 5, 9], [4, 7, 11], [0, 4, 9], [5, 8, 12], [3, 7, 10], [0, 5, 9], [2, 5, 8], [5, 9, 12], [4, 7, 10], [0, 3, 7]], 2),
+        bass: this.repeatBass([0, 5, 2, 4, 0, 5, 3, 0, 2, 5, 4, 0], 2)
+      },
+      procession: {
+        melody: this.expandMelody(processionPhrases),
+        chords: this.repeatProgression([[1, 5, 8], [1, 6, 10], [4, 7, 11], [5, 8, 12], [3, 7, 10], [1, 5, 8], [6, 9, 12], [4, 8, 11], [2, 6, 9], [5, 8, 12], [4, 7, 10], [1, 5, 8]], 2),
+        bass: this.repeatBass([1, 1, 4, 5, 3, 1, 6, 4, 2, 5, 4, 1], 2)
+      },
+      memorial: {
+        melody: this.expandMelody(memorialPhrases),
+        chords: this.repeatProgression([[0, 3, 7], [0, 4, 8], [5, 8, 10], [3, 5, 8], [1, 4, 7], [5, 7, 10], [0, 3, 7], [2, 5, 9], [4, 7, 10], [3, 5, 8], [1, 4, 7], [0, 3, 7]], 2),
+        bass: this.repeatBass([0, 0, 5, 3, 1, 5, 0, 2, 4, 3, 1, 0], 2)
+      },
+      recessional: {
+        melody: this.expandMelody(recessionalPhrases),
+        chords: this.repeatProgression([[0, 4, 7], [2, 5, 9], [4, 7, 11], [5, 9, 12], [0, 4, 9], [4, 8, 12], [2, 6, 10], [5, 7, 11], [0, 5, 9], [3, 7, 10], [5, 8, 12], [0, 4, 7]], 2),
+        bass: this.repeatBass([0, 2, 4, 5, 0, 4, 2, 5, 0, 3, 5, 0], 2)
+      }
+    };
+  }
+
   createMusicTracks() {
+    const score = this.trackScores;
     return {
       flag: {
         stepDuration: 0.19,
-        patternLength: 256,
-        melody: this.anthemMelody,
-        chords: this.anthemChords,
-        bass: this.anthemBass,
+        patternLength: 384,
+        melody: score.flag.melody,
+        chords: score.flag.chords,
+        bass: score.flag.bass,
         leadWave: "triangle",
         leadGain: 0.028,
         upperGain: 0.016,
@@ -1040,11 +1209,11 @@ class AudioEngine {
         choir: true
       },
       gospel: {
-        stepDuration: 0.235,
-        patternLength: 256,
-        melody: this.shiftEvents(this.anthemMelody, -2, 0, 1.08),
-        chords: this.shiftChords(this.anthemChords, -1, 1),
-        bass: this.shiftIndexes(this.anthemBass, -1, 1),
+        stepDuration: 0.245,
+        patternLength: 384,
+        melody: score.gospel.melody,
+        chords: score.gospel.chords,
+        bass: score.gospel.bass,
         leadWave: "sine",
         leadGain: 0.021,
         upperGain: 0.014,
@@ -1058,10 +1227,10 @@ class AudioEngine {
       },
       procession: {
         stepDuration: 0.155,
-        patternLength: 256,
-        melody: this.shiftEvents(this.anthemMelody, 1, 2, 0.96),
-        chords: this.shiftChords(this.anthemChords, 1, 0),
-        bass: this.shiftIndexes(this.anthemBass, 0, 0),
+        patternLength: 384,
+        melody: score.procession.melody,
+        chords: score.procession.chords,
+        bass: score.procession.bass,
         leadWave: "triangle",
         leadGain: 0.038,
         upperGain: 0.014,
@@ -1074,11 +1243,11 @@ class AudioEngine {
         choir: false
       },
       memorial: {
-        stepDuration: 0.27,
-        patternLength: 256,
-        melody: this.shiftEvents(this.anthemMelody, -3, 0, 1.18),
-        chords: this.shiftChords(this.anthemChords, -2, 2),
-        bass: this.shiftIndexes(this.anthemBass, -2, 2),
+        stepDuration: 0.285,
+        patternLength: 384,
+        melody: score.memorial.melody,
+        chords: score.memorial.chords,
+        bass: score.memorial.bass,
         leadWave: "sine",
         leadGain: 0.018,
         upperGain: 0.012,
@@ -1091,11 +1260,11 @@ class AudioEngine {
         choir: true
       },
       recessional: {
-        stepDuration: 0.145,
-        patternLength: 256,
-        melody: this.shiftEvents(this.anthemMelody, 2, 0, 0.92),
-        chords: this.shiftChords(this.anthemChords, 1, 3),
-        bass: this.shiftIndexes(this.anthemBass, 1, 3),
+        stepDuration: 0.165,
+        patternLength: 384,
+        melody: score.recessional.melody,
+        chords: score.recessional.chords,
+        bass: score.recessional.bass,
         leadWave: "triangle",
         leadGain: 0.036,
         upperGain: 0.019,
@@ -3008,6 +3177,20 @@ function getArchitectureCardKeys(tags, category) {
 }
 
 const CARD_ART_CACHE = new Map();
+const CARD_VARIANT_PALETTES = [
+  ["#6f1f24", "#d2a44d"],
+  ["#293f61", "#b84a42"],
+  ["#315e55", "#d4a34f"],
+  ["#43306f", "#d05b70"],
+  ["#4b4f55", "#c08a43"],
+  ["#1f4d78", "#c94c4c"],
+  ["#29566a", "#d9b35d"],
+  ["#77244d", "#7db0c2"],
+  ["#2f596d", "#8fc0cf"],
+  ["#4e342d", "#c7a15d"],
+  ["#243d35", "#b14b57"],
+  ["#3f335c", "#d4a34f"]
+];
 
 function svgEscape(value) {
   return String(value || "")
@@ -3015,6 +3198,44 @@ function svgEscape(value) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function getCardVariantSeed(art) {
+  return String(art?.variantKey || art?.key || `${art?.scene || "file"}-${art?.glyph || ""}`);
+}
+
+function getCardVariantMeta(art) {
+  const seed = getCardVariantSeed(art);
+  const random = mulberry32(hashString(seed));
+  const palette = CARD_VARIANT_PALETTES[Math.floor(random() * CARD_VARIANT_PALETTES.length)] || CARD_VARIANT_PALETTES[0];
+  const angle = 18 + Math.round(random() * 124);
+  const grid = 6 + Math.floor(random() * 8);
+  const stampX = 18 + Math.round(random() * 62);
+  const stampY = 18 + Math.round(random() * 42);
+  const stampRot = -24 + Math.round(random() * 48);
+  const stripe = 10 + Math.round(random() * 18);
+  const cutX = 12 + Math.round(random() * 70);
+  const cutY = 10 + Math.round(random() * 52);
+  const opacity = (0.08 + random() * 0.12).toFixed(3);
+  const plate = Math.floor(random() * 997).toString().padStart(3, "0");
+  return { seed, palette, angle, grid, stampX, stampY, stampRot, stripe, cutX, cutY, opacity, plate };
+}
+
+function variantSvgLayer(meta, glyph) {
+  const g = svgEscape(glyph);
+  const plate = svgEscape(meta.plate);
+  return `
+    <g opacity="${meta.opacity}">
+      <path d="M0 ${meta.stripe}H100M0 ${meta.stripe + 21}H100M0 ${meta.stripe + 42}H100" stroke="rgba(255,255,255,.55)" stroke-width="1"/>
+      <path d="M${meta.grid} 0v76M${meta.grid + 18} 0v76M${meta.grid + 39} 0v76M${meta.grid + 63} 0v76" stroke="rgba(255,255,255,.42)" stroke-width="1"/>
+      <path d="M${meta.cutX} 6l18 0 0 12M${meta.cutX - 8} 69l22 0M8 ${meta.cutY}l16 0" stroke="rgba(255,255,255,.7)" stroke-width="2" fill="none"/>
+    </g>
+    <g transform="translate(${meta.stampX} ${meta.stampY}) rotate(${meta.stampRot})" opacity=".22">
+      <rect x="-19" y="-11" width="38" height="22" rx="4" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="2"/>
+      <text x="0" y="5" text-anchor="middle" font-size="9" font-weight="900" fill="rgba(255,255,255,.82)" font-family="Arial, sans-serif">${g || plate}</text>
+    </g>
+    <text x="6" y="70" font-size="7" font-weight="800" fill="rgba(255,255,255,.24)" font-family="Arial, sans-serif">AF-${plate}</text>
+  `;
 }
 
 function sceneSvg(scene, glyph) {
@@ -3088,9 +3309,22 @@ function sceneSvg(scene, glyph) {
 }
 
 function cardImageUrl(art) {
-  const key = `${art.scene}|${art.glyph}|${art.a}|${art.b}`;
+  const meta = getCardVariantMeta(art);
+  const variantA = art.variantA || meta.palette[0];
+  const variantB = art.variantB || meta.palette[1];
+  const key = `${art.scene}|${art.glyph}|${art.a}|${art.b}|${meta.seed}`;
   if (CARD_ART_CACHE.has(key)) return CARD_ART_CACHE.get(key);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 76"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${svgEscape(art.a)}"/><stop offset="1" stop-color="${svgEscape(art.b)}"/></linearGradient><radialGradient id="r" cx=".22" cy=".18" r=".7"><stop offset="0" stop-color="rgba(255,255,255,.32)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100" height="76" rx="10" fill="url(#g)"/><rect width="100" height="76" rx="10" fill="url(#r)"/><path d="M4 8c22 10 46 10 92 0M7 68c28-8 57-8 86 0" stroke="rgba(255,255,255,.14)" stroke-width="3" fill="none"/>${sceneSvg(art.scene, art.glyph)}</svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 76"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${svgEscape(art.a)}"/><stop offset="1" stop-color="${svgEscape(art.b)}"/></linearGradient><linearGradient id="v" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(${meta.angle} .5 .5)"><stop offset="0" stop-color="${svgEscape(variantA)}" stop-opacity=".7"/><stop offset="1" stop-color="${svgEscape(variantB)}" stop-opacity=".48"/></linearGradient><radialGradient id="r" cx=".22" cy=".18" r=".7"><stop offset="0" stop-color="rgba(255,255,255,.32)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100" height="76" rx="10" fill="url(#g)"/><rect width="100" height="76" rx="10" fill="url(#v)" opacity=".34"/><rect width="100" height="76" rx="10" fill="url(#r)"/><path d="M4 8c22 10 46 10 92 0M7 68c28-8 57-8 86 0" stroke="rgba(255,255,255,.14)" stroke-width="3" fill="none"/>${variantSvgLayer(meta, art.glyph)}${sceneSvg(art.scene, art.glyph)}</svg>`;
+  const value = `url(data:image/svg+xml,${encodeURIComponent(svg)})`;
+  CARD_ART_CACHE.set(key, value);
+  return value;
+}
+
+function cardVariantOverlayUrl(art) {
+  const meta = getCardVariantMeta(art);
+  const key = `overlay|${meta.seed}|${art?.glyph || ""}`;
+  if (CARD_ART_CACHE.has(key)) return CARD_ART_CACHE.get(key);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 76"><rect width="100" height="76" fill="rgba(0,0,0,0)"/>${variantSvgLayer(meta, art?.glyph || "")}<path d="M0 0h100v76H0z" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="2"/></svg>`;
   const value = `url(data:image/svg+xml,${encodeURIComponent(svg)})`;
   CARD_ART_CACHE.set(key, value);
   return value;
@@ -3281,13 +3515,20 @@ function isAnswerUnitRevealed(index) {
 function makeSheepTile(group, layer, x, y) {
   const row = Math.round(y * 2);
   const col = Math.round(x * 2);
+  const tileSerial = state.cellSerial;
+  const visualArt = group.visualArt
+    ? {
+      ...group.visualArt,
+      variantKey: `${group.visualArt.variantKey || group.groupKey}|tile-${tileSerial}-${layer}-${row}-${col}`
+    }
+    : null;
   return makeCell(0, row, col, "", {
     label: group.label,
     displayLabel: group.displayLabel || group.label,
     groupKey: group.groupKey,
     groupIndex: group.groupIndex,
     answer: group.answer,
-    visualArt: group.visualArt || null,
+    visualArt,
     layer,
     x,
     y,
@@ -3333,12 +3574,15 @@ function getTileArtProfile(tile) {
       ...tile.visualArt,
       a: tile.visualArt.a || base.a,
       b: tile.visualArt.b || base.b,
-      asset: tile.visualArt.asset || entryAsset
+      variantKey: tile.visualArt.variantKey || `${state.entry?.en || "entry"}-${tile.groupKey || tile.label}`,
+      asset: Object.prototype.hasOwnProperty.call(tile.visualArt, "asset") ? tile.visualArt.asset : entryAsset
     };
   }
   return {
     scene: "file",
     ...getEntryArtProfile(),
+    glyph: getTileDisplayLabel(tile).slice(0, 1) || getEntryArtProfile().glyph,
+    variantKey: `${state.entry?.en || "entry"}-${tile?.groupKey || tile?.label || "plain"}`,
     asset: entryAsset
   };
 }
@@ -3351,12 +3595,15 @@ function getArtVisualTuning(art) {
   const assetKey = art?.asset && REAL_CARD_ASSETS[art.asset] ? art.asset : "";
   const sceneKey = art?.scene || "";
   const exact = ASSET_VISUAL_TUNING[assetKey] || SCENE_VISUAL_TUNING[sceneKey];
-  if (exact) return exact;
-  const random = mulberry32(hashString(`${assetKey}-${sceneKey}-${art?.glyph || ""}`));
-  const focusX = 38 + Math.round(random() * 24);
-  const focusY = 28 + Math.round(random() * 28);
-  const zoom = 148 + Math.round(random() * 36);
-  const shade = random() > 0.5 ? "rgba(5, 6, 6, 0.64)" : "rgba(10, 8, 7, 0.64)";
+  const random = mulberry32(hashString(`${assetKey}-${sceneKey}-${getCardVariantSeed(art)}-${art?.glyph || ""}`));
+  const baseFocus = exact?.focus?.match(/(\d+)%\s+(\d+)%/);
+  const baseX = baseFocus ? Number(baseFocus[1]) : 50;
+  const baseY = baseFocus ? Number(baseFocus[2]) : 42;
+  const baseZoom = Number(String(exact?.zoom || "").match(/\d+/)?.[0]) || 158;
+  const focusX = Math.max(24, Math.min(76, baseX + Math.round(random() * 22 - 11)));
+  const focusY = Math.max(18, Math.min(74, baseY + Math.round(random() * 22 - 11)));
+  const zoom = Math.max(136, Math.min(206, baseZoom + Math.round(random() * 28 - 10)));
+  const shade = exact?.shade || (random() > 0.5 ? "rgba(5, 6, 6, 0.64)" : "rgba(10, 8, 7, 0.64)");
   return {
     focus: `${focusX}% ${focusY}%`,
     zoom: `${zoom}%`,
@@ -3380,7 +3627,7 @@ function tileStyle(tile) {
   const lockedDepth = tile.layer * 9;
   const shadowLift = 4 + tile.layer * 3;
   const shadowDrop = 12 + tile.layer * 5;
-  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};z-index:${10 + tile.layer};`;
+  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-overlay:${cardVariantOverlayUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};z-index:${10 + tile.layer};`;
 }
 
 function getLayerPositions(layer) {
@@ -3404,6 +3651,48 @@ function rectanglesOverlap(a, b) {
 function isTileAvailable(tile) {
   if (!tile || tile.status !== "board") return false;
   return !state.grid.some((other) => other.status === "board" && other.layer > tile.layer && rectanglesOverlap(tile, other));
+}
+
+function getGeneratedCardScene(seed, answer = false) {
+  const answerScenes = ["file", "seal", "gatehouse", "monument", "rostrum", "assembly", "museum", "redWall"];
+  const decoyScenes = [
+    "file", "seal", "box", "map", "screen", "paper", "camera", "wall", "dataCenter", "checkpoint",
+    "streetBlock", "glassHall", "skyline", "bridgeDetail", "court", "memorial", "towerClose"
+  ];
+  const pool = answer ? answerScenes : decoyScenes;
+  return pool[Math.abs(hashString(seed)) % pool.length];
+}
+
+function makeGroupVisualArt(label, groupKey, groupIndex, answer = false, sourceCard = null) {
+  const seed = `${state.entry?.en || "entry"}|${state.lang}|${groupKey}|${groupIndex}|${answer ? "answer" : "decoy"}`;
+  const random = mulberry32(hashString(seed));
+  const palette = CARD_VARIANT_PALETTES[Math.floor(random() * CARD_VARIANT_PALETTES.length)] || CARD_VARIANT_PALETTES[0];
+  const base = getEntryArtProfile();
+  const glyph = String(label || sourceCard?.glyph || base.glyph || "檔").slice(0, state.lang === "en" ? 2 : 1).toUpperCase();
+  const generated = {
+    key: `${answer ? "answer" : "text"}-${groupIndex}`,
+    scene: getGeneratedCardScene(seed, answer),
+    glyph,
+    a: palette[0] || base.a,
+    b: palette[1] || base.b,
+    variantA: palette[0] || base.a,
+    variantB: palette[1] || base.b,
+    variantKey: seed,
+    asset: answer ? getEntryPhotoAsset() : (random() > 0.72 ? getEntryPhotoAsset() : "")
+  };
+  if (!sourceCard) return generated;
+  const sourceAsset = sourceCard.asset || getEntryPhotoAsset();
+  return {
+    ...generated,
+    ...sourceCard,
+    glyph: sourceCard.glyph || generated.glyph,
+    a: sourceCard.a || generated.a,
+    b: sourceCard.b || generated.b,
+    variantA: generated.variantA,
+    variantB: generated.variantB,
+    variantKey: seed,
+    asset: sourceAsset
+  };
 }
 
 function getDecoyImageCard(index) {
@@ -3447,9 +3736,10 @@ function getDecoyImageCard(index) {
 function buildTileGroups(difficulty) {
   const answerCounts = countAnswerUnits();
   const groups = [];
-  Object.entries(answerCounts).forEach(([unit, count]) => {
+  Object.entries(answerCounts).forEach(([unit, count], unitIndex) => {
+    const visualArt = makeGroupVisualArt(unit, `answer-${unit}`, unitIndex, true);
     for (let index = 0; index < count; index += 1) {
-      groups.push({ label: unit, groupKey: unit, answer: true });
+      groups.push({ label: unit, displayLabel: unit, groupKey: unit, answer: true, visualArt });
     }
   });
   const decoys = buildSheepDecoys(state.entry);
@@ -3459,16 +3749,24 @@ function buildTileGroups(difficulty) {
     const useImageCard = index % 3 !== 1;
     if (useImageCard) {
       const card = getDecoyImageCard(index);
+      const groupKey = `image-${card.key}-${index}`;
       groups.push({
         label: card.label,
         displayLabel: card.label,
-        groupKey: `image-${card.key}-${index}`,
+        groupKey,
         answer: false,
-        visualArt: card
+        visualArt: makeGroupVisualArt(card.label, groupKey, groups.length, false, card)
       });
     } else {
       const label = decoys[index % decoys.length] || (state.lang === "en" ? "X" : "檔");
-      groups.push({ label, groupKey: `decoy-${label}-${index}`, answer: false });
+      const groupKey = `decoy-${label}-${index}`;
+      groups.push({
+        label,
+        displayLabel: label,
+        groupKey,
+        answer: false,
+        visualArt: makeGroupVisualArt(label, groupKey, groups.length, false)
+      });
     }
   }
   return groups.map((group, groupIndex) => ({
@@ -3667,7 +3965,10 @@ function parseYear(value) {
 function getOrderedBank(route = state.route) {
   const scoped = state.leaderMode === "all"
     ? WORD_BANK
-    : WORD_BANK.filter((item) => ENTRY_TAGS[item.en]?.includes(state.leaderMode));
+    : WORD_BANK.filter((item) => {
+      const tags = ENTRY_TAGS[item.en] || [];
+      return tags.includes(state.leaderMode) || tags.includes("global");
+    });
   const bank = scoped.length ? scoped : WORD_BANK;
   return bank.map((item, index) => ({ item, index })).sort((a, b) => {
     if (route === "time") {

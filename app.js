@@ -207,24 +207,36 @@ const ROUTE_COPY = {
     route: "\u8def\u7dda",
     time: "\u6642\u9593\u9806\u5e8f",
     difficulty: "\u96e3\u5ea6\u9806\u5e8f",
+    random: "\u96a8\u6a5f\u6a94\u6848",
     timeDesc: "\u6309\u5e74\u4ee3\u63a8\u9032\uff0c\u95dc\u5361\u58d3\u529b\u96a8\u6a5f",
-    difficultyDesc: "\u6309\u8a5e\u689d\u96e3\u5ea6\u63a8\u9032\uff0c\u95dc\u5361\u58d3\u529b\u96a8\u6a5f"
+    difficultyDesc: "\u6309\u8a5e\u689d\u96e3\u5ea6\u63a8\u9032\uff0c\u95dc\u5361\u58d3\u529b\u96a8\u6a5f",
+    randomDesc: "\u8a5e\u689d\u9806\u5e8f\u548c\u724c\u7d44\u96e3\u5ea6\u90fd\u91cd\u65b0\u62bd\u724c"
   },
   cn: {
     route: "\u8def\u7ebf",
     time: "\u65f6\u95f4\u987a\u5e8f",
     difficulty: "\u96be\u5ea6\u987a\u5e8f",
+    random: "\u968f\u673a\u6863\u6848",
     timeDesc: "\u6309\u5e74\u4ee3\u63a8\u8fdb\uff0c\u5173\u5361\u538b\u529b\u968f\u673a",
-    difficultyDesc: "\u6309\u8bcd\u6761\u96be\u5ea6\u63a8\u8fdb\uff0c\u5173\u5361\u538b\u529b\u968f\u673a"
+    difficultyDesc: "\u6309\u8bcd\u6761\u96be\u5ea6\u63a8\u8fdb\uff0c\u5173\u5361\u538b\u529b\u968f\u673a",
+    randomDesc: "\u8bcd\u6761\u987a\u5e8f\u548c\u724c\u7ec4\u96be\u5ea6\u90fd\u91cd\u65b0\u62bd\u724c"
   },
   en: {
     route: "Route",
     time: "Timeline",
     difficulty: "Difficulty",
+    random: "Random",
     timeDesc: "Entries follow eras; challenge pressure is randomized",
-    difficultyDesc: "Entries follow base difficulty; challenge pressure is randomized"
+    difficultyDesc: "Entries follow base difficulty; challenge pressure is randomized",
+    randomDesc: "Entry order and deck difficulty are both reshuffled"
   }
 };
+
+const ROUTE_IDS = ["time", "difficulty", "random"];
+
+function isRoute(route) {
+  return ROUTE_IDS.includes(route);
+}
 
 function entry(tw, cn, en, clueTw, clueCn, clueEn, difficulty, category, year = "", contextTw = "", contextCn = "", contextEn = "") {
   return { tw, cn, en, clueTw, clueCn, clueEn, difficulty, category, year, contextTw, contextCn, contextEn };
@@ -981,6 +993,30 @@ const MUSIC_TRACK_COPY = {
   }
 };
 
+const PAUSE_COPY = {
+  tw: {
+    pause: "\u66ab\u505c",
+    resume: "\u7e7c\u7e8c",
+    title: "\u66ab\u505c\u89e3\u5bc6",
+    kicker: "\u96a8\u6a5f\u65c1\u767d",
+    note: "\u8a08\u6642\u5df2\u505c\u6b62\uff0c\u9019\u6bb5\u65c1\u767d\u62bd\u81ea\u904a\u6232\u5167\u8a5e\u5eab\u3002"
+  },
+  cn: {
+    pause: "\u6682\u505c",
+    resume: "\u7ee7\u7eed",
+    title: "\u6682\u505c\u89e3\u5bc6",
+    kicker: "\u968f\u673a\u65c1\u767d",
+    note: "\u8ba1\u65f6\u5df2\u505c\u6b62\uff0c\u8fd9\u6bb5\u65c1\u767d\u62bd\u81ea\u6e38\u620f\u5185\u8bcd\u5e93\u3002"
+  },
+  en: {
+    pause: "Pause",
+    resume: "Resume",
+    title: "Paused",
+    kicker: "Random Archive Note",
+    note: "The timer is stopped. This note is sampled from the in-game archive."
+  }
+};
+
 const root = document.getElementById("gameRoot");
 const titleEl = document.getElementById("appTitle");
 const subtitleEl = document.getElementById("appSubtitle");
@@ -1024,6 +1060,8 @@ const state = {
   timer: null,
   locked: false,
   modal: null,
+  paused: false,
+  pauseFact: null,
   muted: false,
   volume: 0.62,
   musicTrack: "flag",
@@ -2712,7 +2750,7 @@ function readSaveRoot() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     const root = saved && typeof saved === "object" ? saved : blankSaveRoot();
     if (!root.profiles || typeof root.profiles !== "object") {
-      const route = root.route === "time" || root.route === "difficulty" ? root.route : state.route;
+      const route = isRoute(root.route) ? root.route : state.route;
       const leaderMode = root.leaderMode && LEADER_MODE_COPY.en[root.leaderMode] ? root.leaderMode : state.leaderMode;
       root.profiles = {};
       root.profiles[getProfileKey(route, leaderMode)] = normalizeProfile(root);
@@ -2732,7 +2770,7 @@ function writeSaveRoot(root) {
 function loadSave() {
   const saved = readSaveRoot();
   if (saved.lang && TEXT[saved.lang]) state.lang = saved.lang;
-  if (saved.route === "time" || saved.route === "difficulty") state.route = saved.route;
+  if (isRoute(saved.route)) state.route = saved.route;
   if (saved.leaderMode && LEADER_MODE_COPY.en[saved.leaderMode]) state.leaderMode = saved.leaderMode;
   if (typeof saved.muted === "boolean") state.muted = saved.muted;
   if (Number.isFinite(saved.volume)) state.volume = saved.volume;
@@ -2791,6 +2829,8 @@ function resetProgress() {
   applyProfile(defaultProfile());
   state.started = false;
   state.modal = null;
+  state.paused = false;
+  state.pauseFact = null;
   state.locked = false;
   state.tray = [];
   state.matchBursts = [];
@@ -2805,6 +2845,8 @@ function loadCurrentModeProfile() {
   stopTimer();
   state.started = false;
   state.modal = null;
+  state.paused = false;
+  state.pauseFact = null;
   state.locked = false;
   state.tray = [];
   state.matchBursts = [];
@@ -3149,6 +3191,53 @@ const ARCHITECTURE_CARD_LIBRARY = [
   { key: "debt-tower", scene: "skyline", glyph: "債", tw: "債樓", cn: "债楼", en: "Debt Tower" }
 ];
 
+const ARCHITECTURE_ASSET_KEYS = {
+  "great-hall-close": "tiananmen-gate",
+  "xinhuamen-close": "tiananmen-gate",
+  "monument-close": "tiananmen-gate",
+  "cpc-museum-model": "ccp-flag",
+  "rostrum-close": "tiananmen-gate",
+  "red-wall-maze": "tiananmen-gate",
+  "podium-hall": "tiananmen-gate",
+  "commune-granary": "cultural-revolution",
+  "square-paving": "tiananmen-gate",
+  "checkpoint-gate": "surveillance",
+  "press-hall": "tiananmen-gate",
+  "glass-tower": "surveillance",
+  "hk-legco-model": "legislative-yuan",
+  "hk-court-model": "hong-kong-protest",
+  "harbor-front": "hong-kong-protest",
+  "barricade-street": "hong-kong-protest",
+  "presidential-office-model": "taiwan-flag",
+  "memorial-arch": "chiang",
+  "assembly-floor": "legislative-yuan",
+  "island-map": "taiwan-flag",
+  "kremlin-wall-model": "stalin",
+  "mausoleum-model": "stalin",
+  "lubyanka-model": "stalin",
+  "factory-stack": "chernobyl",
+  "juche-tower-model": "north-korea",
+  "kumsusan-model": "kim",
+  "parade-square": "north-korea",
+  watchtower: "north-korea",
+  "supreme-court-model": "us-capitol",
+  "white-house-model": "us-capitol",
+  "capitol-dome-model": "us-capitol",
+  "nanjing-memorial-model": "nanjing",
+  "bridge-detail": "nanjing",
+  "ruin-wall": "berlin-wall",
+  "memorial-flame": "nanjing",
+  "ghost-city": "surveillance",
+  "camera-grid": "surveillance",
+  "delivery-block": "surveillance",
+  "data-center": "surveillance",
+  "debt-tower": "surveillance"
+};
+
+ARCHITECTURE_CARD_LIBRARY.forEach((card) => {
+  card.asset = ARCHITECTURE_ASSET_KEYS[card.key] || card.asset;
+});
+
 CARD_IMAGE_LIBRARY.push(...ARCHITECTURE_CARD_LIBRARY);
 
 const ARCHITECTURE_CARD_KEYS = {
@@ -3169,11 +3258,111 @@ const ARCHITECTURE_CARD_KEYS = {
   ww2: ["nanjing-memorial-model", "bridge-detail", "ruin-wall", "memorial-flame", "factory-stack"]
 };
 
+const CATEGORY_ASSET_POOLS = {
+  ccp: ["tiananmen-gate", "ccp-flag", "china-flag", "prc-emblem", "cultural-revolution", "red-guards-rally", "mao", "deng", "xi", "surveillance", "covid-booth", "bo-xilai"],
+  ccpMetaphor: ["ccp-flag", "china-flag", "prc-emblem", "tiananmen-gate", "surveillance", "covid-booth", "xi", "mao", "deng"],
+  current: ["surveillance", "covid-booth", "xi", "tiananmen-gate", "china-flag", "bo-xilai"],
+  hongKong: ["hong-kong-protest", "legislative-yuan", "surveillance", "china-flag", "taiwan-flag"],
+  taiwan: ["taiwan-flag", "roc-emblem", "legislative-yuan", "chiang", "sun-yat-sen", "us-capitol"],
+  kmtCcp: ["chiang", "sun-yat-sen", "taiwan-flag", "roc-emblem", "china-flag", "tiananmen-gate"],
+  ww2: ["nanjing", "china-flag", "tiananmen-gate", "chiang", "sun-yat-sen"],
+  soviet: ["stalin", "berlin-wall", "chernobyl", "ccp-flag", "red-guards-rally"],
+  northKorea: ["north-korea", "kim", "kim-jong-il", "stalin", "china-flag"],
+  us: ["us-capitol", "trump", "guantanamo", "berlin-wall", "taiwan-flag"]
+};
+
+const LEADER_ASSET_POOLS = {
+  xi: ["xi", "covid-booth", "surveillance", "tiananmen-gate", "china-flag", "prc-emblem"],
+  mao: ["mao", "cultural-revolution", "red-guards-rally", "ccp-flag", "china-flag", "tiananmen-gate"],
+  deng: ["deng", "tiananmen-gate", "china-flag", "hong-kong-protest", "surveillance"],
+  jiang: ["jiang", "hong-kong-protest", "tiananmen-gate", "china-flag", "surveillance"]
+};
+
 function getArchitectureCardKeys(tags, category) {
   const keys = new Set(ARCHITECTURE_CARD_KEYS.all);
   (ARCHITECTURE_CARD_KEYS[category] || []).forEach((key) => keys.add(key));
   tags.forEach((tag) => (ARCHITECTURE_CARD_KEYS[tag] || []).forEach((key) => keys.add(key)));
   return keys;
+}
+
+function uniqueAssetKeys(values) {
+  const seen = new Set();
+  return values.filter((value) => {
+    const key = String(value || "");
+    if (!key || seen.has(key) || !REAL_CARD_ASSETS[key]) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function limitAssetPool(pool, limit = 14) {
+  return uniqueAssetKeys(pool).slice(0, limit);
+}
+
+function getRelatedPhotoAssets(item = state.entry, extra = []) {
+  const tags = ENTRY_TAGS[item?.en] || [];
+  const architectureAssets = Array.from(getArchitectureCardKeys(tags, item?.category))
+    .map((key) => ARCHITECTURE_ASSET_KEYS[key]);
+  const leaderAssets = tags.flatMap((tag) => LEADER_ASSET_POOLS[tag] || []);
+  const pool = uniqueAssetKeys([
+    ENTRY_ASSET_KEYS[item?.en],
+    ...extra,
+    ...leaderAssets,
+    ...(CATEGORY_ASSET_POOLS[item?.category] || []),
+    CATEGORY_ASSET_KEYS[item?.category],
+    ...architectureAssets
+  ]);
+  return limitAssetPool(pool);
+}
+
+function getCardAssetCandidates(card, item = state.entry) {
+  return limitAssetPool([card?.asset, ARCHITECTURE_ASSET_KEYS[card?.key]]);
+}
+
+const LABEL_ASSET_RULES = [
+  { asset: "xi", keywords: ["\u4e60", "\u7fd2", "\u5305", "\u9ea6", "\u9eb5", "xi", "bun", "wheat"] },
+  { asset: "mao", keywords: ["\u6bdb", "\u814a", "\u7ea2\u65e5", "\u7d05\u65e5", "mao"] },
+  { asset: "deng", keywords: ["\u9093", "\u9127", "\u78be", "\u5766\u514b", "tank", "deng"] },
+  { asset: "jiang", keywords: ["\u6c5f", "\u957f\u8005", "\u9577\u8005", "\u773c\u955c", "\u773c\u93e1", "jiang"] },
+  { asset: "stalin", keywords: ["\u65af\u5927\u6797", "\u53f2\u9054\u6797", "\u5362\u6bd4", "\u76e7\u6bd4", "\u514b\u5bab", "\u514b\u5bae", "\u82cf", "\u8607", "\u53e4\u62c9\u683c", "stalin", "gulag", "kremlin", "lubyanka"] },
+  { asset: "berlin-wall", keywords: ["\u67cf\u6797", "\u5899", "\u7246", "\u6b8b\u5899", "\u6b98\u7246", "wall", "ruin"] },
+  { asset: "chernobyl", keywords: ["\u5207\u5c14\u8bfa\u8d1d\u5229", "\u5207\u723e\u8afe\u8c9d\u5229", "\u6838\u707e", "\u70df\u56f1", "\u7159\u56ea", "chernobyl", "stack"] },
+  { asset: "north-korea", keywords: ["\u671d\u9c9c", "\u671d\u9bae", "\u4e3b\u4f53", "\u4e3b\u9ad4", "\u706b\u7bad", "\u961f\u5217", "\u968a\u5217", "north", "juche", "rocket"] },
+  { asset: "kim", keywords: ["\u91d1", "\u4e09\u80d6", "\u4e09\u80a5", "kim"] },
+  { asset: "kim-jong-il", keywords: ["\u5c06\u519b", "\u5c07\u8ecd", "jong il"] },
+  { asset: "tiananmen-gate", keywords: ["\u5929\u5b89\u95e8", "\u5929\u5b89\u9580", "\u5927\u4f1a\u5802", "\u5927\u6703\u5802", "\u65b0\u534e\u95e8", "\u65b0\u83ef\u9580", "\u57ce\u697c", "\u5e7f\u573a", "\u5ee3\u5834", "\u7ea2\u5899", "\u7d05\u7246", "gate", "hall", "square"] },
+  { asset: "ccp-flag", keywords: ["\u515a", "\u65d7", "\u5fbd", "\u53e3\u53f7", "\u53e3\u865f", "party", "flag", "slogan"] },
+  { asset: "china-flag", keywords: ["\u7ea2\u65d7", "\u7d05\u65d7", "\u4e2d\u56fd", "\u4e2d\u570b", "china"] },
+  { asset: "prc-emblem", keywords: ["\u56fd\u5fbd", "\u570b\u5fbd", "\u5c01\u6761", "\u5c01\u689d", "emblem", "seal"] },
+  { asset: "cultural-revolution", keywords: ["\u6587\u9769", "\u9769\u547d", "\u8bed\u5f55", "\u8a9e\u9304", "\u7ea2\u5b9d\u4e66", "\u7d05\u5bf6\u66f8", "\u62f3", "revolution", "quote", "fist"] },
+  { asset: "red-guards-rally", keywords: ["\u7ea2\u536b\u5175", "\u7d05\u885b\u5175", "\u6279\u6597", "\u6279\u9b25", "guards"] },
+  { asset: "covid-booth", keywords: ["\u6838\u9178", "\u5065\u5eb7\u7801", "\u5065\u5eb7\u78bc", "\u53e3\u7f69", "\u7ea2\u7801", "\u7d05\u78bc", "pcr", "mask", "code"] },
+  { asset: "surveillance", keywords: ["\u76d1\u63a7", "\u76e3\u63a7", "\u6444\u50cf", "\u651d\u50cf", "\u6570\u636e", "\u8cc7\u6599", "\u6578\u64da", "\u6570\u636e\u5e93", "\u6578\u64da\u5eab", "\u6570\u636e\u5eab", "\u5929\u773c", "\u70ed\u641c", "\u71b1\u641c", "camera", "data", "database", "surveillance"] },
+  { asset: "hong-kong-protest", keywords: ["\u9999\u6e2f", "\u96e8\u4f1e", "\u96e8\u5098", "\u6e2f", "\u8def\u969c", "\u5220", "\u524a", "\u522a", "hong kong", "umbrella"] },
+  { asset: "legislative-yuan", keywords: ["\u7acb\u6cd5", "\u7acb\u9662", "\u8bae\u573a", "\u8b70\u5834", "\u9009\u7968", "\u9078\u7968", "\u5ba4", "legco", "legislature", "ballot"] },
+  { asset: "taiwan-flag", keywords: ["\u53f0\u6e7e", "\u53f0\u7063", "\u9752\u5929", "\u5c9b", "\u5cf6", "taiwan", "roc flag"] },
+  { asset: "roc-emblem", keywords: ["\u515a\u56fd", "\u9ee8\u570b", "\u56fd\u6c11\u515a", "\u570b\u6c11\u9ee8", "kmt"] },
+  { asset: "chiang", keywords: ["\u848b", "\u767d\u8272\u6050\u6016", "\u767d\u8272\u6050\u61fc", "chiang"] },
+  { asset: "sun-yat-sen", keywords: ["\u5b59", "\u56fd\u7236", "\u570b\u7236", "sun yat"] },
+  { asset: "nanjing", keywords: ["\u5357\u4eac", "\u8f70\u70b8", "\u8f5f\u70b8", "\u6865", "\u6a4b", "\u7eaa\u5ff5", "\u7d00\u5ff5", "nanjing", "bridge"] },
+  { asset: "us-capitol", keywords: ["\u56fd\u4f1a", "\u570b\u6703", "\u767d\u5bab", "\u767d\u5bae", "\u6700\u9ad8\u9662", "\u56fd\u4f1a\u5c71", "\u570b\u6703\u5c71", "capitol", "white house", "court"] },
+  { asset: "trump", keywords: ["\u5ddd\u666e", "\u7279\u6717\u666e", "trump"] },
+  { asset: "guantanamo", keywords: ["\u5173\u5854", "\u95dc\u5854", "\u62d8\u62bc", "\u62d8\u62bc", "guantanamo", "detain"] },
+  { asset: "bo-xilai", keywords: ["\u8584", "\u5531\u7ea2", "\u5531\u7d05", "bo"] }
+];
+
+function getLabelPhotoAssets(label) {
+  const text = String(label || "").toLowerCase();
+  if (!text) return [];
+  return uniqueAssetKeys(LABEL_ASSET_RULES
+    .filter((rule) => rule.keywords.some((keyword) => text.includes(String(keyword).toLowerCase())))
+    .map((rule) => rule.asset));
+}
+
+function pickAssetCandidate(candidates, seed, fallback = "") {
+  const pool = uniqueAssetKeys([...(candidates || []), fallback]);
+  if (!pool.length) return "";
+  return pool[Math.abs(hashString(seed || fallback || pool[0])) % pool.length];
 }
 
 const CARD_ART_CACHE = new Map();
@@ -3219,6 +3408,19 @@ function getCardVariantMeta(art) {
   const opacity = (0.08 + random() * 0.12).toFixed(3);
   const plate = Math.floor(random() * 997).toString().padStart(3, "0");
   return { seed, palette, angle, grid, stampX, stampY, stampRot, stripe, cutX, cutY, opacity, plate };
+}
+
+function getTileIdentityMeta(art) {
+  const meta = getCardVariantMeta(art);
+  const random = mulberry32(hashString(`${meta.seed}|identity`));
+  const marker = 1 + Math.floor(random() * 4);
+  const glow = 0.26 + random() * 0.16;
+  return {
+    accent: meta.palette[1] || "#d4a34f",
+    accent2: meta.palette[0] || "#6f1f24",
+    marker,
+    glow: glow.toFixed(2)
+  };
 }
 
 function variantSvgLayer(meta, glyph) {
@@ -3515,13 +3717,7 @@ function isAnswerUnitRevealed(index) {
 function makeSheepTile(group, layer, x, y) {
   const row = Math.round(y * 2);
   const col = Math.round(x * 2);
-  const tileSerial = state.cellSerial;
-  const visualArt = group.visualArt
-    ? {
-      ...group.visualArt,
-      variantKey: `${group.visualArt.variantKey || group.groupKey}|tile-${tileSerial}-${layer}-${row}-${col}`
-    }
-    : null;
+  const visualArt = group.visualArt ? { ...group.visualArt } : null;
   return makeCell(0, row, col, "", {
     label: group.label,
     displayLabel: group.displayLabel || group.label,
@@ -3568,22 +3764,25 @@ function getTileArtProfile(tile) {
   const entryAsset = getEntryPhotoAsset();
   if (tile?.visualArt) {
     const base = getEntryArtProfile();
+    const variantKey = tile.visualArt.variantKey || `${state.entry?.en || "entry"}-${tile.groupKey || tile.label}`;
+    const explicitAsset = Object.prototype.hasOwnProperty.call(tile.visualArt, "asset") ? tile.visualArt.asset : entryAsset;
     return {
       scene: "file",
       ...base,
       ...tile.visualArt,
       a: tile.visualArt.a || base.a,
       b: tile.visualArt.b || base.b,
-      variantKey: tile.visualArt.variantKey || `${state.entry?.en || "entry"}-${tile.groupKey || tile.label}`,
-      asset: Object.prototype.hasOwnProperty.call(tile.visualArt, "asset") ? tile.visualArt.asset : entryAsset
+      variantKey,
+      asset: pickAssetCandidate(tile.visualArt.assetCandidates, variantKey, explicitAsset)
     };
   }
+  const variantKey = `${state.entry?.en || "entry"}-${tile?.groupKey || tile?.label || "plain"}`;
   return {
     scene: "file",
     ...getEntryArtProfile(),
     glyph: getTileDisplayLabel(tile).slice(0, 1) || getEntryArtProfile().glyph,
-    variantKey: `${state.entry?.en || "entry"}-${tile?.groupKey || tile?.label || "plain"}`,
-    asset: entryAsset
+    variantKey,
+    asset: pickAssetCandidate(getRelatedPhotoAssets(state.entry), variantKey, entryAsset)
   };
 }
 
@@ -3614,6 +3813,7 @@ function getArtVisualTuning(art) {
 function tileStyle(tile) {
   const art = getTileArtProfile(tile);
   const tuning = getArtVisualTuning(art);
+  const identity = getTileIdentityMeta(art);
   const random = mulberry32(hashString(`${tile.id}-${tile.groupIndex}-${tile.x}-${tile.y}-${tile.layer}`));
   const jitterX = (random() - 0.5) * (tile.layer >= 2 ? 3.2 : 4.8);
   const jitterY = (random() - 0.5) * (tile.layer >= 2 ? 3.6 : 5.2);
@@ -3627,7 +3827,7 @@ function tileStyle(tile) {
   const lockedDepth = tile.layer * 9;
   const shadowLift = 4 + tile.layer * 3;
   const shadowDrop = 12 + tile.layer * 5;
-  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-overlay:${cardVariantOverlayUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};z-index:${10 + tile.layer};`;
+  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-overlay:${cardVariantOverlayUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};--tile-accent:${identity.accent};--tile-accent-2:${identity.accent2};--tile-marker:${identity.marker};--tile-glow:${identity.glow};z-index:${10 + tile.layer};`;
 }
 
 function getLayerPositions(layer) {
@@ -3669,6 +3869,9 @@ function makeGroupVisualArt(label, groupKey, groupIndex, answer = false, sourceC
   const palette = CARD_VARIANT_PALETTES[Math.floor(random() * CARD_VARIANT_PALETTES.length)] || CARD_VARIANT_PALETTES[0];
   const base = getEntryArtProfile();
   const glyph = String(label || sourceCard?.glyph || base.glyph || "檔").slice(0, state.lang === "en" ? 2 : 1).toUpperCase();
+  const entryCandidates = getRelatedPhotoAssets(state.entry);
+  const labelCandidates = getLabelPhotoAssets(label || sourceCard?.label || sourceCard?.en);
+  const generatedCandidates = answer ? entryCandidates : (labelCandidates.length ? labelCandidates : entryCandidates);
   const generated = {
     key: `${answer ? "answer" : "text"}-${groupIndex}`,
     scene: getGeneratedCardScene(seed, answer),
@@ -3678,10 +3881,12 @@ function makeGroupVisualArt(label, groupKey, groupIndex, answer = false, sourceC
     variantA: palette[0] || base.a,
     variantB: palette[1] || base.b,
     variantKey: seed,
-    asset: answer ? getEntryPhotoAsset() : (random() > 0.72 ? getEntryPhotoAsset() : "")
+    asset: answer ? getEntryPhotoAsset() : (random() > 0.72 ? getEntryPhotoAsset() : ""),
+    assetCandidates: generatedCandidates
   };
   if (!sourceCard) return generated;
   const sourceAsset = sourceCard.asset || getEntryPhotoAsset();
+  const sourceCandidates = uniqueAssetKeys([sourceAsset, ...(sourceCard.assetCandidates || []), ...labelCandidates]);
   return {
     ...generated,
     ...sourceCard,
@@ -3691,7 +3896,8 @@ function makeGroupVisualArt(label, groupKey, groupIndex, answer = false, sourceC
     variantA: generated.variantA,
     variantB: generated.variantB,
     variantKey: seed,
-    asset: sourceAsset
+    asset: sourceAsset,
+    assetCandidates: sourceCandidates
   };
 }
 
@@ -3729,7 +3935,8 @@ function getDecoyImageCard(index) {
     label: raw[state.lang] || raw.en,
     a: index % 2 ? base.b : base.a,
     b: index % 2 ? base.a : base.b,
-    asset: raw.asset || getEntryPhotoAsset()
+    asset: raw.asset || getEntryPhotoAsset(),
+    assetCandidates: getCardAssetCandidates(raw, state.entry)
   };
 }
 
@@ -3962,39 +4169,52 @@ function parseYear(value) {
   return match ? Number(match[0]) : 9999;
 }
 
-function getOrderedBank(route = state.route) {
+function getScopedBank() {
   const scoped = state.leaderMode === "all"
     ? WORD_BANK
     : WORD_BANK.filter((item) => {
       const tags = ENTRY_TAGS[item.en] || [];
       return tags.includes(state.leaderMode) || tags.includes("global");
     });
-  const bank = scoped.length ? scoped : WORD_BANK;
+  return scoped.length ? scoped : WORD_BANK;
+}
+
+function getOrderedBank(route = state.route, lap = 0) {
+  const bank = getScopedBank();
   return bank.map((item, index) => ({ item, index })).sort((a, b) => {
     if (route === "time") {
       return parseYear(a.item.year) - parseYear(b.item.year) || a.item.difficulty - b.item.difficulty || a.index - b.index;
+    }
+    if (route === "random") {
+      return hashString(`${state.leaderMode}-${lap}-${a.item.en}`) - hashString(`${state.leaderMode}-${lap}-${b.item.en}`) || a.index - b.index;
     }
     return a.item.difficulty - b.item.difficulty || parseYear(a.item.year) - parseYear(b.item.year) || a.index - b.index;
   }).map((record) => record.item);
 }
 
 function getLevelEntry(levelIndex) {
-  const ordered = getOrderedBank();
+  const bankSize = getScopedBank().length;
+  const lap = Math.floor(levelIndex / Math.max(1, bankSize));
+  const ordered = getOrderedBank(state.route, lap);
   return ordered[levelIndex % ordered.length];
 }
 
 function getActiveBankSize() {
-  return getOrderedBank().length;
+  return getScopedBank().length;
 }
 
 function getLevelConfig(levelIndex) {
-  const ordered = getOrderedBank();
+  const bankSize = getScopedBank().length;
+  const lap = Math.floor(levelIndex / Math.max(1, bankSize));
+  const ordered = getOrderedBank(state.route, lap);
   const item = ordered[levelIndex % ordered.length];
-  const lap = Math.floor(levelIndex / ordered.length);
   const seed = hashString(`${state.route}-${item.en}-${levelIndex}`);
   const random = mulberry32(seed);
   const randomDifficulty = 1 + Math.floor(random() * 5);
-  const pressure = Math.max(1, Math.min(5, Math.round((randomDifficulty * 2 + item.difficulty) / 3) + Math.min(1, lap)));
+  const pressureBase = state.route === "random"
+    ? randomDifficulty
+    : Math.round((randomDifficulty * 2 + item.difficulty) / 3);
+  const pressure = Math.max(1, Math.min(5, pressureBase + Math.min(1, lap)));
   const units = tokenize(item[state.lang]);
   const groupCount = getTargetTileGroupCount(units.length, pressure);
   const difficulty = difficultyFromTileGroups(groupCount);
@@ -4031,6 +4251,8 @@ function setupLevel(levelIndex) {
   state.hintsLeft = config.hints;
   state.locked = false;
   state.modal = null;
+  state.paused = false;
+  state.pauseFact = null;
   state.wrongCellId = null;
   state.hintCellId = null;
   state.endlessLap = config.lap;
@@ -4038,10 +4260,60 @@ function setupLevel(levelIndex) {
   updateRevealCount();
 }
 
+function makePauseFact(item = state.entry) {
+  const copy = getCopy();
+  return {
+    item,
+    term: getTerm(item),
+    clue: getClue(item),
+    context: getContext(item),
+    category: copy.categories[item.category] || "",
+    year: item.year || ""
+  };
+}
+
+function pickPauseFactItem() {
+  const scoped = getScopedBank();
+  const currentKey = state.entry?.en || "";
+  const upcoming = Array.from({ length: Math.min(12, scoped.length) }, (_, index) => getLevelEntry(state.level + index + 1));
+  const seen = new Set();
+  const pool = [...upcoming, ...scoped].filter((item) => {
+    if (!item || item.en === currentKey || seen.has(item.en)) return false;
+    seen.add(item.en);
+    return true;
+  });
+  if (!pool.length) return state.entry;
+  return pool[Math.floor(Math.random() * pool.length)] || state.entry;
+}
+
+function createPauseFact() {
+  return makePauseFact(pickPauseFactItem());
+}
+
+function pauseGame() {
+  if (!state.started || state.locked || state.modal) return;
+  state.paused = true;
+  state.pauseFact = createPauseFact();
+  render();
+}
+
+function resumeGame() {
+  if (!state.paused) return;
+  state.paused = false;
+  state.pauseFact = null;
+  render();
+}
+
+function refreshPauseFactLanguage() {
+  if (state.paused && state.pauseFact?.item) {
+    state.pauseFact = makePauseFact(state.pauseFact.item);
+  }
+}
+
 function startTimer() {
   stopTimer();
   state.timer = window.setInterval(() => {
-    if (!state.started || state.locked || state.modal) return;
+    if (!state.started || state.locked || state.modal || state.paused) return;
     state.timeLeft = Math.max(0, state.timeLeft - 0.2);
     if (state.timeLeft <= 0) {
       failLevel();
@@ -4060,6 +4332,8 @@ function stopTimer() {
 
 async function beginGame() {
   state.started = true;
+  state.paused = false;
+  state.pauseFact = null;
   await audio.start();
   audio.setTrack(state.musicTrack, false);
   audio.setVolume(state.volume);
@@ -4087,7 +4361,7 @@ function registerTraceMistake(cellId) {
 }
 
 function handleCellClick(id) {
-  if (!state.started || state.locked || state.modal) return;
+  if (!state.started || state.locked || state.modal || state.paused) return;
   const cell = getCellById(id);
   if (!cell || cell.status !== "board") return;
   if (!isTileAvailable(cell)) {
@@ -4132,7 +4406,7 @@ function handleCellClick(id) {
 }
 
 function useHint() {
-  if (!state.started || state.locked || state.modal) return;
+  if (!state.started || state.locked || state.modal || state.paused) return;
   if (state.hintsLeft <= 0) {
     flashNoHints();
     return;
@@ -4164,7 +4438,7 @@ function flashNoHints() {
 }
 
 function shuffleTokens() {
-  if (!state.started || state.locked || state.modal) return;
+  if (!state.started || state.locked || state.modal || state.paused) return;
   state.tray = [];
   state.clearedAnswerCounts = {};
   state.clearedAnswerTotal = 0;
@@ -4184,7 +4458,7 @@ function shuffleTokens() {
 }
 
 function skipLevel() {
-  if (!state.started || state.locked || state.modal) return;
+  if (!state.started || state.locked || state.modal || state.paused) return;
   state.score = Math.max(0, state.score - 80);
   state.streak = 0;
   state.level += 1;
@@ -4204,6 +4478,8 @@ function calculateStars() {
 
 function completeLevel() {
   state.locked = true;
+  state.paused = false;
+  state.pauseFact = null;
   state.revealedCount = state.answerUnits.length;
   const stars = calculateStars();
   const bonus = stars * 90 + Math.round(state.timeLeft * 3);
@@ -4227,6 +4503,8 @@ function completeLevel() {
 
 function failLevel() {
   state.locked = true;
+  state.paused = false;
+  state.pauseFact = null;
   state.streak = 0;
   state.modal = {
     type: "failed",
@@ -4256,7 +4534,7 @@ function retryLevel() {
 }
 
 function setRoute(route) {
-  if (route !== "time" && route !== "difficulty") return;
+  if (!isRoute(route)) return;
   if (state.route === route) return;
   saveGame();
   state.route = route;
@@ -4301,6 +4579,7 @@ function setLanguage(lang) {
       state.modal.clue = getClue();
       state.modal.context = getContext();
     }
+    refreshPauseFactLanguage();
   } else {
     setupLevel(state.level);
   }
@@ -4374,14 +4653,14 @@ function renderRouteSwitch(compact = false) {
     <div class="route-block ${compact ? "compact" : ""}">
       <div class="panel-kicker">${escapeHtml(routeCopy.route)}</div>
       <div class="route-switch" role="group" aria-label="${escapeHtml(routeCopy.route)}">
-        <button class="route-option ${state.route === "time" ? "active" : ""}" type="button" data-route="time">
-          <span class="route-title">${escapeHtml(routeCopy.time)}</span>
-          ${compact ? "" : `<span class="route-copy">${escapeHtml(routeCopy.timeDesc)}</span>`}
-        </button>
-        <button class="route-option ${state.route === "difficulty" ? "active" : ""}" type="button" data-route="difficulty">
-          <span class="route-title">${escapeHtml(routeCopy.difficulty)}</span>
-          ${compact ? "" : `<span class="route-copy">${escapeHtml(routeCopy.difficultyDesc)}</span>`}
-        </button>
+        ${ROUTE_IDS
+          .map((route) => `
+            <button class="route-option ${state.route === route ? "active" : ""}" type="button" data-route="${route}">
+              <span class="route-title">${escapeHtml(routeCopy[route])}</span>
+              ${compact ? "" : `<span class="route-copy">${escapeHtml(routeCopy[`${route}Desc`])}</span>`}
+            </button>
+          `)
+          .join("")}
       </div>
     </div>
   `;
@@ -4471,6 +4750,7 @@ function render() {
       ${renderQueuePanel()}
     </section>
     ${state.modal ? renderModal() : ""}
+    ${state.paused ? renderPauseOverlay() : ""}
   `;
   bindDynamicEvents();
 }
@@ -4613,7 +4893,8 @@ function renderPuzzlePanel() {
               if (!cell || cell.status !== "board") return "";
               const available = isTileAvailable(cell);
               const art = getTileArtProfile(cell);
-              const artYear = state.entry.year ? String(state.entry.year).slice(0, 11) : "";
+              const identityMark = ["I", "II", "III", "IV"][getTileIdentityMeta(art).marker - 1] || "I";
+              const artYear = [state.entry.year ? String(state.entry.year).slice(0, 11) : "", identityMark].filter(Boolean).join(" ");
               const displayLabel = getTileDisplayLabel(cell);
               const classes = [
                 "sheep-tile",
@@ -4645,6 +4926,7 @@ function renderPuzzlePanel() {
       <div class="puzzle-actions">
         <button class="primary-button" type="button" data-action="hint">${escapeHtml(gameCopy.scan)} ${state.hintsLeft}</button>
         <button class="ghost-button" type="button" data-action="shuffle">${escapeHtml(gameCopy.reshuffle)}</button>
+        <button class="ghost-button pause-button" type="button" data-action="pause">${escapeHtml(PAUSE_COPY[state.lang].pause)}</button>
         <button class="danger-button" type="button" data-action="skip">${escapeHtml(gameCopy.skip)}</button>
       </div>
       <div class="level-footer">
@@ -4700,6 +4982,35 @@ function renderQueuePanel() {
   `;
 }
 
+function renderPauseOverlay() {
+  const pauseCopy = PAUSE_COPY[state.lang];
+  const fact = state.pauseFact || makePauseFact(state.entry);
+  const meta = [fact.category, fact.year].filter(Boolean).join(" / ");
+  return `
+    <div class="modal-backdrop pause-backdrop">
+      <section class="modal pause-modal" role="dialog" aria-modal="true">
+        <div class="modal-kicker">${escapeHtml(pauseCopy.kicker)}</div>
+        <h2>${escapeHtml(pauseCopy.title)}</h2>
+        <div class="pause-fact-head">
+          <div>
+            <div class="modal-answer">${escapeHtml(fact.term)}</div>
+            ${meta ? `<div class="pause-meta">${escapeHtml(meta)}</div>` : ""}
+          </div>
+          <div class="pause-sigil" aria-hidden="true">${escapeHtml(fact.term.slice(0, state.lang === "en" ? 2 : 1).toUpperCase())}</div>
+        </div>
+        <p class="modal-copy">${escapeHtml(fact.clue)}</p>
+        <div class="context-block pause-context">
+          <p>${escapeHtml(fact.context)}</p>
+        </div>
+        <p class="pause-note">${escapeHtml(pauseCopy.note)}</p>
+        <div class="modal-actions">
+          <button class="primary-button" type="button" data-action="resume">${escapeHtml(pauseCopy.resume)}</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 function renderModal() {
   const copy = getCopy();
   const isComplete = state.modal.type === "complete";
@@ -4734,6 +5045,8 @@ function bindDynamicEvents() {
     if (action === "reset") button.addEventListener("click", resetProgress);
     if (action === "hint") button.addEventListener("click", useHint);
     if (action === "shuffle") button.addEventListener("click", shuffleTokens);
+    if (action === "pause") button.addEventListener("click", pauseGame);
+    if (action === "resume") button.addEventListener("click", resumeGame);
     if (action === "skip") button.addEventListener("click", skipLevel);
     if (action === "next") button.addEventListener("click", nextLevel);
     if (action === "retry") button.addEventListener("click", retryLevel);
@@ -4758,9 +5071,18 @@ document.querySelectorAll(".lang-btn").forEach((button) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.code !== "KeyH") return;
-  event.preventDefault();
-  useHint();
+  if (event.code === "KeyH") {
+    event.preventDefault();
+    useHint();
+  }
+  if (event.code === "KeyP" || (event.code === "Escape" && state.paused)) {
+    event.preventDefault();
+    if (state.paused) {
+      resumeGame();
+    } else {
+      pauseGame();
+    }
+  }
 });
 
 soundToggle.addEventListener("click", async () => {

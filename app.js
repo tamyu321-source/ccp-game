@@ -1,11 +1,12 @@
 const STORAGE_KEY = "archive-fog-save-v1";
+const RANKING_LIMIT = 20;
 
 const TEXT = {
   tw: {
     title: "檔案迷霧",
     subtitle: "解密詞條，連破關卡",
     startTitle: "檔案迷霧",
-    startCopy: "從直白黑歷史開始，逐步進入諧音、隱喻和高干擾檔案。",
+    startCopy: "黑歷史開局，逐步進入諧音、隱喻與高干擾檔案。",
     start: "開始",
     continue: "繼續",
     reset: "重置進度",
@@ -13,11 +14,18 @@ const TEXT = {
     chapter: "章節",
     time: "時間",
     score: "分數",
+    leaderboard: "積分排行",
+    rankEmpty: "尚無紀錄",
+    modeRecord: "模式紀錄",
     streak: "連破",
     mistakes: "失誤",
     clue: "線索",
     target: "復原詞條",
     tokens: "檔案碎片",
+    evidence: "消除規則",
+    evidenceHint: "只能拿未被蓋住的牌；三張同牌進槽後自動消除。",
+    currentLead: "檔案牌堆",
+    traceHint: "點選未被上層遮住的文字牌，湊齊三張同牌消除；槽位滿就封存。",
     hint: "提示",
     shuffle: "重排",
     skip: "跳過",
@@ -52,6 +60,10 @@ const TEXT = {
       soviet: "蘇共檔案",
       northKorea: "朝鮮黑話",
       taiwan: "台灣政治",
+      kmtCcp: "國共時期",
+      ww2: "二戰中國",
+      hongKong: "香港檔案",
+      current: "當下時事",
       us: "美國政治"
     },
     contextLabel: "背景脈絡"
@@ -60,7 +72,7 @@ const TEXT = {
     title: "档案迷雾",
     subtitle: "解密词条，连破关卡",
     startTitle: "档案迷雾",
-    startCopy: "从直白黑历史开始，逐步进入谐音、隐喻和高干扰档案。",
+    startCopy: "黑历史开局，逐步进入谐音、隐喻与高干扰档案。",
     start: "开始",
     continue: "继续",
     reset: "重置进度",
@@ -68,11 +80,18 @@ const TEXT = {
     chapter: "章节",
     time: "时间",
     score: "分数",
+    leaderboard: "积分排行",
+    rankEmpty: "暂无记录",
+    modeRecord: "模式记录",
     streak: "连破",
     mistakes: "失误",
     clue: "线索",
     target: "复原词条",
     tokens: "档案碎片",
+    evidence: "消除规则",
+    evidenceHint: "只能拿未被盖住的牌；三张同牌进槽后自动消除。",
+    currentLead: "档案牌堆",
+    traceHint: "点击未被上层遮住的文字牌，凑齐三张同牌消除；槽位满就封存。",
     hint: "提示",
     shuffle: "重排",
     skip: "跳过",
@@ -107,6 +126,10 @@ const TEXT = {
       soviet: "苏共档案",
       northKorea: "朝鲜黑话",
       taiwan: "台湾政治",
+      kmtCcp: "国共时期",
+      ww2: "二战中国",
+      hongKong: "香港档案",
+      current: "当下时事",
       us: "美国政治"
     },
     contextLabel: "背景脉络"
@@ -115,7 +138,7 @@ const TEXT = {
     title: "Archive Fog",
     subtitle: "Restore entries, break levels",
     startTitle: "Archive Fog",
-    startCopy: "Start with direct historical records, then move into puns, metaphors, and dense decoys.",
+    startCopy: "Start with history, then move into puns, metaphors, and dense decoys.",
     start: "Start",
     continue: "Continue",
     reset: "Reset",
@@ -123,11 +146,18 @@ const TEXT = {
     chapter: "Chapter",
     time: "Time",
     score: "Score",
+    leaderboard: "Leaderboard",
+    rankEmpty: "No records",
+    modeRecord: "Mode Record",
     streak: "Streak",
     mistakes: "Misses",
     clue: "Clue",
     target: "Restored Entry",
     tokens: "Fragments",
+    evidence: "Match Rule",
+    evidenceHint: "Pick only uncovered tiles. Three matching tiles clear from the tray.",
+    currentLead: "Tile Stack",
+    traceHint: "Pick uncovered text tiles and clear triples. If the tray fills, the file is sealed.",
     hint: "Hint",
     shuffle: "Shuffle",
     skip: "Skip",
@@ -162,6 +192,10 @@ const TEXT = {
       soviet: "Soviet Archive",
       northKorea: "North Korea Slang",
       taiwan: "Taiwan Politics",
+      kmtCcp: "KMT-CCP Era",
+      ww2: "WWII China",
+      hongKong: "Hong Kong Archive",
+      current: "Current Affairs",
       us: "US Politics"
     },
     contextLabel: "Context"
@@ -359,6 +393,36 @@ const WORD_BANK = [
   entry("東升西降", "东升西降", "East Rises West Falls", "太陽還沒落山，劇本已經安排好方向。", "太阳还没落山，剧本已经安排好方向。", "Before the sun sets, the script has assigned the direction.", 3, "ccp", "2021", "「東升西降」概括官方對國際格局的自信敘事。網路使用時常帶反諷，尤其在經濟壓力或外交受挫時。", "“东升西降”概括官方对国际格局的自信叙事。网络使用时常带反讽，尤其在经济压力或外交受挫时。", "East rises, West falls summarizes official confidence about global change. Online use often becomes ironic during economic or diplomatic stress."),
   entry("中國式現代化", "中国式现代化", "Chinese Style Modernization", "現代化前面加定語，答案就不用和別人一樣。", "现代化前面加定语，答案就不用和别人一样。", "Add an adjective before modernization, and the answer can differ from everyone else's.", 3, "ccp", "2022", "這是中共二十大後高度宣傳的路線詞，強調由黨領導的現代化模型。梗化後常被用來質問口號與民生現實的差距。", "这是中共二十大后高度宣传的路线词，强调由党领导的现代化模型。梗化后常被用来质问口号与民生现实的差距。", "Heavily promoted after the 20th Party Congress, this slogan frames modernization under CCP leadership. Meme use often questions the gap between slogan and daily life."),
   entry("被消失", "被消失", "Made to Disappear", "不是魔術，是公告前的空白期。", "不是魔术，是公告前的空白期。", "Not magic, but the blank period before an announcement.", 4, "ccpMetaphor", "2020s", "近年高官、名人或敏感人物突然淡出公共視野時，網民常說「被消失」。它指向不透明政治處理和資訊管制。", "近年高官、名人或敏感人物突然淡出公共视野时，网民常说“被消失”。它指向不透明政治处理和信息管制。", "When officials, celebrities, or sensitive figures vanish from public view, users say they were made to disappear. The phrase points at opaque political handling and information control."),
+  entry("習包子", "习包子", "Xi Baozi", "一頓包子被拍成親民，後來連餐桌都變成暗號。", "一顿包子被拍成亲民，后来连餐桌都变成暗号。", "A bun-shop photo op turned a lunch counter into coded speech.", 4, "ccpMetaphor", "2013"),
+  entry("扛麥郎", "扛麦郎", "Wheat Shoulder Xi", "兩百斤傳說扛在肩上，不換肩也不換敘事。", "两百斤传说扛在肩上，不换肩也不换叙事。", "The two-hundred-jin legend stays on one shoulder and one script.", 4, "ccpMetaphor", "2010s"),
+  entry("二百斤不換肩", "二百斤不换肩", "Two Hundred Jin No Shoulder Switch", "體能梗被講成苦難勳章，網民拿秤和山路來拆台。", "体能梗被讲成苦难勋章，网民拿秤和山路来拆台。", "A hardship medal becomes a physics problem for the internet.", 5, "ccpMetaphor", "2010s"),
+  entry("薩格爾王", "萨格尔王", "Sager King", "格薩爾被讀歪後，剪輯刀比史詩更忙。", "格萨尔被读歪后，剪辑刀比史诗更忙。", "After Gesar came out wrong, the edit room worked harder than the epic.", 5, "ccpMetaphor", "2018"),
+  entry("慶豐帝", "庆丰帝", "Qingfeng Emperor", "包子鋪的招牌被戴上年號，親民照長出帝王梗。", "包子铺的招牌被戴上年号，亲民照长出帝王梗。", "A bun-shop sign becomes a reign title.", 5, "ccpMetaphor", "2013"),
+  entry("小學生博士", "小学生博士", "Primary School Doctor", "學歷光環太亮時，錯字和注音都會投下影子。", "学历光环太亮时，错字和注音都会投下影子。", "When the credential halo is too bright, typos and phonetics cast shadows.", 5, "ccpMetaphor", "2010s"),
+  entry("大撒幣", "大撒币", "Big Spender", "外援像灑水車，民生帳本卻還在找零。", "外援像洒水车，民生账本却还在找零。", "Foreign spending looks generous while domestic ledgers hunt for change.", 4, "ccpMetaphor", "2010s"),
+  entry("頤使氣指", "颐使气指", "Chin Commanding", "成語被念出新版本，表情包替字典更新注音。", "成语被念出新版本，表情包替字典更新注音。", "A misread idiom lets memes annotate the dictionary.", 5, "ccpMetaphor", "2020s"),
+  entry("習奧塞斯庫", "习奥塞斯库", "Xi Ceausescu", "把東歐倒台陰影貼上去，提醒個人崇拜也有結局。", "把东欧倒台阴影贴上去，提醒个人崇拜也有结局。", "A Ceausescu shadow pasted onto Xi-era personality politics.", 5, "ccpMetaphor", "2020s"),
+  entry("臘肉", "腊肉", "Cured Meat", "遺體被保存成政治聖物，網民把神壇拆成冷笑話。", "遗体被保存成政治圣物，网民把神坛拆成冷笑话。", "A preserved body becomes a cold joke about political sainthood.", 5, "ccpMetaphor", "1976"),
+  entry("毛臘肉", "毛腊肉", "Mao Cured Meat", "名字一接上冷藏櫃，個人崇拜就失去神光。", "名字一接上冷藏柜，个人崇拜就失去神光。", "Attach the name to a cold display case and the aura leaks out.", 5, "ccpMetaphor", "1976"),
+  entry("紅太陽", "红太阳", "Red Sun", "領袖被唱成太陽，陰影也就跟著變長。", "领袖被唱成太阳，阴影也就跟着变长。", "When a leader is sung as the sun, the shadows grow too.", 4, "ccpMetaphor", "1960s"),
+  entry("毛語錄", "毛语录", "Little Red Book", "小紅書被舉過頭頂，句子成了通行證和護身符。", "小红书被举过头顶，句子成了通行证和护身符。", "A little red book turns sentences into passes and amulets.", 2, "ccp", "1964"),
+  entry("偉大舵手", "伟大舵手", "Great Helmsman", "船往哪裡開不准問，舵手永遠正確。", "船往哪里开不准问，舵手永远正确。", "Do not ask where the ship is going; the helmsman is always right.", 4, "ccpMetaphor", "1960s"),
+  entry("畝產萬斤", "亩产万斤", "Ten Thousand Jin Per Mu", "田地沒長那麼快，報紙和算盤先高產了。", "田地没长那么快，报纸和算盘先高产了。", "The fields did not grow that fast; newspapers and abacuses did.", 2, "ccp", "1958"),
+  entry("忠字舞", "忠字舞", "Loyalty Dance", "身體也要排隊表忠，廣場變成政治課堂。", "身体也要排队表忠，广场变成政治课堂。", "Even bodies lined up to perform loyalty.", 3, "ccp", "1966-1968"),
+  entry("早請示晚匯報", "早请示晚汇报", "Morning Request Evening Report", "一天兩次向語錄報到，生活被做成儀式。", "一天两次向语录报到，生活被做成仪式。", "Twice a day, daily life reported to the quotations.", 3, "ccp", "1960s"),
+  entry("碾平", "碾平", "Crusher Deng", "改革的招牌很亮，履帶的陰影也很長。", "改革的招牌很亮，履带的阴影也很长。", "The reform sign shines, but the tank-tread shadow is long.", 5, "ccpMetaphor", "1989"),
+  entry("黑貓白貓", "黑猫白猫", "Black Cat White Cat", "抓到老鼠就是好貓，於是原則讓位給結果。", "抓到老鼠就是好猫，于是原则让位给结果。", "If it catches mice, principle bows to results.", 3, "ccpMetaphor", "1962"),
+  entry("摸石頭過河", "摸石头过河", "Crossing River By Stones", "改革沒有地圖，腳下的石頭就是臨時憲法。", "改革没有地图，脚下的石头就是临时宪法。", "Reform has no map; the stone underfoot becomes a temporary constitution.", 3, "ccpMetaphor", "1980s"),
+  entry("讓一部分人先富", "让一部分人先富", "Some Get Rich First", "有人先過河，有人後來發現自己成了石頭。", "有人先过河，有人后来发现自己成了石头。", "Some crossed first; others later found they were the stones.", 4, "ccpMetaphor", "1980s"),
+  entry("穩定壓倒一切", "稳定压倒一切", "Stability Above All", "穩定一抬頭，權利和追問就被壓低。", "稳定一抬头，权利和追问就被压低。", "When stability rises, rights and questions are pressed down.", 4, "ccpMetaphor", "1989-1990"),
+  entry("長者", "长者", "Elder", "一句長者訓話，後來長成整套亞文化。", "一句长者训话，后来长成整套亚文化。", "One elder's scolding grew into a subculture.", 4, "ccpMetaphor", "2000s"),
+  entry("膜蛤", "膜蛤", "Toad Worship", "像膜拜也像解構，前任領袖被玩成反諷偶像。", "像膜拜也像解构，前任领袖被玩成反讽偶像。", "Worship and parody fuse into a political meme.", 4, "ccpMetaphor", "2010s"),
+  entry("蛤蛤", "蛤蛤", "Haha Toad", "眼鏡、肚皮和口音一起變成互聯網圖騰。", "眼镜、肚皮和口音一起变成互联网图腾。", "Glasses, belly, and accent become an internet totem.", 4, "ccpMetaphor", "2010s"),
+  entry("悶聲大發財", "闷声大发财", "Make Fortune Quietly", "不要總想搞大新聞，先把財發在靜音模式。", "不要总想搞大新闻，先把财发在静音模式。", "Do not always chase big news; get rich in silent mode.", 4, "ccpMetaphor", "2000"),
+  entry("談笑風生", "谈笑风生", "Talking and Laughing", "專訪被拿來證明見過世面，網民拿來配音。", "专访被拿来证明见过世面，网民拿来配音。", "A foreign interview becomes proof of worldliness and meme material.", 3, "ccpMetaphor", "2000"),
+  entry("圖樣圖森破", "图样图森破", "Too Young Too Simple", "英文訓話被音譯成咒語，記者會變成梗庫。", "英文训话被音译成咒语，记者会变成梗库。", "An English scolding becomes a phonetic spell.", 4, "ccpMetaphor", "2000"),
+  entry("亦可賽艇", "亦可赛艇", "Excited", "一句 excited 被拆成諧音，快樂也有政治口音。", "一句 excited 被拆成谐音，快乐也有政治口音。", "One excited turns into a homophone with a political accent.", 3, "ccpMetaphor", "2000s"),
+  entry("苟利國家生死以", "苟利国家生死以", "For Country Life And Death", "古詩被長者念熟，後來成了續命與表情包素材。", "古诗被长者念熟，后来成了续命与表情包素材。", "A quoted poem becomes longevity lore and meme fuel.", 3, "ccpMetaphor", "2000s"),
   entry("金三胖", "金三胖", "Kim Three Fat", "第三代胖字輩，王朝血統也能變綽號。", "第三代胖字辈，王朝血统也能变绰号。", "The third generation turns dynasty bloodline into a nickname.", 4, "northKorea", "2010s", "這是中文網路對金正恩的嘲諷稱呼，對應金氏家族第三代統治。它把世襲政治和領袖外形一起做成黑色幽默。", "这是中文网络对金正恩的嘲讽称呼，对应金氏家族第三代统治。它把世袭政治和领袖外形一起做成黑色幽默。", "A Chinese internet nickname for Kim Jong Un, pointing at third-generation hereditary rule and using body-image satire as political shorthand."),
   entry("鑫胖", "鑫胖", "Triple Gold Fat", "三個金疊一起，胖字負責收尾。", "三个金叠一起，胖字负责收尾。", "Three gold characters stack up, and fat finishes the joke.", 5, "northKorea", "2010s", "「鑫」由三個金組成，暗指金氏三代。這個黑話是「金三胖」的變體，用文字構形避開直白稱呼。", "“鑫”由三个金组成，暗指金氏三代。这个黑话是“金三胖”的变体，用文字构形避开直白称呼。", "The character Xin contains three gold radicals, hinting at three Kims. It is a coded variant of the Kim Three Fat nickname."),
   entry("白頭山血統", "白头山血统", "Paektu Bloodline", "山名變成王朝血書，繼承就有了神話濾鏡。", "山名变成王朝血书，继承就有了神话滤镜。", "A mountain name becomes dynastic myth and succession filter.", 3, "northKorea", "1940s", "朝鮮官方用「白頭山血統」神化金氏家族統治合法性。它把革命神話、家族繼承與國家宣傳綁在一起。", "朝鲜官方用“白头山血统”神化金氏家族统治合法性。它把革命神话、家族继承与国家宣传绑在一起。", "North Korean propaganda uses the Paektu Bloodline to mythologize Kim family legitimacy, tying revolution myth to hereditary succession."),
@@ -370,6 +434,135 @@ const WORD_BANK = [
   entry("火箭人", "火箭人", "Rocket Man", "飛彈越飛越高，外號也飛進外交場。", "导弹越飞越高，外号也飞进外交场。", "Missiles flew higher, and the nickname flew into diplomacy.", 3, "northKorea", "2017", "「火箭人」因朝鮮核導與飛彈試射而成為國際政治外號。它把核危機、個人領袖形象和外交嘴仗合在一起。", "“火箭人”因朝鲜核导与导弹试射而成为国际政治外号。它把核危机、个人领袖形象和外交嘴仗合在一起。", "Rocket Man became a diplomatic nickname amid North Korean missile and nuclear tests, merging nuclear risk, leader image, and rhetorical confrontation.")
 ];
 
+WORD_BANK.push(
+  entry("梁家河聖地巡禮", "梁家河圣地巡礼", "Liangjiahe Pilgrimage", "插隊村被包裝成政治原點，苦難敘事長成打卡景點。", "插队村被包装成政治原点，苦难叙事长成打卡景点。", "A rustication village is packaged as a political origin story.", 4, "ccpMetaphor", "2010s", "梁家河是習近平知青經歷的核心宣傳地，官方用它塑造吃苦、親民和基層淬煉形象。", "梁家河是习近平知青经历的核心宣传地，官方用它塑造吃苦、亲民和基层淬炼形象。", "Liangjiahe is central to official storytelling about Xi's rustication years, hardship, and grassroots legitimacy."),
+  entry("梁家河大學問", "梁家河大学问", "Liangjiahe Great Learning", "山溝裡長出政治課本，答案早已寫在宣傳板上。", "山沟里长出政治课本，答案早已写在宣传板上。", "A village story becomes a political textbook.", 4, "ccpMetaphor", "2010s", "這個梗諷刺把梁家河經歷過度理論化、神聖化，讓個人履歷變成政治學習材料。", "这个梗讽刺把梁家河经历过度理论化、神圣化，让个人履历变成政治学习材料。", "The meme satirizes turning Xi's Liangjiahe biography into quasi-theory and political-study material."),
+  entry("雄安千年大計", "雄安千年大计", "Xiongan Millennium Plan", "新城被說成千年，房價和政績先聽懂了。", "新城被说成千年，房价和政绩先听懂了。", "A new area is named a millennium plan before daily life catches up.", 3, "ccp", "2017", "雄安新區被官方定位為疏解北京非首都功能和新發展樣板，網路常用千年大計反諷宏大敘事。", "雄安新区被官方定位为疏解北京非首都功能和新发展样板，网络常用千年大计反讽宏大叙事。", "Xiongan was framed as a major new area and model project; online use often mocks the grand timescale."),
+  entry("二十大連任", "二十大连任", "Twentieth Congress Third Term", "任期鐘聲沒有響，核心故事繼續翻頁。", "任期钟声没有响，核心故事继续翻页。", "The term-limit clock did not ring; the core story kept going.", 3, "ccp", "2022", "中共二十大後習近平進入第三個總書記任期，標誌最高權力連任格局正式化。", "中共二十大后习近平进入第三个总书记任期，标志最高权力连任格局正式化。", "After the 20th Party Congress, Xi entered a third term as CCP general secretary, formalizing extended top rule."),
+  entry("忠誠不絕對", "忠诚不绝对", "Absolute Loyalty Test", "忠誠還要加形容詞，考卷就沒有及格線。", "忠诚还要加形容词，考卷就没有及格线。", "When loyalty needs adjectives, there is no passing line.", 4, "ccpMetaphor", "2010s", "黨內政治語言常把絕對忠誠放在突出位置，網民用它諷刺忠誠表態層層加碼。", "党内政治语言常把绝对忠诚放在突出位置，网民用它讽刺忠诚表态层层加码。", "Party language emphasizes absolute loyalty; users mock escalating loyalty performances."),
+  entry("全過程民主", "全过程民主", "Whole Process Democracy", "投票不一定多，形容詞一定夠長。", "投票不一定多，形容词一定够长。", "The adjective grows longer than the ballot.", 3, "ccpMetaphor", "2021", "官方用全過程民主回應西式民主比較，網民常用它反諷形式化政治參與。", "官方用全过程民主回应西式民主比较，网民常用它反讽形式化政治参与。", "The official phrase answers comparisons with liberal democracy; online jokes question whether participation is substantive."),
+  entry("清零轉向", "清零转向", "Zero COVID U Turn", "前一天還是國策，下一秒變成個人責任。", "前一天还是国策，下一秒变成个人责任。", "Yesterday it was national policy; suddenly it became personal responsibility.", 3, "current", "2022", "2022 年底中國快速放開清零管控，長期封控與突然轉向之間缺少充分準備，引發醫療擠兌和公共記憶衝突。", "2022 年底中国快速放开清零管控，长期封控与突然转向之间缺少充分准备，引发医疗挤兑和公共记忆冲突。", "China rapidly exited Zero COVID in late 2022, leaving a sharp contrast between long controls and sudden reopening."),
+  entry("青年失業率暫停發布", "青年失业率暂停发布", "Youth Jobless Data Pause", "數字不好看時，統計表先去休息。", "数字不好看时，统计表先去休息。", "When the number looks bad, the table takes a break.", 3, "current", "2023", "中國在 2023 年暫停發布青年失業率，之後改用調整後口徑恢復，網民把它視為數據治理與輿論壓力的案例。", "中国在 2023 年暂停发布青年失业率，之后改用调整后口径恢复，网民把它视为数据治理与舆论压力的案例。", "China paused youth unemployment publication in 2023 and later resumed with a revised measure, becoming a data-politics meme."),
+  entry("孔乙己文學", "孔乙己文学", "Kong Yiji Literature", "長衫脫不下，工作也找不到。", "长衫脱不下，工作也找不到。", "The scholar's gown will not come off, and the job will not arrive.", 3, "current", "2023", "孔乙己文學借魯迅人物形容高學歷青年就業困境，反映學歷、階層期待和現實機會錯位。", "孔乙己文学借鲁迅人物形容高学历青年就业困境，反映学历、阶层期待和现实机会错位。", "Kong Yiji literature uses Lu Xun's character to describe educated youth facing poor job prospects."),
+  entry("潤學", "润学", "Runology", "不是地理題，是把出口當成答案。", "不是地理题，是把出口当成答案。", "It is not geography; the exit becomes the answer.", 3, "current", "2020s", "潤學指討論移民、出走和尋找外部生活路徑的網路話題，常與壓力、審查和前景焦慮相連。", "润学指讨论移民、出走和寻找外部生活路径的网络话题，常与压力、审查和前景焦虑相连。", "Runology refers to online talk about emigrating or exiting a pressured social environment."),
+  entry("躺平", "躺平", "Tang Ping", "不再衝刺，也是一種無聲投票。", "不再冲刺，也是一种无声投票。", "Refusing the sprint becomes a silent vote.", 2, "current", "2021", "躺平是對高壓競爭、低回報和階層焦慮的消極抵抗語言。", "躺平是对高压竞争、低回报和阶层焦虑的消极抵抗语言。", "Tang ping describes passive resistance to intense competition and low returns."),
+  entry("內卷", "内卷", "Involution", "大家都更努力，出口卻沒有變大。", "大家都更努力，出口却没有变大。", "Everyone works harder, but the exit does not widen.", 2, "current", "2020s", "內卷形容競爭投入增加但總體收益不變，常用於教育、職場和平台經濟。", "内卷形容竞争投入增加但总体收益不变，常用于教育、职场和平台经济。", "Involution describes rising effort in zero-sum competition, often in education and work."),
+  entry("爛尾樓停貸潮", "烂尾楼停贷潮", "Mortgage Boycott", "房子停在半空，月供還在地上追人。", "房子停在半空，月供还在地上追人。", "The home is unfinished, but the mortgage keeps chasing.", 2, "current", "2022", "多地爛尾樓業主曾以停貸維權，暴露預售制、房企債務和地方監管問題。", "多地烂尾楼业主曾以停贷维权，暴露预售制、房企债务和地方监管问题。", "Mortgage boycotts over unfinished homes exposed pre-sale, developer debt, and regulatory problems."),
+  entry("走線", "走线", "Walking the Line", "南方雨林和邊境牆，變成另一種出路。", "南方雨林和边境墙，变成另一种出路。", "Jungles and borders become another exit route.", 3, "current", "2020s", "走線指經拉美等路線赴美尋求庇護或移民的現象，反映經濟與政治壓力下的出走選擇。", "走线指经拉美等路线赴美寻求庇护或移民的现象，反映经济与政治压力下的出走选择。", "Walking the line refers to migration routes through Latin America toward the United States under social pressure."),
+  entry("地方債黑洞", "地方债黑洞", "Local Debt Hole", "基建寫在政績裡，利息寫在未來裡。", "基建写在政绩里，利息写在未来里。", "Infrastructure goes into the achievement book; interest goes into the future.", 3, "current", "2020s", "地方融資平台和基建債務長期支撐增長，也累積財政風險與公共服務壓力。", "地方融资平台和基建债务长期支撑增长，也累积财政风险与公共服务压力。", "Local financing vehicles supported growth through infrastructure while accumulating fiscal risk."),
+  entry("人口負增長", "人口负增长", "Population Decline", "計劃過的人口，終於反過來計劃未來。", "计划过的人口，终于反过来计划未来。", "A planned population starts planning the future back.", 2, "current", "2022", "中國近年進入人口負增長，少子化和老齡化加重養老、房地產和地方財政壓力。", "中国近年进入人口负增长，少子化和老龄化加重养老、房地产和地方财政压力。", "China's recent population decline intensifies aging, pension, housing, and fiscal pressures."),
+  entry("文攻武衛", "文攻武卫", "Attack With Words Defend With Force", "先用標語開火，再用棍棒保衛正確。", "先用标语开火，再用棍棒保卫正确。", "Slogans attack first; force defends correctness.", 3, "ccp", "1967", "文革派性鬥爭中，文攻武衛成為群眾組織武鬥與政治暴力的口號之一。", "文革派性斗争中，文攻武卫成为群众组织武斗与政治暴力的口号之一。", "During Cultural Revolution factional struggles, the slogan justified political confrontation and violence."),
+  entry("武鬥", "武斗", "Factional Armed Struggle", "革命隊伍互相開火，城市也能變戰場。", "革命队伍互相开火，城市也能变战场。", "Revolutionary factions fire at each other and cities become battlefields.", 2, "ccp", "1967-1968", "文革武鬥是造反派和群眾組織之間的暴力衝突，部分地區動用槍械和軍火。", "文革武斗是造反派和群众组织之间的暴力冲突，部分地区动用枪械和军火。", "Factional violence during the Cultural Revolution involved mass organizations and sometimes weapons."),
+  entry("清理階級隊伍", "清理阶级队伍", "Cleansing Class Ranks", "隊伍越清，冤案越多。", "队伍越清，冤案越多。", "The cleaner the ranks, the more wrongful cases appeared.", 3, "ccp", "1968", "清理階級隊伍運動在文革中造成大規模審查、迫害和冤案。", "清理阶级队伍运动在文革中造成大规模审查、迫害和冤案。", "The campaign produced mass investigations, persecution, and wrongful cases during the Cultural Revolution."),
+  entry("鬥私批修", "斗私批修", "Fight Self Criticize Revisionism", "連私心都要交代，生活被拉進批判會。", "连私心都要交代，生活被拉进批判会。", "Even private motives had to report to criticism sessions.", 3, "ccp", "1960s", "鬥私批修是文革政治口號，把個人思想改造和反修正主義綁在一起。", "斗私批修是文革政治口号，把个人思想改造和反修正主义绑在一起。", "The slogan tied personal thought remolding to anti-revisionist politics."),
+  entry("大煉鋼鐵", "大炼钢铁", "Backyard Steel Drive", "鍋碗瓢盆進爐，鋼鐵神話出爐。", "锅碗瓢盆进炉，钢铁神话出炉。", "Pots entered furnaces and a steel myth came out.", 1, "ccp", "1958", "大躍進期間大量群眾投入土法煉鋼，浪費資源並擾亂農業生產。", "大跃进期间大量群众投入土法炼钢，浪费资源并扰乱农业生产。", "The backyard steel drive wasted resources and disrupted agriculture during the Great Leap Forward."),
+  entry("浮誇風", "浮夸风", "Exaggeration Wind", "產量吹上天，糧食卻不會跟著落地。", "产量吹上天，粮食却不会跟着落地。", "Yields were blown into the sky; food did not fall back down.", 1, "ccp", "1958", "浮誇風指大躍進中虛報產量和政績，直接扭曲徵糧與政策判斷。", "浮夸风指大跃进中虚报产量和政绩，直接扭曲征粮与政策判断。", "Exaggerated output reports distorted procurement and policy decisions during the Great Leap Forward."),
+  entry("公共食堂", "公共食堂", "Commune Canteens", "飯桌集中起來，飢餓也集中起來。", "饭桌集中起来，饥饿也集中起来。", "Dining tables were centralized, and hunger followed.", 1, "ccp", "1958", "人民公社公共食堂削弱家庭儲糧與分配彈性，是饑荒記憶中的重要制度環節。", "人民公社公共食堂削弱家庭储粮与分配弹性，是饥荒记忆中的重要制度环节。", "Commune canteens weakened household food control and flexibility during the famine era."),
+  entry("深圳特區", "深圳特区", "Shenzhen SEZ", "邊境小城成了市場實驗室。", "边境小城成了市场实验室。", "A border town became a market laboratory.", 1, "ccp", "1980", "深圳經濟特區是改革開放的代表試點，承載市場化、外資和城市化實驗。", "深圳经济特区是改革开放的代表试点，承载市场化、外资和城市化实验。", "Shenzhen became a flagship Special Economic Zone for market reform and foreign investment."),
+  entry("價格闖關", "价格闯关", "Price Reform Shock", "市場化一步太急，錢包先喊疼。", "市场化一步太急，钱包先喊疼。", "The wallet felt the shock before reform found its balance.", 3, "ccp", "1988", "1988 年價格改革預期引發搶購與通脹焦慮，成為改革風險的重要記憶。", "1988 年价格改革预期引发抢购与通胀焦虑，成为改革风险的重要记忆。", "The 1988 price reform push triggered panic buying and inflation fears."),
+  entry("不爭論", "不争论", "No Debate", "路線先走，問題先不要問。", "路线先走，问题先不要问。", "The route moves first; questions wait outside.", 3, "ccpMetaphor", "1990s", "不爭論常被用來概括鄧小平推進市場化改革時壓低意識形態爭論的策略。", "不争论常被用来概括邓小平推进市场化改革时压低意识形态争论的策略。", "No debate is associated with Deng's strategy of pushing reform while suppressing ideological disputes."),
+  entry("韜光養晦", "韬光养晦", "Hide Brightness Bide Time", "外交先低頭走路，等風向再抬頭。", "外交先低头走路，等风向再抬头。", "Foreign policy walks low and waits for the wind.", 3, "ccpMetaphor", "1990s", "韜光養晦被視為鄧小平時期外交策略概括，後來常被拿來對比更高調的國際姿態。", "韬光养晦被视为邓小平时期外交策略概括，后来常被拿来对比更高调的国际姿态。", "The phrase is associated with Deng-era caution in foreign policy and later contrasts with assertive diplomacy."),
+  entry("三個代表", "三个代表", "Three Represents", "老黨章打開一扇給企業家的門。", "老党章打开一扇给企业家的门。", "An old party charter opened a door for entrepreneurs.", 2, "ccp", "2000", "三個代表是江澤民提出的理論，為私營企業主入黨和黨的階層調整提供話語。", "三个代表是江泽民提出的理论，为私营企业主入党和党的阶层调整提供话语。", "Jiang's Three Represents helped justify admitting private entrepreneurs into the CCP."),
+  entry("上海幫", "上海帮", "Shanghai Clique", "一座城市的人脈，被看成一張權力網。", "一座城市的人脉，被看成一张权力网。", "A city's networks become a map of power.", 3, "ccpMetaphor", "1990s", "上海幫常指江澤民時期與上海經歷相關的政治人脈，被用來討論派系政治。", "上海帮常指江泽民时期与上海经历相关的政治人脉，被用来讨论派系政治。", "Shanghai Clique refers to networks linked to Jiang's Shanghai background and factional politics."),
+  entry("加入世貿", "加入世贸", "WTO Accession", "世界市場開門，中國工廠開始加班。", "世界市场开门，中国工厂开始加班。", "The world market opened and Chinese factories worked overtime.", 1, "ccp", "2001", "中國加入 WTO 推動出口、外資和產業升級，也加深全球供應鏈依賴。", "中国加入 WTO 推动出口、外资和产业升级，也加深全球供应链依赖。", "China's WTO accession accelerated exports, foreign investment, and supply-chain integration."),
+  entry("三講教育", "三讲教育", "Three Stresses Campaign", "講學習、講政治、講正氣，幹部考卷又多一張。", "讲学习、讲政治、讲正气，干部考卷又多一张。", "Study, politics, rectitude: another cadre exam sheet.", 3, "ccp", "1998", "三講教育是江澤民時期黨內整風式教育，強調幹部政治忠誠與作風。", "三讲教育是江泽民时期党内整风式教育，强调干部政治忠诚与作风。", "The campaign stressed cadre study, politics, and rectitude under Jiang."),
+  entry("二二八事件", "二二八事件", "February Twenty Eight", "查緝煙販點燃怒火，鎮壓把島嶼記憶撕開。", "查缉烟贩点燃怒火，镇压把岛屿记忆撕开。", "A tobacco dispute ignited anger; repression tore open island memory.", 1, "taiwan", "1947", "二二八事件由官民衝突擴大為全台抗爭與鎮壓，成為台灣轉型正義核心記憶。", "二二八事件由官民冲突扩大为全台抗争与镇压，成为台湾转型正义核心记忆。", "The 1947 incident escalated from official-civilian conflict into island-wide repression and transitional-justice memory."),
+  entry("白色恐怖", "白色恐怖", "White Terror Taiwan", "戒嚴的陰影裡，思想也會被判刑。", "戒严的阴影里，思想也会被判刑。", "Under martial law, thought itself could be sentenced.", 1, "taiwan", "1949-1987", "白色恐怖指國民黨威權統治下的政治偵防、審判、監禁與處決。", "白色恐怖指国民党威权统治下的政治侦防、审判、监禁与处决。", "Taiwan's White Terror involved surveillance, political trials, imprisonment, and executions under KMT authoritarian rule."),
+  entry("台灣戒嚴", "台湾戒严", "Taiwan Martial Law", "一張戒嚴令，鎖住四十年政治空氣。", "一张戒严令，锁住四十年政治空气。", "One martial-law order locked political air for decades.", 1, "taiwan", "1949-1987", "台灣長期戒嚴限制組黨、集會、言論和出版，直到 1987 年解除。", "台湾长期戒严限制组党、集会、言论和出版，直到 1987 年解除。", "Taiwan's martial law restricted parties, assembly, speech, and publishing until 1987."),
+  entry("黨外運動", "党外运动", "Dangwai Movement", "不能組黨，就把反對派寫在黨外。", "不能组党，就把反对派写在党外。", "If parties are banned, opposition lives outside the party.", 2, "taiwan", "1970s-1980s", "黨外運動是在戒嚴限制下形成的民主反對力量，推動台灣政治轉型。", "党外运动是在戒严限制下形成的民主反对力量，推动台湾政治转型。", "The dangwai movement formed democratic opposition under martial-law limits."),
+  entry("野百合學運", "野百合学运", "Wild Lily Movement", "學生坐進廣場，老國會開始鬆動。", "学生坐进广场，老国会开始松动。", "Students sat in the square and the old legislature began to loosen.", 1, "taiwan", "1990", "野百合學運推動國會全面改選與政治改革，是台灣民主化關鍵節點。", "野百合学运推动国会全面改选与政治改革，是台湾民主化关键节点。", "The Wild Lily student movement pushed parliamentary reform and democratization."),
+  entry("黑金政治", "黑金政治", "Black Gold Politics", "選票、地方派系和利益，把民主染成油墨色。", "选票、地方派系和利益，把民主染成油墨色。", "Votes, factions, and money stain democracy dark.", 3, "taiwan", "1990s", "黑金政治形容台灣地方派系、金錢與組織犯罪介入政治的問題。", "黑金政治形容台湾地方派系、金钱与组织犯罪介入政治的问题。", "Black gold politics refers to money, local factions, and organized crime in Taiwan politics."),
+  entry("太陽花學運", "太阳花学运", "Sunflower Movement", "議場被學生佔領，服貿審查變成世代政治。", "议场被学生占领，服贸审查变成世代政治。", "Students occupied the legislature and a trade pact became generational politics.", 1, "taiwan", "2014", "太陽花學運反對服貿協議快速審查，重塑台灣青年政治參與和兩岸議題。", "太阳花学运反对服贸协议快速审查，重塑台湾青年政治参与和两岸议题。", "The movement opposed fast review of the services trade pact and reshaped youth politics."),
+  entry("罷韓", "罢韩", "Han Kuo Yu Recall", "造勢像海浪，罷免票像退潮。", "造势像海浪，罢免票像退潮。", "Campaign waves met recall tides.", 2, "taiwan", "2020", "高雄市長韓國瑜被罷免，成為台灣地方政治與民粹動員的重要案例。", "高雄市长韩国瑜被罢免，成为台湾地方政治与民粹动员的重要案例。", "Han Kuo-yu's recall became a major case of local politics and populist mobilization in Taiwan."),
+  entry("藍白合破局", "蓝白合破局", "Blue White Deal Collapse", "談判桌坐滿了，總統票只剩各走各路。", "谈判桌坐满了，总统票只剩各走各路。", "The negotiation table filled up; the presidential race split apart.", 2, "taiwan", "2023", "國民黨與民眾黨總統合作談判破局，影響 2024 台灣選舉格局。", "国民党与民众党总统合作谈判破局，影响 2024 台湾选举格局。", "The KMT-TPP presidential cooperation talks collapsed before Taiwan's 2024 election."),
+  entry("國會改革爭議", "国会改革争议", "Taiwan Legislature Reform Dispute", "程序槌敲太快，街頭又坐滿人。", "程序槌敲太快，街头又坐满人。", "The gavel moved fast and the street filled again.", 3, "taiwan", "2024", "2024 年台灣立法院改革法案引發程序、權力分立與街頭抗議爭議。", "2024 年台湾立法院改革法案引发程序、权力分立与街头抗议争议。", "Taiwan's 2024 legislature reform bills triggered disputes over procedure, separation of powers, and protests."),
+  entry("國共合作", "国共合作", "KMT CCP United Front", "同一面旗暫時合影，裂痕一直在旁邊等。", "同一面旗暂时合影，裂痕一直在旁边等。", "A temporary group photo hid a waiting crack.", 1, "kmtCcp", "1924", "第一次國共合作促成北伐和革命動員，也埋下日後分裂衝突。", "第一次国共合作促成北伐和革命动员，也埋下日后分裂冲突。", "The First United Front enabled mobilization and the Northern Expedition but led toward rupture."),
+  entry("四一二清黨", "四一二清党", "Shanghai Purge", "合作的門突然關上，街頭成了清算現場。", "合作的门突然关上，街头成了清算现场。", "The alliance door shut and streets became purge sites.", 2, "kmtCcp", "1927", "蔣介石在上海清共，國共合作破裂，國共內戰格局開始形成。", "蒋介石在上海清共，国共合作破裂，国共内战格局开始形成。", "Chiang Kai-shek's purge of communists in Shanghai broke the United Front and shaped civil war."),
+  entry("北伐", "北伐", "Northern Expedition", "軍隊北上統一，盟友也在路上變敵人。", "军队北上统一，盟友也在路上变敌人。", "An army marched north for unity while allies became enemies.", 1, "kmtCcp", "1926-1928", "北伐推翻北洋軍閥格局，國民黨建立南京政權，也伴隨國共分裂。", "北伐推翻北洋军阀格局，国民党建立南京政权，也伴随国共分裂。", "The Northern Expedition broke warlord rule and led to the Nanjing government amid KMT-CCP rupture."),
+  entry("西安事變", "西安事变", "Xi'an Incident", "槍口逼出抗日合作，領袖被迫改劇本。", "枪口逼出抗日合作，领袖被迫改剧本。", "A kidnapping forced the anti-Japan script to change.", 1, "kmtCcp", "1936", "張學良、楊虎城扣押蔣介石，促成停止內戰、共同抗日的政治轉向。", "张学良、杨虎城扣押蒋介石，促成停止内战、共同抗日的政治转向。", "The Xi'an Incident pressured Chiang into a united front against Japan."),
+  entry("重慶談判", "重庆谈判", "Chongqing Negotiations", "握手照拍好了，內戰火種還沒熄。", "握手照拍好了，内战火种还没熄。", "The handshake was photographed before the civil-war embers died.", 2, "kmtCcp", "1945", "抗戰勝利後國共在重慶談判，簽署雙十協定但未能阻止全面內戰。", "抗战胜利后国共在重庆谈判，签署双十协定但未能阻止全面内战。", "Postwar KMT-CCP negotiations produced the Double Tenth Agreement but failed to stop civil war."),
+  entry("雙十協定", "双十协定", "Double Tenth Agreement", "紙上寫和平，槍口還在校準。", "纸上写和平，枪口还在校准。", "Peace was written on paper while guns were still sighted.", 2, "kmtCcp", "1945", "雙十協定承諾和平建國和政治協商，但很快被軍事衝突吞沒。", "双十协定承诺和平建国和政治协商，但很快被军事冲突吞没。", "The agreement promised peace and consultation but was overtaken by renewed conflict."),
+  entry("三大戰役", "三大战役", "Three Campaigns", "遼瀋、淮海、平津，把政權天平推倒。", "辽沈、淮海、平津，把政权天平推倒。", "Liaoshen, Huaihai, and Pingjin tipped the regime balance.", 1, "kmtCcp", "1948-1949", "三大戰役決定國共內戰後期走向，中共取得軍事優勢並建立政權基礎。", "三大战役决定国共内战后期走向，中共取得军事优势并建立政权基础。", "The three campaigns decisively shifted the Chinese Civil War toward CCP victory."),
+  entry("國府遷台", "国府迁台", "ROC Retreat to Taiwan", "南京的政權帶著印信渡海，海峽變成邊界。", "南京的政权带着印信渡海，海峡变成边界。", "A government crossed the sea and the strait became a border.", 1, "kmtCcp", "1949", "國民政府在內戰失利後遷往台灣，形成兩岸分治格局。", "国民政府在内战失利后迁往台湾，形成两岸分治格局。", "The Republic of China government retreated to Taiwan after losing the civil war, creating cross-strait division."),
+  entry("九一八事變", "九一八事变", "Mukden Incident", "一段鐵軌爆炸，東北命運被改寫。", "一段铁轨爆炸，东北命运被改写。", "A railway blast rewrote Manchuria's fate.", 1, "ww2", "1931", "九一八事變後日本佔領東北，建立滿洲國，成為中日戰爭前奏。", "九一八事变后日本占领东北，建立满洲国，成为中日战争前奏。", "The Mukden Incident led to Japan's occupation of Manchuria and the puppet state Manchukuo."),
+  entry("七七事變", "七七事变", "Marco Polo Bridge Incident", "橋邊槍聲響起，全面戰爭拉開。", "桥边枪声响起，全面战争拉开。", "Shots near a bridge opened full-scale war.", 1, "ww2", "1937", "七七事變後中日全面戰爭爆發，華北衝突迅速擴大。", "七七事变后中日全面战争爆发，华北冲突迅速扩大。", "The Marco Polo Bridge Incident triggered full-scale war between China and Japan."),
+  entry("南京大屠殺", "南京大屠杀", "Nanjing Massacre", "城破之後，平民和戰俘成了暴行目標。", "城破之后，平民和战俘成了暴行目标。", "After the city fell, civilians and POWs became targets.", 1, "ww2", "1937", "日軍佔領南京後發生大規模屠殺、強姦和掠奪，是二戰東亞暴行核心記憶。", "日军占领南京后发生大规模屠杀、强奸和掠夺，是二战东亚暴行核心记忆。", "After Japanese forces captured Nanjing, mass killing, rape, and looting became central wartime memory."),
+  entry("重慶大轟炸", "重庆大轰炸", "Chongqing Bombing", "陪都天空反覆燃燒，防空洞記住平民代價。", "陪都天空反复燃烧，防空洞记住平民代价。", "The wartime capital burned from the air, and shelters remembered civilians.", 2, "ww2", "1938-1943", "日本對重慶長期空襲，造成大量平民傷亡並考驗戰時政府與社會韌性。", "日本对重庆长期空袭，造成大量平民伤亡并考验战时政府与社会韧性。", "Japan's sustained bombing of Chongqing caused civilian casualties and tested wartime resilience."),
+  entry("八百壯士", "八百壮士", "Eight Hundred Heroes", "倉庫守軍被拍成民族記憶，也被政治敘事反覆重剪。", "仓库守军被拍成民族记忆，也被政治叙事反复重剪。", "Warehouse defenders became national memory and political editing material.", 2, "ww2", "1937", "四行倉庫守軍抗戰事跡被國民政府宣傳為士氣象徵，後來成為兩岸抗戰敘事素材。", "四行仓库守军抗战事迹被国民政府宣传为士气象征，后来成为两岸抗战叙事素材。", "The Sihang Warehouse defense became a morale symbol and later a contested memory source."),
+  entry("滇緬公路", "滇缅公路", "Burma Road", "山路運來補給，也運來戰爭的喘息。", "山路运来补给，也运来战争的喘息。", "A mountain road carried supplies and wartime breathing space.", 2, "ww2", "1938", "滇緬公路是抗戰時期中國重要國際補給線，連接雲南與緬甸。", "滇缅公路是抗战时期中国重要国际补给线，连接云南与缅甸。", "The Burma Road was a key supply route linking Yunnan and Burma during the war."),
+  entry("中國遠征軍", "中国远征军", "Chinese Expeditionary Force", "士兵走進緬甸雨林，補給線寫進墓碑。", "士兵走进缅甸雨林，补给线写进墓碑。", "Soldiers entered Burma's jungles and supply lines entered tombstones.", 2, "ww2", "1942-1945", "中國遠征軍赴緬作戰，保衛和恢復盟軍對華補給通道，付出巨大傷亡。", "中国远征军赴缅作战，保卫和恢复盟军对华补给通道，付出巨大伤亡。", "Chinese forces fought in Burma to protect and restore Allied supply routes to China."),
+  entry("七三一部隊", "七三一部队", "Unit Seven Three One", "實驗室穿上軍裝，人命被降格成材料。", "实验室穿上军装，人命被降格成材料。", "A laboratory wore a uniform and people became material.", 3, "ww2", "1930s-1945", "七三一部隊進行細菌戰和人體實驗，是日本侵華戰爭暴行之一。", "七三一部队进行细菌战和人体实验，是日本侵华战争暴行之一。", "Unit 731 conducted biological warfare and human experimentation during Japan's war in China."),
+  entry("八三一太子站", "八三一太子站", "Prince Edward Eight Three One", "地鐵門關上後，謠言和恐懼一起擴散。", "地铁门关上后，谣言和恐惧一起扩散。", "After the subway doors closed, fear and rumors spread.", 3, "hongKong", "2019", "2019 年 8 月 31 日香港警方在太子站執法引發傷亡傳聞、監控透明度和警民信任爭議。", "2019 年 8 月 31 日香港警方在太子站执法引发伤亡传闻、监控透明度和警民信任争议。", "Police action at Prince Edward station sparked rumors, transparency disputes, and distrust during 2019 protests."),
+  entry("七二一元朗", "七二一元朗", "Yuen Long Seven Two One", "白衣人走進車站，警民信任走出裂縫。", "白衣人走进车站，警民信任走出裂缝。", "White-clad attackers entered a station and trust cracked.", 2, "hongKong", "2019", "2019 年元朗襲擊事件中白衣人攻擊市民和示威者，警方反應引發重大爭議。", "2019 年元朗袭击事件中白衣人攻击市民和示威者，警方反应引发重大争议。", "The Yuen Long attack by white-clad men and police response became a major 2019 Hong Kong controversy."),
+  entry("光復香港", "光复香港", "Liberate Hong Kong", "一句口號被寫進街頭，也被寫進罪名。", "一句口号被写进街头，也被写进罪名。", "A slogan entered the streets and then the charge sheet.", 3, "hongKong", "2019", "光復香港時代革命是反送中運動口號，國安法後被當局視為敏感甚至違法表述。", "光复香港时代革命是反送中运动口号，国安法后被当局视为敏感甚至违法表述。", "The protest slogan became legally sensitive after Hong Kong's national security law."),
+  entry("連登", "连登", "LIHKG", "論壇像指揮部，也像情緒廣場。", "论坛像指挥部，也像情绪广场。", "A forum became both command room and emotional square.", 2, "hongKong", "2019", "連登在香港反送中運動中承擔資訊流通、動員和迷因生產角色。", "连登在香港反送中运动中承担信息流通、动员和迷因生产角色。", "LIHKG helped circulate information, mobilize action, and produce memes during the protests."),
+  entry("蘋果日報停刊", "苹果日报停刊", "Apple Daily Closure", "報紙停印，新聞自由少了一盞燈。", "报纸停印，新闻自由少了一盏灯。", "A newspaper stopped printing and press freedom lost a lamp.", 2, "hongKong", "2021", "蘋果日報在國安法壓力與資產凍結後停刊，象徵香港媒體環境急劇收縮。", "苹果日报在国安法压力与资产冻结后停刊，象征香港媒体环境急剧收缩。", "Apple Daily closed after national-security pressure and asset freezes, symbolizing a sharp media contraction."),
+  entry("立場新聞案", "立场新闻案", "Stand News Case", "新聞室被控煽動，採訪本身也變成風險。", "新闻室被控煽动，采访本身也变成风险。", "A newsroom was accused of sedition, and reporting became risk.", 3, "hongKong", "2021", "立場新聞被搜查和停運，相關案件反映香港新聞自由與煽動罪爭議。", "立场新闻被搜查和停运，相关案件反映香港新闻自由与煽动罪争议。", "The Stand News case reflected disputes over press freedom and sedition law in Hong Kong."),
+  entry("初選四十七人", "初选四十七人", "Hong Kong Forty Seven", "一次初選，被放進顛覆敘事。", "一次初选，被放进颠覆叙事。", "A primary election was placed into a subversion narrative.", 3, "hongKong", "2021", "香港民主派初選 47 人案是國安法下最大規模案件之一，涉及顛覆國家政權指控。", "香港民主派初选 47 人案是国安法下最大规模案件之一，涉及颠覆国家政权指控。", "The Hong Kong 47 case is one of the largest national-security prosecutions involving opposition primaries."),
+  entry("基本法二十三條", "基本法二十三条", "Article Twenty Three", "本地立法落下，紅線又往日常靠近。", "本地立法落下，红线又往日常靠近。", "Local security legislation brought red lines closer to daily life.", 3, "hongKong", "2024", "香港 2024 年完成二十三條本地國安立法，擴大叛國、間諜、外部干預等罪名框架。", "香港 2024 年完成二十三条本地国安立法，扩大叛国、间谍、外部干预等罪名框架。", "Hong Kong enacted Article 23 security legislation in 2024, expanding local national-security offenses.")
+);
+
+WORD_BANK.push(
+  entry("怒斥香港記者", "怒斥香港记者", "Jiang Scolds Hong Kong Reporter", "不要總想搞大新聞，這句話自己成了大新聞。", "不要总想搞大新闻，这句话自己成了大新闻。", "Do not always chase big news, said the clip that became big news.", 4, "ccpMetaphor", "2000", "江澤民 2000 年會見香港記者時的訓話片段後來被網民反覆剪輯，成為膜蛤文化核心素材。", "江泽民 2000 年会见香港记者时的训话片段后来被网民反复剪辑，成为膜蛤文化核心素材。", "Jiang's 2000 scolding of Hong Kong reporters became a core source for toad-worship remixes."),
+  entry("華萊士訪談", "华莱士访谈", "Wallace Interview", "英文、背詩和手勢，被剪成長者素材庫。", "英文、背诗和手势，被剪成长者素材库。", "English, poetry, and gestures became elder meme material.", 3, "ccpMetaphor", "2000", "江澤民接受美國記者華萊士訪談的片段常被網民拿來對比不同時期領導人風格。", "江泽民接受美国记者华莱士访谈的片段常被网民拿来对比不同时期领导人风格。", "Jiang's interview with Mike Wallace is often remixed and contrasted with later leadership styles."),
+  entry("申奧成功", "申奥成功", "Beijing Olympic Bid Success", "廣場歡呼很響，國家形象工程也正式起跑。", "广场欢呼很响，国家形象工程也正式起跑。", "The cheers were loud, and the image project began running.", 2, "ccp", "2001", "北京 2001 年申奧成功發生在江澤民時期，後來成為中國崛起敘事和大型國家形象工程的一部分。", "北京 2001 年申奥成功发生在江泽民时期，后来成为中国崛起叙事和大型国家形象工程的一部分。", "Beijing's successful 2001 Olympic bid became part of China's rise narrative and state image-building."),
+  entry("香港回歸交接", "香港回归交接", "Hong Kong Handover", "一國兩制登場，倒計時牌換成新劇本。", "一国两制登场，倒计时牌换成新剧本。", "One country, two systems entered the stage as the countdown changed scripts.", 2, "hongKong", "1997", "1997 年香港主權移交發生在江澤民任內，一國兩制承諾後來成為香港政治爭議核心背景。", "1997 年香港主权移交发生在江泽民任内，一国两制承诺后来成为香港政治争议核心背景。", "The 1997 handover under Jiang became the backdrop for later debates over one country, two systems."),
+  entry("社會主義市場經濟", "社会主义市场经济", "Socialist Market Economy", "市場被請進門，姓社姓資先放一邊。", "市场被请进门，姓社姓资先放一边。", "The market was invited in while ideological labels waited outside.", 2, "ccp", "1992", "中共十四大確立社會主義市場經濟目標，承接鄧小平南方談話後的改革方向。", "中共十四大确立社会主义市场经济目标，承接邓小平南方谈话后的改革方向。", "The CCP's 14th Congress set the socialist market economy goal after Deng's southern tour.")
+);
+
+WORD_BANK.push(
+  entry("依法治你", "依法治你", "Rule By Law On You", "法律像方向盤，轉向時才知道誰坐在駕駛座。", "法律像方向盘，转向时才知道谁坐在驾驶座。", "The law is the steering wheel; the driver appears when it turns.", 5, "ccpMetaphor", "2010s", "這個黑話反諷依法治國與選擇性執法之間的落差。", "这个黑话反讽依法治国与选择性执法之间的落差。", "The phrase mocks the gap between rule-of-law slogans and selective enforcement."),
+  entry("口袋罪", "口袋罪", "Pocket Crime", "罪名像口袋，裝得下所有不方便。", "罪名像口袋，装得下所有不方便。", "A charge like a pocket can hold every inconvenience.", 4, "ccpMetaphor", "2000s", "尋釁滋事等彈性罪名常被批評為口袋罪，因為邊界模糊、適用空間大。", "寻衅滋事等弹性罪名常被批评为口袋罪，因为边界模糊、适用空间大。", "Flexible offenses such as picking quarrels are criticized as pocket crimes because their boundaries are broad."),
+  entry("被自願", "被自愿", "Voluntold", "同意書寫得很客氣，旁邊站得很整齊。", "同意书写得很客气，旁边站得很整齐。", "The consent form sounds polite; the people beside it stand very straight.", 4, "ccpMetaphor", "2020s", "網民用被自願形容在行政壓力下形式上自願、實際上難以拒絕的場景。", "网民用被自愿形容在行政压力下形式上自愿、实际上难以拒绝的场景。", "Users say voluntold when administrative pressure turns formal consent into practical compulsion."),
+  entry("熱搜蒸發", "热搜蒸发", "Hot Search Evaporation", "話題剛燒開，水壺就被端走。", "话题刚烧开，水壶就被端走。", "The topic starts boiling, then the kettle is removed.", 3, "ccpMetaphor", "2010s", "社群平台上的敏感話題會突然降溫、下榜或消失，形成熱搜蒸發的說法。", "社群平台上的敏感话题会突然降温、下榜或消失，形成热搜蒸发的说法。", "Sensitive social-media topics can abruptly cool, drop, or vanish, creating the hot-search evaporation meme."),
+  entry("評論精選", "评论精选", "Curated Comments", "評論區還在，只是觀眾席被換成合唱團。", "评论区还在，只是观众席被换成合唱团。", "The comment section remains; the audience has been replaced by a choir.", 3, "ccpMetaphor", "2010s", "評論精選本是平台功能，黑色幽默裡常指只留下安全、順風或官方需要的聲音。", "评论精选本是平台功能，黑色幽默里常指只留下安全、顺风或官方需要的声音。", "Curated comments became a joke about leaving only safe, supportive, or officially convenient voices."),
+  entry("全網下架", "全网下架", "Whole Web Takedown", "作品還沒老，連影子先退休。", "作品还没老，连影子先退休。", "The work has not aged; even its shadow retires first.", 4, "ccpMetaphor", "2010s", "當人、作品或話題突然在多平台消失時，網民用全網下架概括平台審查與風險切割。", "当人、作品或话题突然在多平台消失时，网民用全网下架概括平台审查与风险切割。", "When people, works, or topics disappear across platforms, users describe it as a whole-web takedown."),
+  entry("不明原因", "不明原因", "Cause Unknown", "答案不是沒有，只是還沒批准出場。", "答案不是没有，只是还没批准出场。", "The answer exists; it just has not been approved to appear.", 3, "ccpMetaphor", "2020s", "官方通報常用不明原因處理敏感傷亡、事故或公共事件，網民把它變成遮蔽資訊的笑點。", "官方通报常用不明原因处理敏感伤亡、事故或公共事件，网民把它变成遮蔽信息的笑点。", "Cause unknown is mocked when official notices avoid detail on sensitive deaths, accidents, or public incidents."),
+  entry("官方通報文學", "官方通报文学", "Official Notice Literature", "每個字都很準確，準確到避開重點。", "每个字都很准确，准确到避开重点。", "Every word is precise, precisely away from the point.", 3, "ccpMetaphor", "2020s", "通報模板化、被動語態和避重就輕的寫法常被網民戲稱為官方通報文學。", "通报模板化、被动语态和避重就轻的写法常被网民戏称为官方通报文学。", "Formulaic notices with passive phrasing and evasive emphasis are mocked as official-notice literature."),
+  entry("睡前辟謠", "睡前辟谣", "Bedtime Rumor Refutation", "晚上說是假，早上發公告。", "晚上说是假，早上发公告。", "At night it is false; by morning it is an announcement.", 4, "ccpMetaphor", "2020s", "一些公共事件中，先被闢謠後被證實或部分證實的反差，催生了睡前闢謠式調侃。", "一些公共事件中，先被辟谣后被证实或部分证实的反差，催生了睡前辟谣式调侃。", "The meme comes from incidents where claims are denied first and later confirmed or partly confirmed."),
+  entry("不信謠不傳謠", "不信谣不传谣", "Do Not Believe Rumors", "標語先把嘴封好，真相慢慢排隊。", "标语先把嘴封好，真相慢慢排队。", "The slogan seals mouths first while facts queue slowly.", 3, "ccpMetaphor", "2000s", "這句公共宣傳語在災難和突發事件中常被反諷，因為它有時先壓制討論再等正式版本。", "这句公共宣传语在灾难和突发事件中常被反讽，因为它有时先压制讨论再等正式版本。", "The public-safety slogan is mocked when it suppresses discussion before a full official account appears."),
+  entry("健康碼治國", "健康码治国", "Health Code Governance", "紅黃綠三色，比戶口本還會說話。", "红黄绿三色，比户口本还会说话。", "Three colors can speak louder than a household register.", 4, "ccpMetaphor", "2020-2022", "健康碼在疫情中從防疫工具擴張為通行、隔離和社會控制的日常介面。", "健康码在疫情中从防疫工具扩张为通行、隔离和社会控制的日常界面。", "Health codes expanded from pandemic tools into everyday interfaces for movement, quarantine, and control."),
+  entry("紅碼旅行團", "红码旅行团", "Red Code Tour Group", "不是旅遊套餐，是一鍵原地封印。", "不是旅游套餐，是一键原地封印。", "Not a travel package, but one-click immobilization.", 4, "ccpMetaphor", "2022", "河南村鎮銀行等事件後，賦紅碼爭議讓健康碼被視為可被行政目的挪用的工具。", "河南村镇银行等事件后，赋红码争议让健康码被视为可被行政目的挪用的工具。", "Red-code controversies, including around Henan bank depositors, made health codes look usable for administrative control beyond health."),
+  entry("核酸經濟", "核酸经济", "PCR Economy", "棉棒一伸，GDP 也要張嘴。", "棉棒一伸，GDP 也要张嘴。", "When the swab goes in, GDP opens its mouth too.", 3, "current", "2020-2022", "常態化核酸催生檢測公司、採樣亭和地方財政支出，也留下利益鏈質疑。", "常态化核酸催生检测公司、采样亭和地方财政支出，也留下利益链质疑。", "Routine PCR testing created testing firms, booths, and fiscal spending while raising questions about vested interests."),
+  entry("方艙文學", "方舱文学", "Fangcang Literature", "隔離床位很多，故事比插座還缺。", "隔离床位很多，故事比插座还缺。", "There are many quarantine beds; stories are scarcer than outlets.", 3, "ccpMetaphor", "2020-2022", "方艙隔離中的日記、吐槽和求助貼形成特殊記憶，反映集體隔離的荒誕和不便。", "方舱隔离中的日记、吐槽和求助帖形成特殊记忆，反映集体隔离的荒诞和不便。", "Diaries, complaints, and pleas from fangcang quarantine sites formed a memory of mass isolation's absurdity."),
+  entry("層層加碼", "层层加码", "Layered Overreach", "上面說一寸，下面量出一公里。", "上面说一寸，下面量出一公里。", "The top says one inch; below it becomes a kilometer.", 3, "ccpMetaphor", "2020s", "層層加碼形容地方為避責把政策執行得更嚴，尤其在防疫和維穩中常見。", "层层加码形容地方为避责把政策执行得更严，尤其在防疫和维稳中常见。", "Layered overreach describes local officials enforcing policy more harshly to avoid responsibility, especially in pandemic and stability work."),
+  entry("臨時工背鍋", "临时工背锅", "Temporary Worker Takes Blame", "鍋很重，編制很輕。", "锅很重，编制很轻。", "The blame is heavy; the employment status is light.", 3, "ccpMetaphor", "2000s", "出事後責任常被推給臨時工、外包或基層個人，網民用它諷刺問責切割。", "出事后责任常被推给临时工、外包或基层个人，网民用它讽刺问责切割。", "When responsibility is shifted to temps, contractors, or low-level staff, users mock it as blame outsourcing."),
+  entry("鐵拳砸醒", "铁拳砸醒", "Iron Fist Awakening", "拳頭落下之前，大家都以為自己是觀眾。", "拳头落下之前，大家都以为自己是观众。", "Before the fist lands, everyone thinks they are just spectators.", 4, "ccpMetaphor", "2020s", "鐵拳梗常用於形容原本支持體制的人在自身利益受損後突然理解壓力。", "铁拳梗常用于形容原本支持体制的人在自身利益受损后突然理解压力。", "The iron-fist meme describes people who supported the system until policy pressure hit them personally."),
+  entry("共同貧窮", "共同贫穷", "Common Poverty", "共同富裕的反義詞，總是先在錢包裡完成試點。", "共同富裕的反义词，总是先在钱包里完成试点。", "The antonym of common prosperity pilots itself in wallets first.", 4, "ccpMetaphor", "2020s", "這個反諷詞把共同富裕口號與收入壓力、就業焦慮和民營經濟不確定性放在一起。", "这个反讽词把共同富裕口号与收入压力、就业焦虑和民营经济不确定性放在一起。", "The phrase contrasts common-prosperity rhetoric with income pressure, job anxiety, and private-sector uncertainty."),
+  entry("爛尾樓共和國", "烂尾楼共和国", "Unfinished Tower Republic", "房子沒交付，人生先停工。", "房子没交付，人生先停工。", "The apartment is unfinished; life stops construction first.", 4, "current", "2020s", "房企債務危機導致多地爛尾與停貸風波，購房者承擔交付和金融風險。", "房企债务危机导致多地烂尾与停贷风波，购房者承担交付和金融风险。", "Developer debt crises left unfinished projects and mortgage boycotts, pushing delivery and financial risk onto buyers."),
+  entry("保交樓", "保交楼", "Guarantee Delivery", "先把夢賣出去，再搶救鋼筋水泥。", "先把梦卖出去，再抢救钢筋水泥。", "Sell the dream first, rescue the concrete later.", 3, "current", "2022", "保交樓是房地產風險外溢後的政策任務，重點從賣地增長轉向避免購房者損失擴大。", "保交楼是房地产风险外溢后的政策任务，重点从卖地增长转向避免购房者损失扩大。", "Guaranteeing delivery became a policy priority after property risks spilled over to homebuyers."),
+  entry("土地財政成精", "土地财政成精", "Land Finance Monster", "地皮會說話，說的都是地方債。", "地皮会说话，说的都是地方债。", "The land speaks, and everything it says is local debt.", 4, "ccpMetaphor", "2000s-2020s", "地方政府長期依賴土地出讓收入，房地產降溫後財政壓力和債務問題集中浮現。", "地方政府长期依赖土地出让收入，房地产降温后财政压力和债务问题集中浮现。", "Local reliance on land-sale revenue made property slowdown expose fiscal and debt pressure."),
+  entry("房住不炒不交房", "房住不炒不交房", "Homes For Living Not Delivering", "不炒很正確，不交更安靜。", "不炒很正确，不交更安静。", "No speculation sounds right; no delivery sounds quieter.", 4, "ccpMetaphor", "2020s", "這個黑色幽默把房住不炒口號和爛尾樓、交付困難並置，嘲諷政策語言與購房現實落差。", "这个黑色幽默把房住不炒口号和烂尾楼、交付困难并置，嘲讽政策语言与购房现实落差。", "The phrase pits the homes-not-speculation slogan against unfinished projects and delivery failures."),
+  entry("孔乙己長衫", "孔乙己长衫", "Kong Yiji Gown", "讀書改變命運，先改成脫不下的長衫。", "读书改变命运，先改成脱不下的长衫。", "Education changes fate, first into a gown you cannot remove.", 3, "current", "2023", "孔乙己長衫借魯迅人物諷刺學歷貶值、青年就業困境和向下流動焦慮。", "孔乙己长衫借鲁迅人物讽刺学历贬值、青年就业困境和向下流动焦虑。", "The Kong Yiji gown meme uses Lu Xun's character to mock credential devaluation and youth job anxiety."),
+  entry("青年失業率休假", "青年失业率休假", "Youth Jobless Rate Vacation", "數字太累了，先放個長假。", "数字太累了，先放个长假。", "The number got tired, so it took a long vacation.", 4, "current", "2023", "中國一度暫停發布青年失業率，後來調整統計口徑，網民把它視為數據管理笑話。", "中国一度暂停发布青年失业率，后来调整统计口径，网民把它视为数据管理笑话。", "China paused youth-unemployment publication and later changed methodology, turning the data gap into a meme."),
+  entry("三十五歲優化", "三十五岁优化", "Optimized At Thirty Five", "年齡不是履歷，是倒計時。", "年龄不是履历，是倒计时。", "Age is not a resume line; it is a countdown.", 3, "current", "2020s", "35 歲危機來自職場招聘、裁員和中年再就業壓力，常被用來嘲諷用人成本邏輯。", "35 岁危机来自职场招聘、裁员和中年再就业压力，常被用来嘲讽用人成本逻辑。", "The thirty-five crisis reflects hiring bias, layoffs, and mid-career pressure in a cost-focused labor market."),
+  entry("靈活畢業", "灵活毕业", "Flexible Graduation", "畢業證很硬，工作崗位很靈活。", "毕业证很硬，工作岗位很灵活。", "The diploma is firm; the job is flexible.", 3, "ccpMetaphor", "2020s", "這個詞把靈活就業與高校畢業生壓力連在一起，嘲諷就業統計和現實落差。", "这个词把灵活就业与高校毕业生压力连在一起，嘲讽就业统计和现实落差。", "The term links flexible employment with graduate pressure and mocks gaps between job statistics and reality."),
+  entry("外賣算法爹", "外卖算法爹", "Delivery Algorithm Dad", "老闆不一定見得到，算法一定會催單。", "老板不一定见得到，算法一定会催单。", "You may never see the boss, but the algorithm always rushes you.", 3, "current", "2020s", "外賣平台用算法分配訂單、時間和評價，騎手承擔交通與收入壓力。", "外卖平台用算法分配订单、时间和评价，骑手承担交通与收入压力。", "Food-delivery platforms use algorithms for orders, timing, and ratings, putting risk and pressure on riders."),
+  entry("九九六福報", "九九六福报", "Nine Nine Six Blessing", "加班像香火，燒完才算虔誠。", "加班像香火，烧完才算虔诚。", "Overtime is incense; only burnout proves devotion.", 3, "ccpMetaphor", "2010s", "996 福報來自互聯網加班文化爭議，網民用它反諷把剝削包裝成奮鬥。", "996 福报来自互联网加班文化争议，网民用它反讽把剥削包装成奋斗。", "The 996 blessing meme comes from tech overtime disputes and mocks exploitation packaged as奋斗."),
+  entry("一鍵辱華", "一键辱华", "One Click Insult China", "按鈕還沒按下，帽子已經戴好。", "按钮还没按下，帽子已经戴好。", "Before the button is clicked, the accusation is already fitted.", 4, "ccpMetaphor", "2020s", "辱華指控常在品牌、影視、體育和外交爭議中快速擴散，網民用一鍵辱華嘲諷敏感度過高。", "辱华指控常在品牌、影视、体育和外交争议中快速扩散，网民用一键辱华嘲讽敏感度过高。", "Insult-China accusations spread quickly in brand, media, sports, and diplomatic controversies, inspiring the one-click meme."),
+  entry("辱華檢測儀", "辱华检测仪", "Insult China Detector", "靈敏度拉滿，連空氣都可能不友好。", "灵敏度拉满，连空气都可能不友好。", "Sensitivity is maxed; even the air may be unfriendly.", 4, "ccpMetaphor", "2020s", "這個詞嘲諷民族主義審查和網路出征把普通符號解讀成政治冒犯。", "这个词嘲讽民族主义审查和网络出征把普通符号解读成政治冒犯。", "The detector meme mocks nationalist policing that turns ordinary symbols into political offense."),
+  entry("戰狼回旋鏢", "战狼回旋镖", "Wolf Warrior Boomerang", "話說得越滿，回來時越疼。", "话说得越满，回来时越疼。", "The harder the line, the harder it returns.", 4, "ccpMetaphor", "2020s", "戰狼式表態在外交、商業或輿論中有時引發反作用，網民稱之為回旋鏢。", "战狼式表态在外交、商业或舆论中有时引发反作用，网民称之为回旋镖。", "Wolf-warrior rhetoric can backfire in diplomacy, business, or public opinion, hence the boomerang joke."),
+  entry("贏麻了", "赢麻了", "Won Numb", "每天都贏，贏到臉上沒有知覺。", "每天都赢，赢到脸上没有知觉。", "Winning every day until your face goes numb.", 3, "ccpMetaphor", "2020s", "贏麻了常用來反諷宣傳口徑永遠勝利，現實壓力卻沒有被解決。", "赢麻了常用来反讽宣传口径永远胜利，现实压力却没有被解决。", "Won numb mocks propaganda that always claims victory while real problems remain."),
+  entry("又贏一次", "又赢一次", "Won Again", "比分不知道，掌聲先到位。", "比分不知道，掌声先到位。", "No one knows the score, but applause arrives first.", 3, "ccpMetaphor", "2020s", "又贏是對民族主義敘事和媒體勝利口吻的壓縮嘲諷。", "又赢是对民族主义叙事和媒体胜利口吻的压缩嘲讽。", "Won again is a compact jab at nationalist narratives and victory-toned media framing."),
+  entry("統計局美容院", "统计局美容院", "Statistics Beauty Salon", "數字進去洗個臉，出來就精神多了。", "数字进去洗个脸，出来就精神多了。", "Numbers get a facial and come out refreshed.", 4, "ccpMetaphor", "2020s", "這個梗嘲諷經濟和就業數據口徑調整、選擇發布或過度修飾。", "这个梗嘲讽经济和就业数据口径调整、选择发布或过度修饰。", "The meme mocks statistical methodology changes, selective publication, or cosmetic presentation of economic data."),
+  entry("數據休假", "数据休假", "Data On Leave", "人會失業，數據會休假。", "人会失业，数据会休假。", "People may lose jobs; data takes leave.", 4, "ccpMetaphor", "2023", "當敏感數據暫停發布或改口徑時，網民用數據休假嘲諷透明度不足。", "当敏感数据暂停发布或改口径时，网民用数据休假嘲讽透明度不足。", "When sensitive data pauses or changes methodology, users joke that the data went on leave."),
+  entry("網信辦宇宙", "网信办宇宙", "Cyberspace Office Universe", "每個星球都有評論區，每個評論區都有紅線。", "每个星球都有评论区，每个评论区都有红线。", "Every planet has comments; every comment section has red lines.", 4, "ccpMetaphor", "2010s", "網信辦代表中國網路治理和內容管控體系，網民用宇宙梗形容紅線無處不在。", "网信办代表中国网络治理和内容管控体系，网民用宇宙梗形容红线无处不在。", "The Cyberspace Administration symbolizes content control; the universe joke says red lines are everywhere."),
+  entry("學習強國刷分", "学习强国刷分", "Study Xi Score Farming", "思想也有日活，忠誠也有積分。", "思想也有日活，忠诚也有积分。", "Ideology has daily active users; loyalty has points.", 3, "ccpMetaphor", "2019", "學習強國 app 推出後，部分單位把學習積分變成考核任務，形成刷分黑色幽默。", "学习强国 app 推出后，部分单位把学习积分变成考核任务，形成刷分黑色幽默。", "After the Study Xi app launched, some workplaces treated points as assessment tasks, creating score-farming jokes."),
+  entry("忠誠競賽", "忠诚竞赛", "Loyalty Contest", "表態不是終點，是下一輪起跑線。", "表态不是终点，是下一轮起跑线。", "A loyalty statement is not the finish line; it starts the next round.", 4, "ccpMetaphor", "2010s", "黨內政治中忠誠表態層層加碼，網民用競賽形容互相比誰更正確。", "党内政治中忠诚表态层层加码，网民用竞赛形容互相比谁更正确。", "Escalating loyalty declarations become a contest over who sounds most correct."),
+  entry("親自背鍋", "亲自背锅", "Personally Takes The Blame", "親自指揮很風光，親自背鍋很科幻。", "亲自指挥很风光，亲自背锅很科幻。", "Personally commanding is glorious; personally taking blame is science fiction.", 4, "ccpMetaphor", "2020s", "它反諷重大政策被塑造成最高領導親自部署，但出問題時責任往往下沉。", "它反讽重大政策被塑造成最高领导亲自部署，但出问题时责任往往下沉。", "The joke contrasts top-level credit for personal command with blame that usually flows downward."),
+  entry("一尊模式", "一尊模式", "One Man Mode", "多人遊戲被更新成單人劇情。", "多人游戏被更新成单人剧情。", "A multiplayer game is patched into a single-player storyline.", 5, "ccpMetaphor", "2010s", "一尊模式諷刺權力集中、集體領導弱化和個人核心化。", "一尊模式讽刺权力集中、集体领导弱化和个人核心化。", "One-man mode satirizes concentrated power, weaker collective leadership, and personal core politics."),
+  entry("梁家河濾鏡", "梁家河滤镜", "Liangjiahe Filter", "一開濾鏡，土窯洞也能發光。", "一开滤镜，土窑洞也能发光。", "Turn on the filter and even a cave dwelling glows.", 4, "ccpMetaphor", "2010s", "梁家河敘事被用來塑造領袖吃苦和基層經歷，網民用濾鏡諷刺履歷神聖化。", "梁家河叙事被用来塑造领袖吃苦和基层经历，网民用滤镜讽刺履历神圣化。", "The Liangjiahe story is used to craft a hardship biography; the filter meme mocks sanctified biography."),
+  entry("雄安空城計", "雄安空城计", "Xiongan Empty City Stratagem", "千年大計先上牆，人氣慢慢等通知。", "千年大计先上墙，人气慢慢等通知。", "The millennium plan goes on the wall first; population waits for notice.", 4, "ccpMetaphor", "2017", "雄安宏大規劃引發對政績工程、新城建設和人口產業導入速度的網路質疑。", "雄安宏大规划引发对政绩工程、新城建设和人口产业导入速度的网络质疑。", "Xiongan's grand planning produced online skepticism about prestige projects and the speed of population and industry arrival."),
+  entry("千年大餅", "千年大饼", "Millennium Pie", "餅畫得越圓，肚子越容易餓。", "饼画得越圆，肚子越容易饿。", "The rounder the promised pie, the hungrier the stomach.", 4, "ccpMetaphor", "2017", "千年大餅把千年大計和畫餅充飢合在一起，嘲諷宏大規劃與現實落差。", "千年大饼把千年大计和画饼充饥合在一起，嘲讽宏大规划与现实落差。", "The meme fuses millennium plan with empty promise, mocking gaps between grand planning and lived reality."),
+  entry("維穩KPI", "维稳KPI", "Stability KPI", "社會很穩，因為表格不能抖。", "社会很稳，因为表格不能抖。", "Society is stable because the spreadsheet must not shake.", 4, "ccpMetaphor", "2000s", "地方治理常把穩定作為硬指標，維權、上訪和抗議被納入考核壓力。", "地方治理常把稳定作为硬指标，维权、上访和抗议被纳入考核压力。", "Local governance often treats stability as a hard metric, turning petitions and protests into assessment pressure."),
+  entry("茶喝明白", "茶喝明白", "Tea Talk Understood", "一杯茶下去，話就知道該怎麼說。", "一杯茶下去，话就知道该怎么说。", "After a cup of tea, you know what to say.", 3, "ccpMetaphor", "2000s", "喝茶是網路黑話，指被警方或有關部門約談提醒。", "喝茶是网络黑话，指被警方或有关部门约谈提醒。", "Tea drinking is online slang for being summoned or warned by police or authorities."),
+  entry("指定居所", "指定居所", "Designated Residence", "地址很指定，自由很抽象。", "地址很指定，自由很抽象。", "The address is designated; freedom is abstract.", 4, "ccpMetaphor", "2010s", "指定居所監視居住是刑事程序中的強制措施，常因秘密羈押和律師會見受限引發爭議。", "指定居所监视居住是刑事程序中的强制措施，常因秘密羁押和律师会见受限引发争议。", "Residential surveillance at a designated location is controversial because it can involve secret detention and restricted legal access."),
+  entry("電視認罪", "电视认罪", "Televised Confession", "審判還沒開播，懺悔先上黃金檔。", "审判还没开播，忏悔先上黄金档。", "The trial has not aired; repentance gets prime time first.", 4, "ccpMetaphor", "2010s", "被拘押者在媒體上認罪的做法被批評為未審先判和輿論審判。", "被拘押者在媒体上认罪的做法被批评为未审先判和舆论审判。", "Televised confessions are criticized as trial by media before due process."),
+  entry("境外敵對勢力", "境外敌对势力", "Hostile Foreign Forces", "鍋太大，國界外比較好放。", "锅太大，国界外比较好放。", "When the blame is too large, it fits better outside the border.", 4, "ccpMetaphor", "2000s", "境外勢力敘事常用於解釋抗議、維權或輿論壓力，網民用它嘲諷外部歸因。", "境外势力叙事常用于解释抗议、维权或舆论压力，网民用它嘲讽外部归因。", "Hostile-foreign-force narratives explain protests or rights pressure through external blame and are widely mocked."),
+  entry("檔案不存在", "档案不存在", "File Does Not Exist", "查無此人，查無此事，查無此記憶。", "查无此人，查无此事，查无此记忆。", "No such person, no such event, no such memory.", 4, "ccpMetaphor", "2020s", "這個詞形容敏感事件、人物或報導在公開資料中突然消失。", "这个词形容敏感事件、人物或报道在公开资料中突然消失。", "The phrase describes sensitive events, people, or reports disappearing from public records."),
+  entry("冷處理", "冷处理", "Cold Treatment", "火不能撲，就把溫度計拿走。", "火不能扑，就把温度计拿走。", "If the fire cannot be put out, remove the thermometer.", 3, "ccpMetaphor", "2000s", "冷處理指用拖延、沉默、降熱搜和不回應讓公共事件自然退潮。", "冷处理指用拖延、沉默、降热搜和不回应让公共事件自然退潮。", "Cold treatment uses delay, silence, lowered visibility, and non-response to let public anger fade.")
+);
+
 const EXTRA_DECOYS = {
   tw: "忠誠偉大勝利穩定繁榮安全復興口號會議審查宣傳紀律文件紅旗印章報告樣板核心治理秩序榮光",
   cn: "忠诚伟大胜利稳定繁荣安全复兴口号会议审查宣传纪律文件红旗印章报告样板核心治理秩序荣光",
@@ -378,53 +571,336 @@ const EXTRA_DECOYS = {
 
 const MODE_SEQUENCE = ["blackout", "scramble", "pressure", "echo", "purge"];
 
-const TILE_TYPES = [
-  { id: "seal", tw: "印", cn: "印", en: "SEAL" },
-  { id: "order", tw: "令", cn: "令", en: "CMD" },
-  { id: "wall", tw: "牆", cn: "墙", en: "WALL" },
-  { id: "red", tw: "紅", cn: "红", en: "RED" },
-  { id: "code", tw: "碼", cn: "码", en: "CODE" },
-  { id: "ban", tw: "禁", cn: "禁", en: "BAN" },
-  { id: "paper", tw: "紙", cn: "纸", en: "DOC" },
-  { id: "zero", tw: "零", cn: "零", en: "ZERO" }
-];
+const MERGE_TILE_SETS = {
+  all: [
+    { tw: "口號", cn: "口号", en: "Slogan" },
+    { tw: "通稿", cn: "通稿", en: "Copy" },
+    { tw: "會議", cn: "会议", en: "Meeting" },
+    { tw: "指示", cn: "指示", en: "Order" },
+    { tw: "專班", cn: "专班", en: "Taskforce" },
+    { tw: "整風", cn: "整风", en: "Rectify" },
+    { tw: "封控", cn: "封控", en: "Control" },
+    { tw: "清場", cn: "清场", en: "Clearance" },
+    { tw: "核心", cn: "核心", en: "Core" },
+    { tw: "一尊", cn: "一尊", en: "One" },
+    { tw: "禁書", cn: "禁书", en: "Banned" },
+    { tw: "檔案", cn: "档案", en: "Archive" }
+  ],
+  xi: [
+    { tw: "包子", cn: "包子", en: "Bun" },
+    { tw: "扛麥", cn: "扛麦", en: "Wheat" },
+    { tw: "親自", cn: "亲自", en: "Personal" },
+    { tw: "清零", cn: "清零", en: "Zero" },
+    { tw: "學習", cn: "学习", en: "Study" },
+    { tw: "核心", cn: "核心", en: "Core" },
+    { tw: "一尊", cn: "一尊", en: "One" },
+    { tw: "修憲", cn: "修宪", en: "Termless" },
+    { tw: "倒車", cn: "倒车", en: "Reverse" },
+    { tw: "刁邁", cn: "刁迈", en: "Diao" },
+    { tw: "皇袍", cn: "皇袍", en: "Robe" },
+    { tw: "禁評", cn: "禁评", en: "Muted" }
+  ],
+  mao: [
+    { tw: "語錄", cn: "语录", en: "Quote" },
+    { tw: "紅袖", cn: "红袖", en: "Armband" },
+    { tw: "公社", cn: "公社", en: "Commune" },
+    { tw: "高產", cn: "高产", en: "Quota" },
+    { tw: "忠舞", cn: "忠舞", en: "Loyalty" },
+    { tw: "批鬥", cn: "批斗", en: "Denounce" },
+    { tw: "下鄉", cn: "下乡", en: "Sent Down" },
+    { tw: "破四", cn: "破四", en: "Smash" },
+    { tw: "饑荒", cn: "饥荒", en: "Famine" },
+    { tw: "太陽", cn: "太阳", en: "Sun" },
+    { tw: "舵手", cn: "舵手", en: "Helm" },
+    { tw: "臘肉", cn: "腊肉", en: "Cured" }
+  ],
+  deng: [
+    { tw: "黑貓", cn: "黑猫", en: "Black Cat" },
+    { tw: "白貓", cn: "白猫", en: "White Cat" },
+    { tw: "石頭", cn: "石头", en: "Stone" },
+    { tw: "先富", cn: "先富", en: "First Rich" },
+    { tw: "特區", cn: "特区", en: "SEZ" },
+    { tw: "南巡", cn: "南巡", en: "South Tour" },
+    { tw: "穩定", cn: "稳定", en: "Stability" },
+    { tw: "戒嚴", cn: "戒严", en: "Martial" },
+    { tw: "履帶", cn: "履带", en: "Treads" },
+    { tw: "廣場", cn: "广场", en: "Square" },
+    { tw: "碾平", cn: "碾平", en: "Crusher" },
+    { tw: "清場", cn: "清场", en: "Clear" }
+  ],
+  jiang: [
+    { tw: "長者", cn: "长者", en: "Elder" },
+    { tw: "眼鏡", cn: "眼镜", en: "Glasses" },
+    { tw: "蛤蛤", cn: "蛤蛤", en: "Toad" },
+    { tw: "談笑", cn: "谈笑", en: "Laughing" },
+    { tw: "悶聲", cn: "闷声", en: "Quiet" },
+    { tw: "賽艇", cn: "赛艇", en: "Excited" },
+    { tw: "圖樣", cn: "图样", en: "Young" },
+    { tw: "核心", cn: "核心", en: "Core" },
+    { tw: "續命", cn: "续命", en: "Life" },
+    { tw: "詩句", cn: "诗句", en: "Poem" },
+    { tw: "大新聞", cn: "大新闻", en: "Big News" },
+    { tw: "膜蛤", cn: "膜蛤", en: "Worship" }
+  ]
+};
+
+const ENTRY_TAGS = {
+  "Cultural Revolution": ["mao"],
+  "Great Famine": ["mao"],
+  "Great Leap Forward": ["mao"],
+  "People Commune": ["mao"],
+  "Anti Rightist Campaign": ["mao"],
+  "Hundred Flowers": ["mao"],
+  "Destroy Four Olds": ["mao"],
+  "Big Character Posters": ["mao"],
+  "Down to the Countryside": ["mao"],
+  "Educated Youth": ["mao"],
+  "Lin Biao Incident": ["mao"],
+  "Gang of Four": ["mao"],
+  "Criticize Lin and Confucius": ["mao"],
+  "Model Operas": ["mao"],
+  "Little Red Book": ["mao"],
+  "Ten Thousand Jin Per Mu": ["mao"],
+  "Loyalty Dance": ["mao"],
+  "Morning Request Evening Report": ["mao"],
+  "Red Sun": ["mao"],
+  "Great Helmsman": ["mao"],
+  "Cured Meat": ["mao"],
+  "Mao Cured Meat": ["mao"],
+  "Reform and Opening": ["deng"],
+  "Southern Tour": ["deng"],
+  "June Fourth": ["deng"],
+  "Eight Nine Six Four": ["deng"],
+  "Tank Man": ["deng"],
+  "Tiananmen Clearing": ["deng"],
+  "Deng the Crusher": ["deng"],
+  "Crusher Deng": ["deng"],
+  "Black Cat White Cat": ["deng"],
+  "Crossing River By Stones": ["deng"],
+  "Some Get Rich First": ["deng"],
+  "Stability Above All": ["deng"],
+  "Jiang Core": ["jiang"],
+  "Elder": ["jiang"],
+  "Toad Worship": ["jiang"],
+  "Haha Toad": ["jiang"],
+  "Make Fortune Quietly": ["jiang"],
+  "Talking and Laughing": ["jiang"],
+  "Too Young Too Simple": ["jiang"],
+  "Excited": ["jiang"],
+  "For Country Life And Death": ["jiang"],
+  "Xi Ban Comments": ["xi"],
+  "Diao May Care": ["xi"],
+  "Chief Accelerator": ["xi"],
+  "Liangjiahe University": ["xi"],
+  "Qingfeng Bun Shop": ["xi"],
+  "Winnie Removed": ["xi"],
+  "Ten Years of Great Health": ["xi"],
+  "Personally Commanded": ["xi"],
+  "Personally Deployed": ["xi"],
+  "Trade and Undress": ["xi"],
+  "One Supreme Figure": ["xi"],
+  "Two Establishes": ["xi"],
+  "Two Upholds": ["xi"],
+  "Study Xi Strong Nation": ["xi"],
+  "Unanimous Election": ["xi"],
+  "Constitutional Emperor": ["xi"],
+  "Reverse Gear Emperor": ["xi"],
+  "The One": ["xi"],
+  "Zero COVID Patriarch": ["xi"],
+  "PCR Golden Age": ["xi"],
+  "White Paper Revolution": ["xi"],
+  "New Quality Productive Forces": ["xi"],
+  "Historical Garbage Time": ["xi"],
+  "Far Ahead": ["xi"],
+  "East Rises West Falls": ["xi"],
+  "Chinese Style Modernization": ["xi"],
+  "Made to Disappear": ["xi"],
+  "Xi Baozi": ["xi"],
+  "Wheat Shoulder Xi": ["xi"],
+  "Two Hundred Jin No Shoulder Switch": ["xi"],
+  "Sager King": ["xi"],
+  "Qingfeng Emperor": ["xi"],
+  "Primary School Doctor": ["xi"],
+  "Big Spender": ["xi"],
+  "Chin Commanding": ["xi"],
+  "Xi Ceausescu": ["xi"]
+};
+
+Object.assign(ENTRY_TAGS, {
+  "Liangjiahe Pilgrimage": ["xi"],
+  "Liangjiahe Great Learning": ["xi"],
+  "Xiongan Millennium Plan": ["xi"],
+  "Twentieth Congress Third Term": ["xi"],
+  "Absolute Loyalty Test": ["xi"],
+  "Whole Process Democracy": ["xi"],
+  "Zero COVID U Turn": ["xi"],
+  "Attack With Words Defend With Force": ["mao"],
+  "Factional Armed Struggle": ["mao"],
+  "Cleansing Class Ranks": ["mao"],
+  "Fight Self Criticize Revisionism": ["mao"],
+  "Backyard Steel Drive": ["mao"],
+  "Exaggeration Wind": ["mao"],
+  "Commune Canteens": ["mao"],
+  "Shenzhen SEZ": ["deng"],
+  "Price Reform Shock": ["deng"],
+  "No Debate": ["deng"],
+  "Hide Brightness Bide Time": ["deng"],
+  "Three Represents": ["jiang"],
+  "Shanghai Clique": ["jiang"],
+  "WTO Accession": ["jiang"],
+  "Three Stresses Campaign": ["jiang"],
+  "Jiang Scolds Hong Kong Reporter": ["jiang"],
+  "Wallace Interview": ["jiang"],
+  "Beijing Olympic Bid Success": ["jiang"],
+  "Hong Kong Handover": ["jiang"],
+  "Socialist Market Economy": ["deng"],
+  "Health Code Governance": ["xi"],
+  "Red Code Tour Group": ["xi"],
+  "PCR Economy": ["xi"],
+  "Fangcang Literature": ["xi"],
+  "Layered Overreach": ["xi"],
+  "Common Poverty": ["xi"],
+  "Youth Jobless Rate Vacation": ["xi"],
+  "Flexible Graduation": ["xi"],
+  "Won Numb": ["xi"],
+  "Won Again": ["xi"],
+  "Statistics Beauty Salon": ["xi"],
+  "Data On Leave": ["xi"],
+  "Cyberspace Office Universe": ["xi"],
+  "Study Xi Score Farming": ["xi"],
+  "Loyalty Contest": ["xi"],
+  "Personally Takes The Blame": ["xi"],
+  "One Man Mode": ["xi"],
+  "Liangjiahe Filter": ["xi"],
+  "Xiongan Empty City Stratagem": ["xi"],
+  "Millennium Pie": ["xi"]
+});
 
 const GAME_COPY = {
   tw: {
     progress: "解密進度",
-    matrix: "檔案矩陣",
+    matrix: "文字牌堆",
     combo: "連擊",
     moves: "步數",
-    scan: "掃描",
-    reshuffle: "洗牌",
+    scan: "提示",
+    reshuffle: "重洗",
     skip: "跳過",
-    scanEmpty: "無可掃描",
-    playHint: "點擊相鄰同類碎片，2 個以上即可消除。消除越大，解密越快。",
-    autoReveal: "無需猜詞，矩陣能量滿後自動解密。"
+    scanEmpty: "暫無提示",
+    playHint: "未被上層牌遮住的文字牌才可拿取。",
+    autoReveal: "答案關鍵牌消除後逐步解密。",
+    evidence: "牌",
+    evidenceBoost: "三消",
+    chain: "槽位",
+    next: "關鍵",
+    adjacent: "可拿",
+    order: "三張",
+    up: "上",
+    down: "下",
+    left: "左",
+    right: "右",
+    best: "建議",
+    highest: "最高"
   },
   cn: {
     progress: "解密进度",
-    matrix: "档案矩阵",
+    matrix: "文字牌堆",
     combo: "连击",
     moves: "步数",
-    scan: "扫描",
-    reshuffle: "洗牌",
+    scan: "提示",
+    reshuffle: "重洗",
     skip: "跳过",
-    scanEmpty: "无可扫描",
-    playHint: "点击相邻同类碎片，2 个以上即可消除。消除越大，解密越快。",
-    autoReveal: "无需猜词，矩阵能量满后自动解密。"
+    scanEmpty: "暂无提示",
+    playHint: "未被上层牌遮住的文字牌才可拿取。",
+    autoReveal: "答案关键牌消除后逐步解密。",
+    evidence: "牌",
+    evidenceBoost: "三消",
+    chain: "槽位",
+    next: "关键",
+    adjacent: "可拿",
+    order: "三张",
+    up: "上",
+    down: "下",
+    left: "左",
+    right: "右",
+    best: "建议",
+    highest: "最高"
   },
   en: {
     progress: "Decode Progress",
-    matrix: "Archive Matrix",
+    matrix: "Text Tile Stack",
     combo: "Combo",
     moves: "Moves",
-    scan: "Scan",
-    reshuffle: "Reshuffle",
+    scan: "Hint",
+    reshuffle: "Shuffle",
     skip: "Skip",
-    scanEmpty: "No scan",
-    playHint: "Click adjacent matching fragments. Groups of 2 or more clear.",
-    autoReveal: "No guessing. Fill the meter and the archive decrypts itself."
+    scanEmpty: "No hint",
+    playHint: "Only uncovered tiles can be picked.",
+    autoReveal: "Key archive triples reveal the term step by step.",
+    evidence: "Tile",
+    evidenceBoost: "Triple",
+    chain: "Tray",
+    next: "Key",
+    adjacent: "Open",
+    order: "Three",
+    up: "Up",
+    down: "Down",
+    left: "Left",
+    right: "Right",
+    best: "Best",
+    highest: "Top"
+  }
+};
+
+const LEADER_MODE_COPY = {
+  tw: {
+    all: { name: "通用檔案", desc: "全詞庫輪替，標準三消牌堆規則。" },
+    xi: { name: "刁邁乎模式", desc: "習近平相關詞條優先；每隔數步會壓縮時間，槽位壓力更大。" },
+    mao: { name: "臘肉模式", desc: "毛澤東相關詞條優先；消掉關鍵牌加分更多，但時間代價更高。" },
+    deng: { name: "碾平模式", desc: "鄧小平相關詞條優先；低槽位操作有額外分數。" },
+    jiang: { name: "長者模式", desc: "江澤民相關詞條優先；連續三消會悶聲加時加分。" }
+  },
+  cn: {
+    all: { name: "通用档案", desc: "全词库轮替，标准三消牌堆规则。" },
+    xi: { name: "刁迈乎模式", desc: "习近平相关词条优先；每隔数步会压缩时间，槽位压力更大。" },
+    mao: { name: "腊肉模式", desc: "毛泽东相关词条优先；消掉关键牌加分更多，但时间代价更高。" },
+    deng: { name: "碾平模式", desc: "邓小平相关词条优先；低槽位操作有额外分数。" },
+    jiang: { name: "长者模式", desc: "江泽民相关词条优先；连续三消会闷声加时加分。" }
+  },
+  en: {
+    all: { name: "General Archive", desc: "Full word bank with standard triple-match stack rules." },
+    xi: { name: "Diao Mai Hu", desc: "Xi-focused entries. The clock tightens every few picks." },
+    mao: { name: "Cured Meat", desc: "Mao-focused entries. Key triples pay more but cost time." },
+    deng: { name: "Crusher", desc: "Deng-focused entries. Low-tray play earns extra score." },
+    jiang: { name: "Elder", desc: "Jiang-focused entries. Combo triples quietly add time and score." }
+  }
+};
+
+const MUSIC_TRACK_IDS = ["flag", "gospel", "procession", "memorial", "recessional"];
+
+const MUSIC_TRACK_COPY = {
+  tw: {
+    label: "配樂",
+    flag: { name: "旗歌行進", desc: "莊重行進與鐘聲主題。" },
+    gospel: { name: "聖歌合唱", desc: "柔和合唱與管風琴感。" },
+    procession: { name: "典禮銅管", desc: "更明亮的儀式行進。" },
+    memorial: { name: "追思鐘聲", desc: "慢速、肅穆、低鼓。" },
+    recessional: { name: "凱旋終章", desc: "較快的終章式主題。" }
+  },
+  cn: {
+    label: "配乐",
+    flag: { name: "旗歌行进", desc: "庄重行进与钟声主题。" },
+    gospel: { name: "圣歌合唱", desc: "柔和合唱与管风琴感。" },
+    procession: { name: "典礼铜管", desc: "更明亮的仪式行进。" },
+    memorial: { name: "追思钟声", desc: "慢速、肃穆、低鼓。" },
+    recessional: { name: "凯旋终章", desc: "较快的终章式主题。" }
+  },
+  en: {
+    label: "Music",
+    flag: { name: "Flag March", desc: "Solemn march with bells." },
+    gospel: { name: "Gospel Choir", desc: "Soft choir and organ feel." },
+    procession: { name: "Procession", desc: "Brighter ceremonial pulse." },
+    memorial: { name: "Memorial Bells", desc: "Slow, solemn, low drums." },
+    recessional: { name: "Recessional", desc: "Faster closing hymn theme." }
   }
 };
 
@@ -436,6 +912,7 @@ const soundToggle = document.getElementById("soundToggle");
 const state = {
   lang: "tw",
   route: "time",
+  leaderMode: "all",
   level: 0,
   score: 0,
   bestLevel: 0,
@@ -443,16 +920,22 @@ const state = {
   started: false,
   entry: null,
   answerUnits: [],
-  selected: [],
-  tokens: [],
   grid: [],
-  gridSize: 7,
+  gridSize: 5,
   decryptProgress: 0,
   decryptGoal: 100,
   revealedCount: 0,
   combo: 0,
   moves: 0,
-  highlightedCellIds: [],
+  lastEvidenceHits: [],
+  matchBursts: [],
+  matchBurstSerial: 0,
+  tray: [],
+  trayLimit: 7,
+  tileGroupCount: 0,
+  clearedAnswerCounts: {},
+  clearedAnswerTotal: 0,
+  hintCellId: null,
   wrongCellId: null,
   cellSerial: 0,
   maxTime: 90,
@@ -466,8 +949,7 @@ const state = {
   modal: null,
   muted: false,
   volume: 0.62,
-  hintTokenId: null,
-  wrongTokenId: null,
+  musicTrack: "flag",
   endlessLap: 0
 };
 
@@ -481,7 +963,196 @@ class AudioEngine {
     this.step = 0;
     this.volume = 0.62;
     this.muted = false;
-    this.scale = [146.83, 164.81, 174.61, 196, 220, 246.94, 261.63, 293.66, 329.63, 392];
+    this.stepDuration = 0.18;
+    this.patternLength = 256;
+    this.scale = [196, 220, 246.94, 261.63, 293.66, 329.63, 369.99, 392, 440, 493.88, 523.25, 587.33, 659.25, 739.99, 783.99];
+    this.anthemMelody = [
+      [0, 7, 3], [3, 8, 1], [4, 9, 4], [8, 11, 4], [12, 9, 4],
+      [16, 10, 3], [19, 9, 1], [20, 8, 4], [24, 7, 4], [28, 4, 4],
+      [32, 5, 3], [35, 7, 1], [36, 8, 4], [40, 9, 4], [44, 8, 4],
+      [48, 7, 6], [54, 4, 2], [56, 5, 2], [58, 6, 2], [60, 7, 4],
+      [64, 9, 3], [67, 10, 1], [68, 11, 4], [72, 12, 4], [76, 11, 4],
+      [80, 10, 3], [83, 9, 1], [84, 8, 4], [88, 9, 4], [92, 7, 4],
+      [96, 5, 3], [99, 7, 1], [100, 9, 4], [104, 11, 4], [108, 10, 4],
+      [112, 9, 6], [118, 8, 2], [120, 7, 2], [122, 5, 2], [124, 7, 4],
+      [128, 11, 3], [131, 12, 1], [132, 14, 4], [136, 13, 4], [140, 12, 4],
+      [144, 11, 3], [147, 10, 1], [148, 9, 4], [152, 8, 4], [156, 7, 4],
+      [160, 9, 3], [163, 10, 1], [164, 11, 4], [168, 12, 4], [172, 10, 4],
+      [176, 9, 4], [180, 8, 4], [184, 7, 4], [188, 6, 4],
+      [192, 7, 3], [195, 8, 1], [196, 9, 4], [200, 11, 4], [204, 12, 4],
+      [208, 14, 6], [214, 12, 2], [216, 11, 4], [220, 9, 4],
+      [224, 10, 3], [227, 11, 1], [228, 12, 4], [232, 9, 4], [236, 7, 4],
+      [240, 5, 4], [244, 7, 4], [248, 11, 4], [252, 7, 4]
+    ];
+    this.anthemChords = [
+      [0, 2, 4], [4, 6, 8], [5, 7, 9], [3, 5, 7],
+      [0, 2, 4], [4, 7, 9], [5, 8, 10], [0, 4, 7],
+      [4, 6, 8], [5, 7, 9], [2, 4, 7], [4, 6, 9],
+      [0, 2, 4], [5, 7, 9], [3, 5, 8], [0, 4, 7]
+    ];
+    this.anthemBass = [0, 4, 5, 3, 0, 4, 5, 0, 4, 5, 2, 4, 0, 5, 3, 0];
+    this.trackId = "flag";
+    this.musicTracks = this.createMusicTracks();
+    this.applyTrack(this.trackId);
+  }
+
+  clampScaleIndex(index) {
+    return Math.max(0, Math.min(this.scale.length - 1, index));
+  }
+
+  shiftEvents(events, shift = 0, stepOffset = 0, durationScale = 1) {
+    return events
+      .map(([position, index, duration]) => [
+        (position + stepOffset + this.patternLength) % this.patternLength,
+        this.clampScaleIndex(index + shift),
+        Math.max(1, Math.round(duration * durationScale))
+      ])
+      .sort((a, b) => a[0] - b[0]);
+  }
+
+  shiftIndexes(values, shift = 0, rotate = 0) {
+    const shifted = values.map((index) => this.clampScaleIndex(index + shift));
+    return shifted.map((_, index) => shifted[(index + rotate + shifted.length) % shifted.length]);
+  }
+
+  shiftChords(chords, shift = 0, rotate = 0) {
+    const shifted = chords.map((indexes) => indexes.map((index) => this.clampScaleIndex(index + shift)));
+    return shifted.map((_, index) => shifted[(index + rotate + shifted.length) % shifted.length]);
+  }
+
+  createMusicTracks() {
+    return {
+      flag: {
+        stepDuration: 0.19,
+        patternLength: 256,
+        melody: this.anthemMelody,
+        chords: this.anthemChords,
+        bass: this.anthemBass,
+        leadWave: "triangle",
+        leadGain: 0.028,
+        upperGain: 0.016,
+        padGain: 0.034,
+        bassGain: 0.058,
+        choirGain: 0.008,
+        bellGain: 0.032,
+        bellEvery: 4,
+        percussion: 0.58,
+        choir: true
+      },
+      gospel: {
+        stepDuration: 0.235,
+        patternLength: 256,
+        melody: this.shiftEvents(this.anthemMelody, -2, 0, 1.08),
+        chords: this.shiftChords(this.anthemChords, -1, 1),
+        bass: this.shiftIndexes(this.anthemBass, -1, 1),
+        leadWave: "sine",
+        leadGain: 0.021,
+        upperGain: 0.014,
+        padGain: 0.058,
+        bassGain: 0.046,
+        choirGain: 0.017,
+        bellGain: 0.026,
+        bellEvery: 2,
+        percussion: 0.08,
+        choir: true
+      },
+      procession: {
+        stepDuration: 0.155,
+        patternLength: 256,
+        melody: this.shiftEvents(this.anthemMelody, 1, 2, 0.96),
+        chords: this.shiftChords(this.anthemChords, 1, 0),
+        bass: this.shiftIndexes(this.anthemBass, 0, 0),
+        leadWave: "triangle",
+        leadGain: 0.038,
+        upperGain: 0.014,
+        padGain: 0.03,
+        bassGain: 0.064,
+        choirGain: 0.009,
+        bellGain: 0.034,
+        bellEvery: 4,
+        percussion: 0.88,
+        choir: false
+      },
+      memorial: {
+        stepDuration: 0.27,
+        patternLength: 256,
+        melody: this.shiftEvents(this.anthemMelody, -3, 0, 1.18),
+        chords: this.shiftChords(this.anthemChords, -2, 2),
+        bass: this.shiftIndexes(this.anthemBass, -2, 2),
+        leadWave: "sine",
+        leadGain: 0.018,
+        upperGain: 0.012,
+        padGain: 0.052,
+        bassGain: 0.04,
+        choirGain: 0.019,
+        bellGain: 0.038,
+        bellEvery: 2,
+        percussion: 0.04,
+        choir: true
+      },
+      recessional: {
+        stepDuration: 0.145,
+        patternLength: 256,
+        melody: this.shiftEvents(this.anthemMelody, 2, 0, 0.92),
+        chords: this.shiftChords(this.anthemChords, 1, 3),
+        bass: this.shiftIndexes(this.anthemBass, 1, 3),
+        leadWave: "triangle",
+        leadGain: 0.036,
+        upperGain: 0.019,
+        padGain: 0.034,
+        bassGain: 0.056,
+        choirGain: 0.014,
+        bellGain: 0.04,
+        bellEvery: 4,
+        percussion: 0.62,
+        choir: true
+      }
+    };
+  }
+
+  getTrack() {
+    return this.musicTracks[this.trackId] || this.musicTracks.flag;
+  }
+
+  hasTrack(trackId) {
+    return Boolean(this.musicTracks[trackId]);
+  }
+
+  applyTrack(trackId) {
+    const nextId = this.hasTrack(trackId) ? trackId : "flag";
+    this.trackId = nextId;
+    const track = this.getTrack();
+    this.stepDuration = track.stepDuration;
+    this.patternLength = track.patternLength;
+    if (this.ctx && this.timer) {
+      this.nextTime = this.ctx.currentTime + 0.04;
+      this.step = 0;
+    }
+  }
+
+  setTrack(trackId, playCue = true) {
+    if (!this.hasTrack(trackId)) return false;
+    this.applyTrack(trackId);
+    if (playCue) this.trackCue();
+    return true;
+  }
+
+  trackCue() {
+    if (!this.ctx || this.muted) return;
+    const track = this.getTrack();
+    const now = this.ctx.currentTime + 0.018;
+    const cue = {
+      flag: [7, 9, 11, 12],
+      gospel: [5, 7, 9, 12],
+      procession: [8, 11, 12, 14],
+      memorial: [4, 7, 9, 7],
+      recessional: [9, 11, 14, 12]
+    }[this.trackId] || [7, 9, 11, 12];
+    this.chord(track.chords[0], now, 0.82, track);
+    cue.forEach((index, offset) => {
+      this.lead(index, now + offset * 0.115, 0.18 + offset * 0.018, track);
+    });
+    this.bell(now + 0.48, this.scale[cue[cue.length - 1]], track.bellGain * 1.25);
   }
 
   async start() {
@@ -534,52 +1205,76 @@ class AudioEngine {
     if (!this.ctx) return;
     while (this.nextTime < this.ctx.currentTime + 0.55) {
       this.scheduleStep(this.step, this.nextTime);
-      this.nextTime += 0.42;
-      this.step = (this.step + 1) % 32;
+      this.nextTime += this.stepDuration;
+      this.step = (this.step + 1) % this.patternLength;
     }
   }
 
   scheduleStep(step, time) {
-    const melody = [4, 5, 7, 6, 4, 2, 1, 0, 2, 4, 6, 5, 3, 2, 1, 0];
-    const chords = [
-      [0, 2, 4],
-      [3, 5, 7],
-      [1, 4, 6],
-      [0, 3, 5]
-    ];
-    if (step % 8 === 0) {
-      this.chord(chords[(step / 8) % chords.length], time);
-      this.drum(time, 58, 0.28, 0.16);
+    const track = this.getTrack();
+    const bar = Math.floor(step / 16) % track.chords.length;
+    const beat = step % 16;
+    if (beat === 0) {
+      this.chord(track.chords[bar], time, this.stepDuration * 15.5, track);
+      this.tone(this.scale[track.bass[bar]] / 2, time, this.stepDuration * 13.5, "sine", track.bassGain, this.padGain, 0.09);
+      this.drum(time, 72, 0.24, 0.16 * track.percussion);
+      if (track.choir) this.choirChord(track.chords[bar], time + this.stepDuration * 0.7, this.stepDuration * 9.5, track);
     }
-    if (step % 2 === 0) {
-      const note = this.scale[melody[(step / 2) % melody.length]];
-      this.tone(note, time, 0.34, "triangle", 0.04, this.musicGain, 0.035);
-      this.tone(note * 2, time + 0.01, 0.22, "sine", 0.016, this.musicGain, 0.025);
+    if (beat === 8) {
+      this.drum(time, 66, 0.2, 0.1 * track.percussion);
+      this.tone(this.scale[track.bass[bar]] / 1.5, time, this.stepDuration * 5.8, "triangle", 0.028 * track.percussion, this.padGain, 0.05);
     }
-    if (step % 8 === 4) {
+    if ((beat === 4 || beat === 12) && track.percussion >= 0.22) {
       this.snare(time);
     }
-    if (step % 16 === 14) {
-      this.bell(time, this.scale[8]);
+    if ((beat === 2 || beat === 6 || beat === 10 || beat === 14) && track.percussion >= 0.42) {
+      this.noise(time, 0.04, 0.008 * track.percussion, this.percGain);
+    }
+    track.melody
+      .filter(([position]) => position === step)
+      .forEach(([, index, durationSteps]) => {
+        const duration = Math.max(0.24, durationSteps * this.stepDuration * 0.92);
+        this.lead(index, time, duration, track);
+      });
+    if (beat === 15 && (bar + 1) % track.bellEvery === 0) {
+      this.bell(time, this.scale[bar === 15 ? 14 : 11], track.bellGain);
+      if (track.percussion >= 0.42) this.noise(time, 0.26, 0.012 * track.percussion, this.percGain);
     }
   }
 
-  chord(indexes, time) {
+  choirChord(indexes, time, duration, track = this.getTrack()) {
     indexes.forEach((index, offset) => {
-      const freq = this.scale[index] / 2;
-      this.tone(freq, time + offset * 0.018, 1.45, "sine", 0.035, this.padGain, 0.16);
-      this.tone(freq * 2, time + offset * 0.018, 1.15, "triangle", 0.018, this.padGain, 0.14);
+      const freq = this.scale[this.clampScaleIndex(index + 7)];
+      this.tone(freq, time + offset * 0.034, duration, "sine", track.choirGain, this.musicGain, 0.12);
+      this.tone(freq * 1.5, time + offset * 0.038, duration * 0.72, "triangle", track.choirGain * 0.55, this.musicGain, 0.14);
     });
   }
 
-  bell(time, freq) {
-    this.tone(freq * 2, time, 0.65, "sine", 0.036, this.musicGain, 0.012);
-    this.tone(freq * 3, time + 0.012, 0.42, "triangle", 0.018, this.musicGain, 0.018);
+  chord(indexes, time, duration = 1.45, track = this.getTrack()) {
+    indexes.forEach((index, offset) => {
+      const freq = this.scale[index] / 2;
+      this.tone(freq, time + offset * 0.018, duration, "sine", track.padGain, this.padGain, 0.16);
+      this.tone(freq * 2, time + offset * 0.018, duration * 0.78, "triangle", track.padGain * 0.42, this.padGain, 0.14);
+    });
+  }
+
+  lead(index, time, duration, track = this.getTrack()) {
+    const freq = this.scale[index];
+    this.tone(freq, time, duration, track.leadWave, track.leadGain, this.musicGain, 0.04);
+    this.tone(freq * 2, time + 0.012, duration * 0.72, "triangle", track.upperGain, this.musicGain, 0.035);
+    if (index >= 11) {
+      this.tone(freq / 2, time + 0.006, duration * 0.8, "sine", track.upperGain * 0.55, this.musicGain, 0.05);
+    }
+  }
+
+  bell(time, freq, gainValue = 0.03) {
+    this.tone(freq * 2, time, 0.68, "sine", gainValue, this.musicGain, 0.012);
+    this.tone(freq * 3, time + 0.012, 0.42, "triangle", gainValue * 0.45, this.musicGain, 0.018);
   }
 
   snare(time) {
-    this.noise(time, 0.1, 0.052, this.percGain);
-    this.tone(170, time, 0.07, "triangle", 0.024, this.percGain, 0.006);
+    this.noise(time, 0.08, 0.045, this.percGain);
+    this.tone(188, time, 0.06, "triangle", 0.02, this.percGain, 0.006);
   }
 
   tone(freq, time, duration, type = "sine", gainValue = 0.08, output = this.master, attack = 0.012) {
@@ -1589,7 +2284,119 @@ const CONTEXT_OVERRIDES = {
   "North Korean Defector": ctx(
     ["朝鲜长期封闭、粮食短缺、政治压迫和家庭求生压力促使一些人逃离。", "许多人先越过中朝边境，再经第三国辗转前往韩国或其他地区，途中面临遣返、贩卖和剥削风险。", "脱北者证词成为外界理解朝鲜人权状况的重要来源，也让中国遣返政策和难民保护问题持续受关注。"],
     ["North Korea's isolation, food shortages, political repression, and family survival pressures push some people to flee.", "Many first cross into China and then move through third countries toward South Korea or elsewhere, facing repatriation, trafficking, and exploitation risks.", "Defector testimony is a major source on North Korean human rights and keeps attention on China's repatriation policy and refugee protection."]
-  )
+  ),
+  "Xi Baozi": ctx(
+    ["2013 年习近平到北京庆丰包子铺用餐，官方媒体把它包装为亲民形象展示。", "照片和报道广泛传播后，网民把包子与领导人形象绑定，衍生出习包子、庆丰帝等称呼。", "这些梗后来成为审查敏感词的一部分，反映个人形象工程和网络暗语之间的拉扯。"],
+    ["In 2013 Xi Jinping ate at Beijing's Qingfeng bun shop, and state media framed it as a folksy image event.", "After photos and reports spread, users tied buns to Xi's public image and created nicknames such as Xi Baozi and Qingfeng Emperor.", "The memes later became censorship-sensitive, showing the tension between image management and coded internet speech."]
+  , "meme"),
+  "Wheat Shoulder Xi": ctx(
+    ["这个梗来自习近平早年梁家河经历叙事，尤其是背二百斤麦子十里山路不换肩的说法。", "网民把它和现实体力常识、宣传夸张、领袖苦难叙事放在一起调侃。", "它指向官方塑造吃苦领袖形象时，夸张细节反而变成网络反讽素材。"],
+    ["This meme comes from Xi's Liangjiahe hardship narrative, especially the claim of carrying two hundred jin of wheat for a long distance without switching shoulders.", "Users compare the story with physical plausibility, propaganda exaggeration, and leader-hardship storytelling.", "It points at how exaggerated image-building details can become satire rather than persuasion."]
+  , "meme"),
+  "Two Hundred Jin No Shoulder Switch": ctx(
+    ["来源同样是梁家河叙事中的体力故事，被用来证明领袖年轻时吃苦耐劳。", "因为数字和动作都非常具体，网民容易把它改编成物理题、表情包和暗号。", "结果是官方英雄叙事被拆解成可笑的细节，成为习近平相关高频梗。"],
+    ["The origin is the same Liangjiahe physical-labor story used to show Xi's youthful endurance.", "Because the number and action are so concrete, users easily turn it into physics jokes, memes, and coded references.", "The result is that a heroic narrative is reduced to a comic detail and becomes a frequent Xi-related meme."]
+  , "meme"),
+  "Sager King": ctx(
+    ["这个梗来自习近平公开讲话中把《格萨尔王》读错的片段。", "在审查环境中，网民用错读版本、谐音和截图传播，借口误调侃官方完美领袖形象。", "它的重点不只是读错字，而是高压宣传下小错误被放大成政治笑点。"],
+    ["The meme comes from a public Xi speech in which Gesar was read incorrectly.", "Under censorship, users spread the misread version, puns, and screenshots to mock the flawless-leader image.", "Its point is not only the misreading, but how small errors become political comedy under heavy propaganda."]
+  , "meme"),
+  "Qingfeng Emperor": ctx(
+    ["庆丰包子铺事件本是一次亲民宣传，后来与修宪、个人崇拜和皇帝梗叠加。", "网民把店名当成类似年号的称呼，形成庆丰帝等变体。", "它把日常消费场景转化为对权力集中和政治造神的讽刺。"],
+    ["The Qingfeng bun-shop visit began as a folksy publicity event and later fused with emperor jokes, term-limit concerns, and personality politics.", "Users treated the shop name like a reign title, creating variants such as Qingfeng Emperor.", "It turns an everyday food scene into satire of concentrated power and political image-making."]
+  , "meme"),
+  "Primary School Doctor": ctx(
+    ["这个梗来自习近平早年教育经历、博士头衔和公开读错字争议之间的反差。", "网民用小学生博士调侃学历光环与实际表达能力之间的落差。", "它指向官方履历叙事、领袖不可质疑形象和网络反讽之间的冲突。"],
+    ["This meme comes from the contrast between Xi's early education history, doctoral title, and controversies over public misreadings.", "Users use Primary School Doctor to mock the gap between credential aura and perceived expression ability.", "It points at conflict between official biography, untouchable leader image, and online satire."]
+  , "meme"),
+  "Big Spender": ctx(
+    ["大撒币是对中国对外援助、投资和一带一路支出的一种网络讽刺。", "当国内民生、债务或就业压力上升时，网民常用它批评外部支出显得过度慷慨。", "它反映的是外交宣传、财政优先级和普通人生活感受之间的冲突。"],
+    ["Big Spender is online satire of China's foreign aid, investment, and Belt and Road spending.", "When domestic livelihood, debt, or employment pressure rises, users deploy it to criticize apparently generous external spending.", "It reflects tension between diplomatic publicity, fiscal priorities, and ordinary people's lived experience."]
+  , "meme"),
+  "Chin Commanding": ctx(
+    ["颐使气指本是成语，梗来自公开场合疑似误读或错写引发的二创。", "网民用错版成语调侃高层讲话和文化水平，也借此绕过直接点名。", "它成为习近平相关暗语之一，重点在讽刺权威话语里的低级错误。"],
+    ["The idiom meme comes from perceived misreading or misuse in a public context.", "Users turn the altered idiom into jokes about elite speech and cultural polish while avoiding direct naming.", "It became a Xi-related coded phrase aimed at basic errors inside authoritative language."]
+  , "meme"),
+  "Xi Ceausescu": ctx(
+    ["这个称呼把习近平与罗马尼亚独裁者齐奥塞斯库类比，来源于对个人崇拜和长期执政的担忧。", "在网络讨论中，它常与修宪、忠诚表态、经济压力和社会控制并列出现。", "它不是具体事件，而是一种历史类比：提醒高度个人化统治可能面对的政治风险。"],
+    ["The nickname compares Xi with Romanian dictator Nicolae Ceausescu, arising from fears about personality cult and indefinite rule.", "Online discussion often links it with term-limit removal, loyalty rituals, economic stress, and social control.", "It is a historical analogy rather than one event, warning about risks of highly personalized rule."]
+  , "meme"),
+  "Cured Meat": ctx(
+    ["毛泽东去世后遗体被保存并安放在纪念堂，官方继续维持领袖象征。", "反讽语境中，网民用腊肉削弱神圣化叙事，把政治圣物拉回物质层面。", "这个梗指向个人崇拜、遗体政治和历史责任讨论中的禁忌感。"],
+    ["After Mao's death, his body was preserved and placed in a memorial hall, maintaining leader symbolism.", "In satirical contexts, Cured Meat strips away sacred aura by pulling the political relic back to the material level.", "The meme points at personality cult, body politics, and taboo around discussing historical responsibility."]
+  , "meme"),
+  "Mao Cured Meat": ctx(
+    ["毛腊肉是腊肉梗的直白变体，把毛泽东姓名和保存遗体联系起来。", "它常在讨论文革、大饥荒和个人崇拜时出现，用冷幽默对抗神圣化。", "它的意义在于把领袖崇拜降格为身体与展陈问题，迫使玩家想到历史代价。"],
+    ["Mao Cured Meat is a direct variant linking Mao's name to the preserved body.", "It appears in discussion of the Cultural Revolution, famine, and personality cult as dark humor against sanctification.", "Its meaning is to reduce leader worship to body and display, forcing attention back to historical costs."]
+  , "meme"),
+  "Red Sun": ctx(
+    ["文革时期，宣传系统把毛泽东塑造成红太阳，强调他像太阳一样照耀人民。", "歌曲、语录、画像和忠诚仪式共同强化这种超常领袖形象。", "它加深了个人崇拜，使政治判断让位于对领袖的情感服从。"],
+    ["During the Cultural Revolution, propaganda portrayed Mao as the red sun shining over the people.", "Songs, quotations, portraits, and loyalty rituals reinforced the superhuman leader image.", "It deepened personality worship and pushed political judgment toward emotional obedience to the leader."]
+  , "meme"),
+  "Little Red Book": ctx(
+    ["毛语录在文革前后被大量印发，用来统一思想和展示忠诚。", "群众在集会、工作和日常生活中背诵、挥舞和引用语录，许多政治判断被简化成引用。", "它成为文革个人崇拜的标志，也显示政治语言如何进入身体动作和生活秩序。"],
+    ["Mao's quotations were mass-printed before and during the Cultural Revolution to unify thought and display loyalty.", "People recited, waved, and quoted the book in rallies, work, and daily life, reducing many judgments to quotation.", "It became a symbol of Cultural Revolution personality worship and shows how political language entered bodily ritual and daily order."]
+  ),
+  "Ten Thousand Jin Per Mu": ctx(
+    ["大跃进要求农业产量高速增长，地方干部在政治压力下竞相放卫星。", "亩产万斤等夸张报道登上媒体，虚报产量又反过来支撑过高征粮。", "浮夸风破坏真实决策，成为大饥荒的重要制度因素之一。"],
+    ["The Great Leap Forward demanded rapid agricultural growth, and local cadres competed to report miracle yields under political pressure.", "Claims such as ten thousand jin per mu appeared in media, and inflated reports supported excessive grain procurement.", "The exaggeration destroyed accurate decision-making and became one institutional factor behind the famine."]
+  ),
+  "Loyalty Dance": ctx(
+    ["文革中个人崇拜要求群众用可见仪式证明对毛泽东的忠诚。", "忠字舞在学校、工厂和广场流行，动作、队形和口号一起服务政治表态。", "它把政治服从变成身体表演，显示运动政治如何侵入日常生活。"],
+    ["During the Cultural Revolution, personality worship demanded visible rituals proving loyalty to Mao.", "Loyalty dances spread through schools, factories, and squares, combining movement, formation, and slogans into political display.", "They turned political obedience into bodily performance and show how campaign politics invaded daily life."]
+  ),
+  "Morning Request Evening Report": ctx(
+    ["文革中毛泽东崇拜被制度化，很多单位要求每天向毛像和语录表忠。", "早请示晚汇报把个人生活纳入政治仪式，早晚报告思想和行动。", "这种仪式加强了恐惧和从众，也让政治表演成为社会安全感的一部分。"],
+    ["During the Cultural Revolution, Mao worship was institutionalized and many units required daily loyalty rituals around portraits and quotations.", "Morning request and evening report folded private life into political ritual through daily ideological reporting.", "The ritual strengthened fear and conformity, making political performance part of social safety."]
+  ),
+  "Black Cat White Cat": ctx(
+    ["邓小平在社会主义路线争论中强调实际效果，淡化意识形态标签。", "黑猫白猫的说法被用来概括只要能发展生产、解决问题就可采用的方法。", "它为改革开放的务实转向提供了口号，但也留下结果主义与权利保障之间的张力。"],
+    ["Deng Xiaoping stressed practical results amid socialist policy debates, downplaying ideological labels.", "Black cat, white cat summarized using whatever method solved production and development problems.", "It gave reform a pragmatic slogan while leaving tension between result-first politics and rights protections."]
+  , "meme"),
+  "Crossing River By Stones": ctx(
+    ["改革开放初期缺少现成制度路线，领导层选择试点和渐进调整。", "摸石头过河形容先在局部地区尝试，再把有效做法扩大。", "它解释了中国市场化改革的弹性，也意味着许多社会成本和规则空白由普通人承担。"],
+    ["Early reform lacked a ready institutional map, so leaders chose pilots and gradual adjustment.", "Crossing the river by feeling stones described trying policies locally before scaling them up.", "It explains reform flexibility while also implying that ordinary people bore many social costs and rule gaps."]
+  , "meme"),
+  "Some Get Rich First": ctx(
+    ["改革开放打破平均主义，邓小平允许地区和个人先通过市场机会致富。", "沿海、城市和有资源关系的人更早受益，贫富差距和地区差距扩大。", "这个口号推动增长，也成为后来追问共同富裕、阶层固化和分配不公的起点。"],
+    ["Reform broke with egalitarianism, allowing some regions and individuals to get rich first through market opportunities.", "Coastal regions, cities, and people with access to resources benefited earlier, expanding inequality.", "The slogan helped drive growth but became a starting point for later questions about common prosperity, class rigidity, and unfair distribution."]
+  , "meme"),
+  "Stability Above All": ctx(
+    ["1989 年后，中共领导层把政权安全和社会控制置于政治改革之前。", "稳定压倒一切成为处理抗议、异议和社会矛盾的核心逻辑。", "它帮助维持秩序和发展环境，但也压低了权利表达、历史追问和制度改革空间。"],
+    ["After 1989, CCP leaders put regime security and social control ahead of political reform.", "Stability above all became a core logic for handling protests, dissent, and social conflict.", "It helped maintain order and a development environment while suppressing rights expression, historical inquiry, and institutional reform."]
+  , "meme"),
+  "Elder": ctx(
+    ["长者梗主要来自江泽民 2000 年训斥香港记者的片段和后来网络重看。", "年轻网民把训话中的语气、英文和姿态做成表情包与二创，形成膜蛤文化。", "它既是对前领导人的戏仿，也常被用来反衬后来更严厉的审查环境。"],
+    ["The Elder meme mainly comes from Jiang Zemin's 2000 scolding of Hong Kong reporters and later online rediscovery.", "Younger users turned the tone, English phrases, and gestures into memes and remixes, forming toad-worship culture.", "It is parody of a former leader and often contrasts with later, harsher censorship conditions."]
+  , "meme"),
+  "Toad Worship": ctx(
+    ["膜蛤由江泽民外形绰号、长者训话和网民二创共同形成。", "它表面像膜拜，实际常带戏仿、怀旧和对当下政治气氛的间接比较。", "这个亚文化显示中国网民会把政治人物改造成绕开审查的娱乐符号。"],
+    ["Toad worship grew from Jiang's nickname, elder-scolding clips, and user remixes.", "It looks like worship but often carries parody, nostalgia, and indirect comparison with current politics.", "The subculture shows how Chinese users turn political figures into entertainment symbols that can route around censorship."]
+  , "meme"),
+  "Haha Toad": ctx(
+    ["蛤蛤是膜蛤文化中的轻量称呼，来自江泽民外形绰号和笑声式表达。", "它常和眼镜、谈笑风生、续命等元素一起出现。", "它把政治人物转化为低风险的玩梗符号，同时保留对权力的讽刺距离。"],
+    ["Haha Toad is a lighter label inside toad-worship culture, tied to Jiang's nickname and laughter-like expression.", "It appears with glasses, talking-and-laughing clips, and longevity jokes.", "It turns a political figure into a lower-risk meme symbol while preserving satirical distance from power."]
+  , "meme"),
+  "Make Fortune Quietly": ctx(
+    ["这个梗来自江泽民训斥记者时关于不要总想搞大新闻的表达。", "网民把闷声大发财单独截出，变成劝人低调、也讽刺权力黑箱的常用语。", "它的流行说明政治语录会脱离原场景，变成日常幽默和时代比较工具。"],
+    ["The phrase comes from Jiang's scolding of reporters about not always trying to make big news.", "Users extracted make fortune quietly as advice to keep a low profile and as satire of opaque power.", "Its popularity shows how political quotes detach from context and become daily humor and tools for comparing eras."]
+  , "meme"),
+  "Talking and Laughing": ctx(
+    ["谈笑风生来自江泽民在公开场合展示见识、英文和外交阅历的形象。", "膜蛤二创把它做成一种长者自信姿态，与记者训话片段反复混剪。", "它成为江泽民网络形象的重要组成，既有戏仿也有对旧时代政治松动的怀旧。"],
+    ["Talking and laughing comes from Jiang's public image of worldliness, English, and diplomatic experience.", "Toad-worship remixes turn it into an elder-confidence pose alongside the reporter-scolding clips.", "It became part of Jiang's online image, combining parody with nostalgia for a looser political era."]
+  , "meme"),
+  "Too Young Too Simple": ctx(
+    ["这句话来自江泽民用英文训斥记者时的 famous 片段。", "网民把发音音译成图样图森破，并不断用于评论天真、鲁莽或不懂权力规则的人。", "它的生命力来自强烈口音、权力现场和可复制的网络音译。"],
+    ["The phrase comes from Jiang scolding reporters in English in a famous clip.", "Users rendered it phonetically as tu yang tu sen po and use it to mock naivety or ignorance of power rules.", "Its durability comes from the accent, power setting, and highly reusable phonetic meme form."]
+  , "meme"),
+  "Excited": ctx(
+    ["亦可赛艇来自江泽民英文 excited 的谐音二创。", "它在膜蛤文化中常用来表达夸张兴奋或配合长者视频素材。", "这个梗把外语口音转成中文谐音，成为政治娱乐化的典型例子。"],
+    ["Excited became a homophone meme rendered as yi ke sai ting.", "Inside toad-worship culture it signals exaggerated excitement and pairs with elder video clips.", "The meme turns foreign-language accent into Chinese phonetic play, a typical case of politicized entertainment."]
+  , "meme"),
+  "For Country Life And Death": ctx(
+    ["苟利国家生死以出自林则徐诗句，江泽民在多个场合引用后被膜蛤文化反复截取。", "网民把它和长者续命、背诗、见多识广等形象结合。", "它既保留古典政治修辞，也被改造成对前领导人形象的戏仿道具。"],
+    ["The line comes from Lin Zexu's poem and was repeatedly quoted by Jiang, later clipped in toad-worship culture.", "Users combine it with longevity jokes, poem recitation, and Jiang's worldly persona.", "It preserves classical political rhetoric while becoming a parody prop for a former leader's image."]
+  , "meme")
 };
 
 function getCopy() {
@@ -1612,91 +2419,227 @@ function formatContextRecord(record) {
   return parts.map((part, index) => `${labels[index]}${separator}${part}`).join("\n");
 }
 
+function getContextKind(item) {
+  return item.category === "ccpMetaphor" || item.category === "northKorea" ? "meme" : "event";
+}
+
+function buildContextFromSummary(item, summary = "") {
+  const copy = getCopy();
+  const term = getTerm(item);
+  const clue = getClue(item);
+  const category = copy.categories[item.category] || "";
+  const era = item.year ? (state.lang === "en" ? ` around ${item.year}` : `（${item.year}）`) : "";
+  const kind = getContextKind(item);
+  if (state.lang === "en") {
+    if (kind === "meme") {
+      return {
+        kind,
+        en: [
+          summary || `${term} comes from ${category}${era} as coded political satire.`,
+          `It spread because the surface joke is simple: ${clue}`,
+          `It points to the way censorship, propaganda, or power worship turns daily speech into coded dark humor around "${term}".`
+        ]
+      };
+    }
+    return {
+      kind,
+      en: [
+        summary || `${term} belongs to ${category}${era}, where policy pressure or institutional incentives shaped the event.`,
+        `The public-facing memory is compressed by the clue: ${clue}`,
+        `The result is that "${term}" remains a shorthand for its specific damage, accountability gap, and later political memory.`
+      ]
+    };
+  }
+  if (state.lang === "cn") {
+    if (kind === "meme") {
+      return {
+        kind,
+        cn: [
+          summary || `${term}来自${category}${era}里的政治黑话和网络反讽。`,
+          `它能传播，是因为表层笑点很短：${clue}`,
+          `它指向的是审查、宣传或个人崇拜如何把日常语言逼成围绕“${term}”的黑色幽默。`
+        ]
+      };
+    }
+    return {
+      kind,
+      cn: [
+        summary || `${term}属于${category}${era}，背后有具体政策压力、制度激励或权力运作。`,
+        `公共记忆被浓缩在线索里：${clue}`,
+        `结果是“${term}”不只是名词，而是保留了这件事的具体代价、问责缺口和后续政治记忆。`
+      ]
+    };
+  }
+  if (kind === "meme") {
+    return {
+      kind,
+      tw: [
+        summary || `${term}來自${category}${era}裡的政治黑話和網路反諷。`,
+        `它能傳播，是因為表層笑點很短：${clue}`,
+        `它指向的是審查、宣傳或個人崇拜如何把日常語言逼成圍繞「${term}」的黑色幽默。`
+      ]
+    };
+  }
+  return {
+    kind,
+    tw: [
+      summary || `${term}屬於${category}${era}，背後有具體政策壓力、制度激勵或權力運作。`,
+      `公共記憶被濃縮在線索裡：${clue}`,
+      `結果是「${term}」不只是名詞，而是保留了這件事的具體代價、問責缺口和後續政治記憶。`
+    ]
+  };
+}
+
 function getContext(item = state.entry) {
   const override = CONTEXT_OVERRIDES[item.en];
   if (override) return formatContextRecord(override);
   const key = state.lang === "tw" ? "contextTw" : state.lang === "cn" ? "contextCn" : "contextEn";
-  const copy = getCopy();
-  const category = copy.categories[item.category] || "";
-  const clue = getClue(item);
   if (item[key]) {
-    const record = item.category === "ccpMetaphor" || item.category === "northKorea"
-      ? {
-          kind: "meme",
-          tw: [`這個詞條來自${category}${item.year ? `（${item.year}）` : ""}的政治語境。`, item[key], "它在遊戲中作為暗語或黑話，幫助辨認權力宣傳、審查或個人崇拜的語感。"],
-          cn: [`这个词条来自${category}${item.year ? `（${item.year}）` : ""}的政治语境。`, item[key], "它在游戏中作为暗语或黑话，帮助辨认权力宣传、审查或个人崇拜的语感。"],
-          en: [`This entry comes from the political context of ${category}${item.year ? ` (${item.year})` : ""}.`, item[key], "In the game it works as slang or coded speech for recognizing propaganda, censorship, or personality-cult language."]
-        }
-      : {
-          kind: "event",
-          tw: [`這個詞條來自${category}${item.year ? `（${item.year}）` : ""}的歷史現場。`, item[key], "具體責任鏈和影響因事件而異；這裡先給出簡介，後續可繼續補更精確的專門檔案。"],
-          cn: [`这个词条来自${category}${item.year ? `（${item.year}）` : ""}的历史现场。`, item[key], "具体责任链和影响因事件而异；这里先给出简介，后续可继续补更精确的专门档案。"],
-          en: [`This entry comes from the historical context of ${category}${item.year ? ` (${item.year})` : ""}.`, item[key], "The exact responsibility chain and impact vary by case; this is a short note that can be replaced with a more precise dedicated file later."]
-        };
-    return formatContextRecord(record);
+    return formatContextRecord(buildContextFromSummary(item, item[key]));
   }
-  if (state.lang === "en") {
-    return formatContextRecord({
-      kind: item.category === "ccpMetaphor" ? "meme" : "event",
-      en: [`It belongs to ${category}${item.year ? ` around ${item.year}` : ""}.`, `The clue summarizes the public meaning: ${clue}`, "This entry needs a dedicated cause-course-result note later; for now it is kept as a short factual pointer."]
-    });
+  return formatContextRecord(buildContextFromSummary(item));
+}
+
+function getProfileKey(route = state.route, leaderMode = state.leaderMode) {
+  return `${route}:${leaderMode}`;
+}
+
+function defaultProfile() {
+  return { level: 0, bestLevel: 0, score: 0, streak: 0 };
+}
+
+function profileSnapshot() {
+  return {
+    level: state.level,
+    bestLevel: state.bestLevel,
+    score: state.score,
+    streak: state.streak
+  };
+}
+
+function normalizeProfile(profile = {}) {
+  return {
+    level: Number.isFinite(profile.level) ? profile.level : 0,
+    bestLevel: Number.isFinite(profile.bestLevel) ? profile.bestLevel : 0,
+    score: Number.isFinite(profile.score) ? profile.score : 0,
+    streak: Number.isFinite(profile.streak) ? profile.streak : 0
+  };
+}
+
+function applyProfile(profile = {}) {
+  const clean = normalizeProfile(profile);
+  state.level = clean.level;
+  state.bestLevel = clean.bestLevel;
+  state.score = clean.score;
+  state.streak = clean.streak;
+}
+
+function blankSaveRoot() {
+  return { profiles: {}, rankings: [] };
+}
+
+function readSaveRoot() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const root = saved && typeof saved === "object" ? saved : blankSaveRoot();
+    if (!root.profiles || typeof root.profiles !== "object") {
+      const route = root.route === "time" || root.route === "difficulty" ? root.route : state.route;
+      const leaderMode = root.leaderMode && LEADER_MODE_COPY.en[root.leaderMode] ? root.leaderMode : state.leaderMode;
+      root.profiles = {};
+      root.profiles[getProfileKey(route, leaderMode)] = normalizeProfile(root);
+    }
+    if (!Array.isArray(root.rankings)) root.rankings = [];
+    return root;
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return blankSaveRoot();
   }
-  if (state.lang === "cn") {
-    return formatContextRecord({
-      kind: item.category === "ccpMetaphor" ? "meme" : "event",
-      cn: [`它属于${category}${item.year ? `，时间约为 ${item.year}` : ""}。`, `线索先概括了它的公共含义：${clue}`, "这个词条之后可以继续补专门的起因、经过、结果；目前先保留为简短事实指针。"]
-    });
-  }
-  return formatContextRecord({
-    kind: item.category === "ccpMetaphor" ? "meme" : "event",
-    tw: [`它屬於${category}${item.year ? `，時間約為 ${item.year}` : ""}。`, `線索先概括了它的公共含義：${clue}`, "這個詞條之後可以繼續補專門的起因、經過、結果；目前先保留為簡短事實指針。"]
-  });
+}
+
+function writeSaveRoot(root) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(root));
 }
 
 function loadSave() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    if (saved.lang && TEXT[saved.lang]) state.lang = saved.lang;
-    if (saved.route === "time" || saved.route === "difficulty") state.route = saved.route;
-    if (Number.isFinite(saved.level)) state.level = saved.level;
-    if (Number.isFinite(saved.bestLevel)) state.bestLevel = saved.bestLevel;
-    if (Number.isFinite(saved.score)) state.score = saved.score;
-    if (Number.isFinite(saved.streak)) state.streak = saved.streak;
-    if (typeof saved.muted === "boolean") state.muted = saved.muted;
-    if (Number.isFinite(saved.volume)) state.volume = saved.volume;
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-  }
+  const saved = readSaveRoot();
+  if (saved.lang && TEXT[saved.lang]) state.lang = saved.lang;
+  if (saved.route === "time" || saved.route === "difficulty") state.route = saved.route;
+  if (saved.leaderMode && LEADER_MODE_COPY.en[saved.leaderMode]) state.leaderMode = saved.leaderMode;
+  if (typeof saved.muted === "boolean") state.muted = saved.muted;
+  if (Number.isFinite(saved.volume)) state.volume = saved.volume;
+  if (saved.musicTrack && MUSIC_TRACK_IDS.includes(saved.musicTrack)) state.musicTrack = saved.musicTrack;
+  applyProfile(saved.profiles[getProfileKey()] || defaultProfile());
 }
 
 function saveGame() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      lang: state.lang,
-      route: state.route,
-      level: state.level,
-      bestLevel: state.bestLevel,
-      score: state.score,
-      streak: state.streak,
-      muted: state.muted,
-      volume: state.volume
-    })
-  );
+  const root = readSaveRoot();
+  root.lang = state.lang;
+  root.route = state.route;
+  root.leaderMode = state.leaderMode;
+  root.muted = state.muted;
+  root.volume = state.volume;
+  root.musicTrack = state.musicTrack;
+  root.profiles[getProfileKey()] = profileSnapshot();
+  writeSaveRoot(root);
+}
+
+function getRankings() {
+  return readSaveRoot().rankings || [];
+}
+
+function modeLabel(route = state.route, leaderMode = state.leaderMode, lang = state.lang) {
+  const routeCopy = ROUTE_COPY[lang] || ROUTE_COPY.en;
+  const leaderCopy = LEADER_MODE_COPY[lang] || LEADER_MODE_COPY.en;
+  const routeName = routeCopy[route] || route;
+  const modeName = leaderCopy[leaderMode]?.name || leaderMode;
+  return `${routeName} / ${modeName}`;
+}
+
+function recordRanking(stars, bonus) {
+  const root = readSaveRoot();
+  const item = {
+    id: `${Date.now()}-${state.score}-${state.level}`,
+    score: state.score,
+    level: state.level,
+    bestLevel: state.bestLevel,
+    streak: state.streak,
+    stars,
+    bonus,
+    route: state.route,
+    leaderMode: state.leaderMode,
+    lang: state.lang,
+    term: getTerm(),
+    at: new Date().toISOString()
+  };
+  root.rankings = [...(root.rankings || []), item]
+    .sort((a, b) => (b.score - a.score) || (b.level - a.level) || String(b.at).localeCompare(String(a.at)))
+    .slice(0, RANKING_LIMIT);
+  writeSaveRoot(root);
 }
 
 function resetProgress() {
   stopTimer();
-  state.level = 0;
-  state.bestLevel = 0;
-  state.score = 0;
-  state.streak = 0;
+  applyProfile(defaultProfile());
   state.started = false;
   state.modal = null;
   state.locked = false;
+  state.tray = [];
+  state.matchBursts = [];
   saveGame();
   setupLevel(0);
   render();
+}
+
+function loadCurrentModeProfile() {
+  const root = readSaveRoot();
+  applyProfile(root.profiles[getProfileKey()] || defaultProfile());
+  stopTimer();
+  state.started = false;
+  state.modal = null;
+  state.locked = false;
+  state.tray = [];
+  state.matchBursts = [];
+  setupLevel(state.level);
 }
 
 function hashString(input) {
@@ -1717,201 +2660,1003 @@ function mulberry32(seed) {
   };
 }
 
-function shuffle(array, seed) {
-  const random = mulberry32(seed);
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
 function tokenize(answer) {
   return tokenizeForLang(answer, state.lang);
 }
 
 function tokenizeForLang(answer, lang) {
   if (lang === "en") {
-    return answer
-      .replace(/[^\w\s]/g, " ")
-      .split(/\s+/)
-      .map((unit) => unit.trim())
-      .filter(Boolean);
+    return Array.from(answer.replace(/[^A-Za-z0-9]/g, "").toUpperCase());
   }
   return Array.from(answer.replace(/\s+/g, ""));
 }
 
-function getDecoyPool(lang) {
-  if (lang === "en") {
-    const words = WORD_BANK.flatMap((item) => item.en.split(/\s+/));
-    return [...new Set([...words, ...EXTRA_DECOYS.en].map((word) => word.replace(/[^\w]/g, "")).filter((word) => word.length > 1))];
-  }
-  const fromBank = WORD_BANK.map((item) => item[lang]).join("");
-  return Array.from(new Set(`${fromBank}${EXTRA_DECOYS[lang]}`.replace(/\s+/g, "")));
+function getMergeTileSet() {
+  return MERGE_TILE_SETS[state.leaderMode] || MERGE_TILE_SETS.all;
 }
 
-function makeTokens(item, levelNumber, mode, difficulty) {
-  const units = tokenize(getTerm(item));
-  const answerSet = new Set(units);
-  const seed = hashString(`${item.en}-${state.lang}-${levelNumber}-${mode}`);
-  const random = mulberry32(seed);
-  const pool = shuffle(getDecoyPool(state.lang), seed + 97).filter((unit) => !answerSet.has(unit));
-  const correct = units.map((value, index) => ({
-    id: `a-${levelNumber}-${index}-${value}`,
-    value,
-    answer: true,
-    used: false
-  }));
-  const lengthBoost = state.lang === "en" ? Math.max(2, units.length) : Math.min(8, units.length);
-  const modeBoost = mode === "purge" ? 8 : mode === "pressure" ? 5 : mode === "echo" ? 4 : 2;
-  const decoyCount = Math.min(pool.length, difficulty * 3 + modeBoost + lengthBoost);
-  const decoys = [];
-  for (let index = 0; index < decoyCount; index += 1) {
-    const value = pool[Math.floor(random() * pool.length)];
-    decoys.push({
-      id: `d-${levelNumber}-${index}-${value}`,
-      value,
-      answer: false,
-      used: false
+const EN_STOP_WORDS = new Set([
+  "about", "after", "again", "against", "along", "also", "became", "because", "before", "between", "could", "during",
+  "from", "have", "into", "more", "over", "that", "their", "then", "there", "these", "this", "through", "under",
+  "when", "where", "while", "with", "without", "would", "political", "public", "official"
+]);
+
+const CJK_STOP_CHARS = /[的一是在和與与及把被將将為为後后中上下一個个這这那其而也就都很更最常用來来说成於于]/g;
+
+const TRACE_DECOYS = {
+  tw: ["封存", "口號", "會議", "文件", "廣播", "審查", "沉默", "改寫", "指令", "名單", "邊界", "統計", "公報", "風向", "禁區"],
+  cn: ["封存", "口号", "会议", "文件", "广播", "审查", "沉默", "改写", "指令", "名单", "边界", "统计", "公报", "风向", "禁区"],
+  en: ["sealed", "slogan", "meeting", "file", "broadcast", "censor", "silence", "rewrite", "order", "registry", "border", "statistic", "bulletin", "signal", "taboo"]
+};
+
+const CARD_ART_PROFILES = {
+  ccp: { glyph: "檔", a: "#6f1f24", b: "#d2a44d" },
+  ccpMetaphor: { glyph: "禁", a: "#77244d", b: "#7db0c2" },
+  soviet: { glyph: "蘇", a: "#6d1c22", b: "#c6a04c" },
+  northKorea: { glyph: "朝", a: "#1f4d78", b: "#c94c4c" },
+  taiwan: { glyph: "台", a: "#254f8a", b: "#7ebd8a" },
+  kmtCcp: { glyph: "國", a: "#273f7a", b: "#b94b43" },
+  ww2: { glyph: "戰", a: "#4b4f55", b: "#c08a43" },
+  hongKong: { glyph: "港", a: "#43306f", b: "#d05b70" },
+  current: { glyph: "今", a: "#29566a", b: "#d9b35d" },
+  us: { glyph: "美", a: "#263f7a", b: "#b64747" }
+};
+
+const LEADER_ART_PROFILES = {
+  xi: { glyph: "習", a: "#743037", b: "#d4a34f" },
+  mao: { glyph: "毛", a: "#7b1e24", b: "#c6473d" },
+  deng: { glyph: "鄧", a: "#315e55", b: "#d4a34f" },
+  jiang: { glyph: "江", a: "#2f596d", b: "#8fc0cf" }
+};
+
+const REAL_CARD_ASSETS = {
+  mao: "assets/cards/mao.jpg",
+  deng: "assets/cards/deng.jpg",
+  jiang: "assets/cards/jiang.jpg",
+  xi: "assets/cards/xi.jpg",
+  "cultural-revolution": "assets/cards/cultural-revolution.jpg",
+  "hong-kong-protest": "assets/cards/hong-kong-protest.jpg",
+  "covid-booth": "assets/cards/covid-booth.jpg",
+  "legislative-yuan": "assets/cards/legislative-yuan.jpg",
+  nanjing: "assets/cards/nanjing.jpg",
+  chernobyl: "assets/cards/chernobyl.jpg",
+  "north-korea": "assets/cards/north-korea.jpg",
+  kim: "assets/cards/kim.jpg",
+  guantanamo: "assets/cards/guantanamo.jpg",
+  surveillance: "assets/cards/surveillance.jpg",
+  "ccp-flag": "assets/cards/ccp-flag.png",
+  "china-flag": "assets/cards/china-flag.png",
+  "prc-emblem": "assets/cards/prc-emblem.png",
+  "tiananmen-gate": "assets/cards/tiananmen-gate.jpg",
+  "red-guards-rally": "assets/cards/red-guards-rally.jpg",
+  "bo-xilai": "assets/cards/bo-xilai.jpg",
+  "taiwan-flag": "assets/cards/taiwan-flag.png",
+  "roc-emblem": "assets/cards/roc-emblem.png",
+  chiang: "assets/cards/chiang.png",
+  "sun-yat-sen": "assets/cards/sun-yat-sen.jpg",
+  "us-capitol": "assets/cards/us-capitol.jpg",
+  trump: "assets/cards/trump.jpg",
+  stalin: "assets/cards/stalin.jpg",
+  "berlin-wall": "assets/cards/berlin-wall.jpg",
+  "kim-jong-il": "assets/cards/kim-jong-il.jpg"
+};
+
+const ASSET_VISUAL_TUNING = {
+  xi: { focus: "50% 22%", zoom: "158%", shade: "rgba(5, 6, 6, 0.62)" },
+  mao: { focus: "50% 24%", zoom: "150%", shade: "rgba(24, 8, 8, 0.62)" },
+  deng: { focus: "52% 24%", zoom: "152%", shade: "rgba(6, 14, 12, 0.62)" },
+  jiang: { focus: "50% 22%", zoom: "154%", shade: "rgba(5, 12, 16, 0.62)" },
+  "tiananmen-gate": { focus: "50% 43%", zoom: "184%", shade: "rgba(20, 8, 7, 0.62)" },
+  "cultural-revolution": { focus: "48% 36%", zoom: "172%", shade: "rgba(26, 8, 8, 0.64)" },
+  "red-guards-rally": { focus: "48% 34%", zoom: "178%", shade: "rgba(23, 6, 6, 0.66)" },
+  "hong-kong-protest": { focus: "50% 54%", zoom: "170%", shade: "rgba(6, 9, 13, 0.66)" },
+  "covid-booth": { focus: "46% 46%", zoom: "176%", shade: "rgba(7, 12, 13, 0.64)" },
+  "legislative-yuan": { focus: "50% 42%", zoom: "166%", shade: "rgba(5, 8, 10, 0.64)" },
+  nanjing: { focus: "50% 44%", zoom: "172%", shade: "rgba(12, 10, 8, 0.68)" },
+  chernobyl: { focus: "52% 40%", zoom: "168%", shade: "rgba(10, 14, 12, 0.68)" },
+  "north-korea": { focus: "52% 40%", zoom: "166%", shade: "rgba(6, 10, 17, 0.64)" },
+  guantanamo: { focus: "45% 44%", zoom: "174%", shade: "rgba(8, 10, 12, 0.66)" },
+  surveillance: { focus: "50% 42%", zoom: "180%", shade: "rgba(5, 8, 9, 0.66)" },
+  "ccp-flag": { focus: "50% 50%", zoom: "188%", shade: "rgba(28, 4, 4, 0.58)" },
+  "china-flag": { focus: "40% 34%", zoom: "182%", shade: "rgba(26, 3, 3, 0.58)" },
+  "prc-emblem": { focus: "50% 50%", zoom: "172%", shade: "rgba(18, 5, 4, 0.58)" },
+  "taiwan-flag": { focus: "36% 34%", zoom: "182%", shade: "rgba(5, 8, 20, 0.58)" },
+  "roc-emblem": { focus: "50% 50%", zoom: "170%", shade: "rgba(5, 9, 18, 0.58)" },
+  "us-capitol": { focus: "50% 40%", zoom: "164%", shade: "rgba(5, 8, 13, 0.62)" },
+  "berlin-wall": { focus: "52% 44%", zoom: "176%", shade: "rgba(9, 10, 11, 0.66)" },
+  stalin: { focus: "50% 22%", zoom: "150%", shade: "rgba(15, 9, 8, 0.66)" },
+  trump: { focus: "50% 22%", zoom: "150%", shade: "rgba(6, 8, 13, 0.62)" },
+  kim: { focus: "50% 22%", zoom: "156%", shade: "rgba(5, 8, 13, 0.64)" },
+  "kim-jong-il": { focus: "50% 24%", zoom: "152%", shade: "rgba(6, 8, 13, 0.64)" }
+};
+
+const SCENE_VISUAL_TUNING = {
+  assembly: { focus: "50% 44%", zoom: "152%", shade: "rgba(8, 6, 5, 0.62)" },
+  gatehouse: { focus: "50% 38%", zoom: "164%", shade: "rgba(22, 6, 5, 0.62)" },
+  monument: { focus: "50% 35%", zoom: "168%", shade: "rgba(10, 8, 7, 0.64)" },
+  museum: { focus: "50% 48%", zoom: "154%", shade: "rgba(8, 9, 10, 0.62)" },
+  court: { focus: "50% 45%", zoom: "150%", shade: "rgba(5, 7, 11, 0.62)" },
+  memorial: { focus: "50% 42%", zoom: "166%", shade: "rgba(10, 8, 7, 0.66)" },
+  towerClose: { focus: "50% 28%", zoom: "174%", shade: "rgba(4, 8, 13, 0.64)" },
+  mausoleum: { focus: "50% 42%", zoom: "160%", shade: "rgba(10, 6, 6, 0.66)" },
+  redWall: { focus: "50% 48%", zoom: "184%", shade: "rgba(24, 5, 5, 0.64)" },
+  glassHall: { focus: "50% 44%", zoom: "162%", shade: "rgba(4, 9, 13, 0.62)" },
+  dataCenter: { focus: "50% 42%", zoom: "170%", shade: "rgba(3, 8, 10, 0.66)" },
+  checkpoint: { focus: "50% 44%", zoom: "170%", shade: "rgba(7, 9, 10, 0.66)" },
+  streetBlock: { focus: "50% 52%", zoom: "178%", shade: "rgba(6, 8, 10, 0.66)" },
+  factoryStack: { focus: "50% 36%", zoom: "164%", shade: "rgba(8, 10, 9, 0.66)" },
+  island: { focus: "50% 48%", zoom: "160%", shade: "rgba(4, 9, 14, 0.62)" },
+  bridgeDetail: { focus: "50% 46%", zoom: "172%", shade: "rgba(12, 10, 8, 0.64)" },
+  skyline: { focus: "50% 44%", zoom: "158%", shade: "rgba(4, 8, 12, 0.64)" },
+  rostrum: { focus: "50% 36%", zoom: "166%", shade: "rgba(24, 6, 5, 0.62)" }
+};
+
+const CATEGORY_ASSET_KEYS = {
+  ccp: "tiananmen-gate",
+  ccpMetaphor: "ccp-flag",
+  hongKong: "hong-kong-protest",
+  taiwan: "taiwan-flag",
+  kmtCcp: "chiang",
+  ww2: "nanjing",
+  northKorea: "north-korea",
+  soviet: "stalin",
+  us: "us-capitol",
+  current: "surveillance"
+};
+
+const ENTRY_ASSET_KEYS = {
+  "Cultural Revolution": "cultural-revolution",
+  "Destroy Four Olds": "cultural-revolution",
+  "Little Red Book": "cultural-revolution",
+  "Loyalty Dance": "cultural-revolution",
+  "Factional Armed Struggle": "red-guards-rally",
+  "Lin Biao Incident": "red-guards-rally",
+  "Great Famine": "mao",
+  "Great Leap Forward": "mao",
+  "Ten Thousand Jin Per Mu": "mao",
+  "Mao Cured Meat": "mao",
+  "Tank Man": "deng",
+  "Tiananmen Clearing": "tiananmen-gate",
+  "June Fourth": "tiananmen-gate",
+  "Deng the Crusher": "deng",
+  "Crusher Deng": "deng",
+  "Bo Xilai Case": "bo-xilai",
+  "Dynamic Zero COVID": "covid-booth",
+  "Routine PCR": "covid-booth",
+  "Zero COVID Patriarch": "covid-booth",
+  "Zero COVID U Turn": "covid-booth",
+  "Blank Paper": "hong-kong-protest",
+  "Umbrella Movement": "hong-kong-protest",
+  "Hong Kong National Security Law": "hong-kong-protest",
+  "Hong Kong Handover": "hong-kong-protest",
+  "Apple Daily Closure": "hong-kong-protest",
+  "Sunflower Movement": "legislative-yuan",
+  "White Terror Taiwan": "chiang",
+  "Taiwan Legislature Reform Dispute": "legislative-yuan",
+  "Blue White Deal Collapse": "taiwan-flag",
+  "Double Tenth Agreement": "chiang",
+  "KMT Retreat To Taiwan": "chiang",
+  "Sun Yat Sen": "sun-yat-sen",
+  "Chernobyl": "chernobyl",
+  "Berlin Wall": "berlin-wall",
+  "Soviet Collapse": "berlin-wall",
+  "Stalin Purges": "stalin",
+  "Gulag": "stalin",
+  "October Revolution": "stalin",
+  "Kim Three Fat": "kim",
+  "Triple Gold Fat": "kim",
+  "Paektu Bloodline": "kim",
+  "Kim Jong Il": "kim-jong-il",
+  "Rocket Man": "north-korea",
+  "Juche": "north-korea",
+  "Military First": "north-korea",
+  "Arduous March": "north-korea",
+  "Guantanamo": "guantanamo",
+  "Watergate": "us-capitol",
+  "Capitol Riot": "us-capitol",
+  "Patriot Act": "us-capitol",
+  "Trump Trade War": "trump",
+  "Xinjiang Reeducation Camps": "surveillance",
+  "Social Credit": "surveillance",
+  "Skynet Project": "surveillance",
+  "Unanimous Election": "xi",
+  "Two Establishes": "xi",
+  "Two Upholds": "xi",
+  "Xi Ban Comments": "xi",
+  "Diao May Care": "xi",
+  "Xi Baozi": "xi",
+  "Wheat Shoulder Xi": "xi",
+  "Liangjiahe Pilgrimage": "xi",
+  "Liangjiahe Great Learning": "xi",
+  "Jiang Core": "jiang",
+  "Jiang Scolds Hong Kong Reporter": "jiang",
+  "Too Young Too Simple": "jiang"
+};
+
+const CARD_IMAGE_LIBRARY = [
+  { key: "red-code", scene: "qr", asset: "covid-booth", glyph: "碼", tw: "紅碼", cn: "红码", en: "Red Code" },
+  { key: "pcr", scene: "swab", asset: "covid-booth", glyph: "酸", tw: "核酸", cn: "核酸", en: "PCR" },
+  { key: "bun", scene: "bun", asset: "xi", glyph: "包", tw: "包子", cn: "包子", en: "Bun" },
+  { key: "crown", scene: "crown", asset: "xi", glyph: "尊", tw: "一尊", cn: "一尊", en: "One" },
+  { key: "wheat", scene: "wheat", asset: "xi", glyph: "麥", tw: "麥山", cn: "麦山", en: "Wheat" },
+  { key: "tank", scene: "tank", asset: "deng", glyph: "履", tw: "履帶", cn: "履带", en: "Tread" },
+  { key: "square", scene: "square", asset: "deng", glyph: "場", tw: "廣場", cn: "广场", en: "Square" },
+  { key: "red-book", scene: "book", asset: "cultural-revolution", glyph: "語", tw: "語錄", cn: "语录", en: "Quote" },
+  { key: "sun", scene: "sun", asset: "mao", glyph: "日", tw: "紅日", cn: "红日", en: "Sun" },
+  { key: "fist", scene: "fist", asset: "cultural-revolution", glyph: "拳", tw: "鐵拳", cn: "铁拳", en: "Fist" },
+  { key: "wall", scene: "wall", asset: "surveillance", glyph: "牆", tw: "高牆", cn: "高墙", en: "Wall" },
+  { key: "hot-search", scene: "screen", asset: "surveillance", glyph: "搜", tw: "熱搜", cn: "热搜", en: "Trend" },
+  { key: "deleted", scene: "shred", asset: "hong-kong-protest", glyph: "刪", tw: "刪帖", cn: "删帖", en: "Delete" },
+  { key: "tea", scene: "tea", glyph: "茶", tw: "喝茶", cn: "喝茶", en: "Tea" },
+  { key: "tv", scene: "tv", asset: "surveillance", glyph: "認", tw: "認罪", cn: "认罪", en: "Confess" },
+  { key: "data", scene: "chart", asset: "surveillance", glyph: "數", tw: "數據", cn: "数据", en: "Data" },
+  { key: "tower", scene: "tower", asset: "surveillance", glyph: "樓", tw: "爛尾", cn: "烂尾", en: "Tower" },
+  { key: "land", scene: "land", glyph: "地", tw: "賣地", cn: "卖地", en: "Land" },
+  { key: "delivery", scene: "scooter", glyph: "算", tw: "算法", cn: "算法", en: "Algo" },
+  { key: "996", scene: "clock", glyph: "996", tw: "加班", cn: "加班", en: "996" },
+  { key: "umbrella", scene: "umbrella", asset: "hong-kong-protest", glyph: "傘", tw: "雨傘", cn: "雨伞", en: "Umbrella" },
+  { key: "apple", scene: "paper", asset: "hong-kong-protest", glyph: "報", tw: "停刊", cn: "停刊", en: "Press" },
+  { key: "ballot", scene: "ballot", asset: "legislative-yuan", glyph: "票", tw: "選票", cn: "选票", en: "Ballot" },
+  { key: "brawl", scene: "gavel", asset: "legislative-yuan", glyph: "槌", tw: "議場", cn: "议场", en: "Gavel" },
+  { key: "kmt-ccp", scene: "split", glyph: "裂", tw: "裂縫", cn: "裂缝", en: "Split" },
+  { key: "bridge", scene: "bridge", asset: "nanjing", glyph: "橋", tw: "橋邊", cn: "桥边", en: "Bridge" },
+  { key: "bombing", scene: "fire", asset: "nanjing", glyph: "火", tw: "轟炸", cn: "轰炸", en: "Fire" },
+  { key: "rocket", scene: "rocket", asset: "north-korea", glyph: "箭", tw: "火箭", cn: "火箭", en: "Rocket" },
+  { key: "bread", scene: "queue", glyph: "麵", tw: "排隊", cn: "排队", en: "Queue" },
+  { key: "hammer", scene: "hammer", asset: "chernobyl", glyph: "鐮", tw: "鐮錘", cn: "镰锤", en: "Hammer" },
+  { key: "gulag", scene: "barbed", asset: "chernobyl", glyph: "寒", tw: "古拉", cn: "古拉", en: "Gulag" },
+  { key: "capitol", scene: "capitol", asset: "guantanamo", glyph: "會", tw: "國會", cn: "国会", en: "Capitol" },
+  { key: "dollar", scene: "money", glyph: "$", tw: "黑錢", cn: "黑钱", en: "Money" },
+  { key: "map", scene: "map", glyph: "區", tw: "選區", cn: "选区", en: "Map" },
+  { key: "seal", scene: "seal", glyph: "封", tw: "封條", cn: "封条", en: "Seal" },
+  { key: "file", scene: "file", glyph: "檔", tw: "檔案", cn: "档案", en: "File" },
+  { key: "blackbox", scene: "box", glyph: "箱", tw: "黑箱", cn: "黑箱", en: "Box" },
+  { key: "megaphone", scene: "horn", glyph: "宣", tw: "口號", cn: "口号", en: "Slogan" },
+  { key: "camera", scene: "camera", asset: "surveillance", glyph: "眼", tw: "監控", cn: "监控", en: "Camera" },
+  { key: "mask", scene: "mask", asset: "covid-booth", glyph: "罩", tw: "口罩", cn: "口罩", en: "Mask" },
+  { key: "chives", scene: "chives", glyph: "韭", tw: "韭菜", cn: "韭菜", en: "Chives" },
+  { key: "ship", scene: "ship", asset: "jiang", glyph: "舵", tw: "舵手", cn: "舵手", en: "Helm" },
+  { key: "glasses", scene: "glasses", asset: "jiang", glyph: "蛤", tw: "眼鏡", cn: "眼镜", en: "Glasses" },
+  { key: "microphone", scene: "mic", asset: "jiang", glyph: "麥", tw: "記者", cn: "记者", en: "Press" },
+  { key: "party-badge", scene: "seal", asset: "ccp-flag", glyph: "黨", tw: "黨徽", cn: "党徽", en: "Badge" },
+  { key: "red-flag", scene: "seal", asset: "china-flag", glyph: "旗", tw: "紅旗", cn: "红旗", en: "Flag" },
+  { key: "prc-emblem", scene: "seal", asset: "prc-emblem", glyph: "徽", tw: "國徽", cn: "国徽", en: "Emblem" },
+  { key: "tiananmen-gate", scene: "square", asset: "tiananmen-gate", glyph: "門", tw: "城樓", cn: "城楼", en: "Gate" },
+  { key: "red-guards-rally", scene: "fist", asset: "red-guards-rally", glyph: "兵", tw: "紅衛兵", cn: "红卫兵", en: "Guards" },
+  { key: "bo-card", scene: "file", asset: "bo-xilai", glyph: "薄", tw: "薄案", cn: "薄案", en: "Bo" },
+  { key: "roc-flag", scene: "seal", asset: "taiwan-flag", glyph: "青", tw: "青天", cn: "青天", en: "ROC" },
+  { key: "roc-emblem", scene: "seal", asset: "roc-emblem", glyph: "徽", tw: "黨國", cn: "党国", en: "KMT" },
+  { key: "chiang-card", scene: "file", asset: "chiang", glyph: "蔣", tw: "蔣像", cn: "蒋像", en: "Chiang" },
+  { key: "sun-card", scene: "file", asset: "sun-yat-sen", glyph: "孫", tw: "國父", cn: "国父", en: "Sun" },
+  { key: "capitol-card", scene: "capitol", asset: "us-capitol", glyph: "會", tw: "國會山", cn: "国会山", en: "Capitol" },
+  { key: "trump-card", scene: "file", asset: "trump", glyph: "川", tw: "川普", cn: "特朗普", en: "Trump" },
+  { key: "stalin-card", scene: "file", asset: "stalin", glyph: "史", tw: "史達林", cn: "斯大林", en: "Stalin" },
+  { key: "wall-card", scene: "wall", asset: "berlin-wall", glyph: "牆", tw: "柏林牆", cn: "柏林墙", en: "Wall" },
+  { key: "kim-jong-il-card", scene: "file", asset: "kim-jong-il", glyph: "金", tw: "將軍", cn: "将军", en: "Kim II" },
+  { key: "kim", scene: "seal", asset: "kim", glyph: "金", tw: "三胖", cn: "三胖", en: "Kim" },
+  { key: "detention", scene: "barbed", asset: "guantanamo", glyph: "押", tw: "拘押", cn: "拘押", en: "Detain" }
+];
+
+const ARCHITECTURE_CARD_LIBRARY = [
+  { key: "great-hall-close", scene: "assembly", glyph: "堂", tw: "大會堂", cn: "大会堂", en: "Great Hall" },
+  { key: "xinhuamen-close", scene: "gatehouse", glyph: "門", tw: "新華門", cn: "新华门", en: "Xinhuamen" },
+  { key: "monument-close", scene: "monument", glyph: "碑", tw: "紀念碑", cn: "纪念碑", en: "Monument" },
+  { key: "cpc-museum-model", scene: "museum", glyph: "館", tw: "黨史館", cn: "党史馆", en: "Party Museum" },
+  { key: "rostrum-close", scene: "rostrum", glyph: "樓", tw: "城樓", cn: "城楼", en: "Rostrum" },
+  { key: "red-wall-maze", scene: "redWall", glyph: "牆", tw: "紅牆", cn: "红墙", en: "Red Wall" },
+  { key: "podium-hall", scene: "assembly", glyph: "席", tw: "主席台", cn: "主席台", en: "Podium" },
+  { key: "commune-granary", scene: "factoryStack", glyph: "倉", tw: "公社倉", cn: "公社仓", en: "Granary" },
+  { key: "square-paving", scene: "monument", glyph: "場", tw: "廣場磚", cn: "广场砖", en: "Square" },
+  { key: "checkpoint-gate", scene: "checkpoint", glyph: "卡", tw: "檢查口", cn: "检查口", en: "Checkpoint" },
+  { key: "press-hall", scene: "glassHall", glyph: "記", tw: "記者廳", cn: "记者厅", en: "Press Hall" },
+  { key: "glass-tower", scene: "skyline", glyph: "樓", tw: "玻璃樓", cn: "玻璃楼", en: "Glass Tower" },
+  { key: "hk-legco-model", scene: "glassHall", glyph: "會", tw: "立會樓", cn: "立会楼", en: "LegCo" },
+  { key: "hk-court-model", scene: "court", glyph: "審", tw: "終院", cn: "终院", en: "Final Court" },
+  { key: "harbor-front", scene: "skyline", glyph: "港", tw: "海港線", cn: "海港线", en: "Harbor" },
+  { key: "barricade-street", scene: "streetBlock", glyph: "欄", tw: "路障街", cn: "路障街", en: "Barricade" },
+  { key: "presidential-office-model", scene: "gatehouse", glyph: "府", tw: "總統府", cn: "总统府", en: "Presidential" },
+  { key: "memorial-arch", scene: "memorial", glyph: "牌", tw: "紀念堂", cn: "纪念堂", en: "Memorial" },
+  { key: "assembly-floor", scene: "assembly", glyph: "議", tw: "議場", cn: "议场", en: "Chamber" },
+  { key: "island-map", scene: "island", glyph: "島", tw: "島線", cn: "岛线", en: "Island" },
+  { key: "kremlin-wall-model", scene: "redWall", glyph: "克", tw: "克宮牆", cn: "克宫墙", en: "Kremlin Wall" },
+  { key: "mausoleum-model", scene: "mausoleum", glyph: "墓", tw: "陵墓", cn: "陵墓", en: "Mausoleum" },
+  { key: "lubyanka-model", scene: "court", glyph: "局", tw: "盧比揚卡", cn: "卢比扬卡", en: "Lubyanka" },
+  { key: "factory-stack", scene: "factoryStack", glyph: "煙", tw: "煙囪", cn: "烟囱", en: "Stacks" },
+  { key: "juche-tower-model", scene: "towerClose", glyph: "塔", tw: "主體塔", cn: "主体塔", en: "Juche Tower" },
+  { key: "kumsusan-model", scene: "mausoleum", glyph: "宮", tw: "錦繡山", cn: "锦绣山", en: "Kumsusan" },
+  { key: "parade-square", scene: "assembly", glyph: "閱", tw: "閱兵場", cn: "阅兵场", en: "Parade" },
+  { key: "watchtower", scene: "towerClose", glyph: "哨", tw: "哨塔", cn: "哨塔", en: "Watchtower" },
+  { key: "supreme-court-model", scene: "court", glyph: "法", tw: "最高院", cn: "最高院", en: "Supreme Court" },
+  { key: "white-house-model", scene: "gatehouse", glyph: "府", tw: "白宮", cn: "白宫", en: "White House" },
+  { key: "capitol-dome-model", scene: "assembly", glyph: "會", tw: "國會穹", cn: "国会穹", en: "Capitol Dome" },
+  { key: "nanjing-memorial-model", scene: "memorial", glyph: "祭", tw: "遇難館", cn: "遇难馆", en: "Nanjing Memorial" },
+  { key: "bridge-detail", scene: "bridgeDetail", glyph: "橋", tw: "橋洞", cn: "桥洞", en: "Bridge Detail" },
+  { key: "ruin-wall", scene: "redWall", glyph: "墟", tw: "殘牆", cn: "残墙", en: "Ruin Wall" },
+  { key: "memorial-flame", scene: "monument", glyph: "火", tw: "紀念火", cn: "纪念火", en: "Memorial Flame" },
+  { key: "ghost-city", scene: "skyline", glyph: "空", tw: "空城樓", cn: "空城楼", en: "Ghost City" },
+  { key: "camera-grid", scene: "dataCenter", glyph: "眼", tw: "天眼格", cn: "天眼格", en: "Camera Grid" },
+  { key: "delivery-block", scene: "streetBlock", glyph: "困", tw: "外賣格", cn: "外卖格", en: "Delivery Block" },
+  { key: "data-center", scene: "dataCenter", glyph: "數", tw: "資料庫", cn: "数据库", en: "Data Center" },
+  { key: "debt-tower", scene: "skyline", glyph: "債", tw: "債樓", cn: "债楼", en: "Debt Tower" }
+];
+
+CARD_IMAGE_LIBRARY.push(...ARCHITECTURE_CARD_LIBRARY);
+
+const ARCHITECTURE_CARD_KEYS = {
+  all: ["great-hall-close", "monument-close", "red-wall-maze", "data-center", "checkpoint-gate"],
+  xi: ["great-hall-close", "xinhuamen-close", "podium-hall", "red-wall-maze", "ghost-city", "camera-grid", "data-center"],
+  mao: ["rostrum-close", "monument-close", "commune-granary", "cpc-museum-model", "red-wall-maze", "factory-stack"],
+  deng: ["square-paving", "checkpoint-gate", "rostrum-close", "hk-court-model", "bridge-detail", "great-hall-close"],
+  jiang: ["press-hall", "glass-tower", "harbor-front", "hk-legco-model", "great-hall-close"],
+  ccp: ["great-hall-close", "xinhuamen-close", "monument-close", "cpc-museum-model", "rostrum-close", "red-wall-maze", "podium-hall"],
+  ccpMetaphor: ["red-wall-maze", "camera-grid", "checkpoint-gate", "ghost-city", "data-center", "debt-tower"],
+  current: ["ghost-city", "camera-grid", "delivery-block", "data-center", "debt-tower", "glass-tower"],
+  hongKong: ["hk-legco-model", "hk-court-model", "harbor-front", "barricade-street", "glass-tower"],
+  taiwan: ["presidential-office-model", "memorial-arch", "assembly-floor", "island-map", "hk-court-model"],
+  kmtCcp: ["memorial-arch", "red-wall-maze", "checkpoint-gate", "presidential-office-model", "bridge-detail"],
+  soviet: ["kremlin-wall-model", "mausoleum-model", "lubyanka-model", "factory-stack", "ruin-wall"],
+  northKorea: ["juche-tower-model", "kumsusan-model", "parade-square", "watchtower", "mausoleum-model"],
+  us: ["supreme-court-model", "white-house-model", "capitol-dome-model", "hk-court-model", "data-center"],
+  ww2: ["nanjing-memorial-model", "bridge-detail", "ruin-wall", "memorial-flame", "factory-stack"]
+};
+
+function getArchitectureCardKeys(tags, category) {
+  const keys = new Set(ARCHITECTURE_CARD_KEYS.all);
+  (ARCHITECTURE_CARD_KEYS[category] || []).forEach((key) => keys.add(key));
+  tags.forEach((tag) => (ARCHITECTURE_CARD_KEYS[tag] || []).forEach((key) => keys.add(key)));
+  return keys;
+}
+
+const CARD_ART_CACHE = new Map();
+
+function svgEscape(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function sceneSvg(scene, glyph) {
+  const g = svgEscape(glyph);
+  const commonText = `<text x="50" y="50" text-anchor="middle" font-size="30" font-weight="900" fill="rgba(255,255,255,.72)" font-family="Arial, sans-serif">${g}</text>`;
+  const scenes = {
+    qr: `<rect x="18" y="12" width="64" height="52" rx="8" fill="rgba(255,255,255,.18)"/><path d="M26 21h12v12H26zM62 21h12v12H62zM26 43h12v12H26zM45 23h7v7h-7zM55 37h7v7h-7zM45 49h22v6H45z" fill="rgba(255,255,255,.72)"/>`,
+    swab: `<path d="M21 55 72 14" stroke="rgba(255,255,255,.78)" stroke-width="5" stroke-linecap="round"/><circle cx="26" cy="52" r="10" fill="rgba(255,255,255,.18)"/><path d="M58 28c12 2 18 9 18 20" stroke="rgba(255,255,255,.42)" stroke-width="4" fill="none"/>`,
+    bun: `<ellipse cx="50" cy="43" rx="32" ry="19" fill="rgba(255,255,255,.3)"/><path d="M27 40c7-13 38-13 46 0" stroke="rgba(255,255,255,.76)" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+    crown: `<path d="M21 52 29 25l17 18 14-23 15 23 16-18 8 27z" fill="rgba(255,255,255,.28)" stroke="rgba(255,255,255,.62)" stroke-width="3"/>`,
+    wheat: `<path d="M51 62V18" stroke="rgba(255,255,255,.72)" stroke-width="4"/><path d="M48 24c-18 6-19 17-1 16M54 31c18 6 19 17 1 16M47 41c-16 5-18 16-1 15" stroke="rgba(255,255,255,.62)" stroke-width="3" fill="none"/>`,
+    tank: `<rect x="23" y="42" width="48" height="13" rx="5" fill="rgba(255,255,255,.28)"/><rect x="36" y="31" width="24" height="12" rx="3" fill="rgba(255,255,255,.38)"/><path d="M58 35h23" stroke="rgba(255,255,255,.68)" stroke-width="4"/><path d="M24 58h48" stroke="rgba(255,255,255,.56)" stroke-width="5" stroke-dasharray="4 4"/>`,
+    square: `<path d="M19 55h62M27 55V27h46v28" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="none"/><circle cx="50" cy="21" r="8" fill="rgba(255,255,255,.3)"/>`,
+    book: `<path d="M22 18h26c7 0 11 4 11 11v34H31c-5 0-9-4-9-9zM59 29c0-7 4-11 11-11h8v45H59z" fill="rgba(255,255,255,.25)" stroke="rgba(255,255,255,.58)" stroke-width="3"/>`,
+    sun: `<circle cx="50" cy="38" r="16" fill="rgba(255,255,255,.26)"/><path d="M50 12v12M50 52v12M24 38H12M88 38H76M31 19l8 8M69 57l-8-8M69 19l-8 8M31 57l8-8" stroke="rgba(255,255,255,.65)" stroke-width="4" stroke-linecap="round"/>`,
+    fist: `<path d="M28 36h10V20h11v16h6V18h11v18h7v13c0 11-9 19-21 19H38c-8 0-15-7-15-15V42c0-4 2-6 5-6z" fill="rgba(255,255,255,.28)" stroke="rgba(255,255,255,.62)" stroke-width="3"/>`,
+    wall: `<path d="M16 58h70V24H16z" fill="rgba(255,255,255,.18)"/><path d="M16 34h70M16 46h70M29 24v10M52 24v10M75 24v10M40 34v12M64 34v12M29 46v12M52 46v12M75 46v12" stroke="rgba(255,255,255,.52)" stroke-width="3"/>`,
+    screen: `<rect x="18" y="16" width="64" height="42" rx="6" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.55)" stroke-width="3"/><path d="M30 30h36M30 42h22" stroke="rgba(255,255,255,.7)" stroke-width="4" stroke-linecap="round"/>`,
+    shred: `<path d="M28 16h38l8 9v36H28z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.56)" stroke-width="3"/><path d="M31 44l10 17 8-17 8 17 8-17" stroke="rgba(255,255,255,.72)" stroke-width="4" fill="none"/>`,
+    tea: `<path d="M30 35h34v11c0 9-7 16-17 16s-17-7-17-16z" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.6)" stroke-width="3"/><path d="M64 38h8c8 0 8 13-1 13h-7M38 22c-4 4 4 6 0 10M51 20c-4 5 5 7 0 12" stroke="rgba(255,255,255,.62)" stroke-width="3" fill="none"/>`,
+    tv: `<rect x="20" y="20" width="60" height="38" rx="6" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M39 34h22M33 46h34" stroke="rgba(255,255,255,.66)" stroke-width="4"/><path d="M40 20 30 10M60 20l10-10" stroke="rgba(255,255,255,.5)" stroke-width="3"/>`,
+    chart: `<path d="M20 58h60" stroke="rgba(255,255,255,.5)" stroke-width="4"/><rect x="27" y="38" width="10" height="20" fill="rgba(255,255,255,.26)"/><rect x="45" y="26" width="10" height="32" fill="rgba(255,255,255,.34)"/><rect x="63" y="18" width="10" height="40" fill="rgba(255,255,255,.42)"/>`,
+    tower: `<path d="M30 62V20h38v42" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M39 30h6M55 30h6M39 43h6M55 43h6M26 62h48" stroke="rgba(255,255,255,.65)" stroke-width="3"/><path d="M68 20l13-9" stroke="rgba(255,255,255,.54)" stroke-width="4"/>`,
+    land: `<path d="M20 58c12-14 24-16 38-8 10 6 18 3 25-6v18H20z" fill="rgba(255,255,255,.2)"/><path d="M31 39h22v19H31zM42 27v31" stroke="rgba(255,255,255,.56)" stroke-width="3" fill="none"/>`,
+    scooter: `<circle cx="33" cy="56" r="8" fill="rgba(255,255,255,.22)"/><circle cx="69" cy="56" r="8" fill="rgba(255,255,255,.22)"/><path d="M32 56h23l12-18h10M42 37h22l-7 19" stroke="rgba(255,255,255,.68)" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    clock: `<circle cx="50" cy="39" r="24" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.58)" stroke-width="4"/><path d="M50 24v16l12 8" stroke="rgba(255,255,255,.72)" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    umbrella: `<path d="M18 40c10-23 54-23 64 0z" fill="rgba(255,255,255,.24)" stroke="rgba(255,255,255,.62)" stroke-width="3"/><path d="M50 40v21c0 8 12 8 12 0" stroke="rgba(255,255,255,.68)" stroke-width="4" fill="none"/>`,
+    paper: `<path d="M24 16h45l8 10v38H24z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M34 32h30M34 43h24M34 54h32" stroke="rgba(255,255,255,.64)" stroke-width="4"/>`,
+    ballot: `<rect x="22" y="34" width="56" height="29" rx="5" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M39 34l22-18 11 13-21 17zM37 47h26" stroke="rgba(255,255,255,.7)" stroke-width="4" fill="none"/>`,
+    gavel: `<path d="M34 23l15-10 22 28-15 10zM25 54l23-18M55 58h28" stroke="rgba(255,255,255,.68)" stroke-width="6" stroke-linecap="round" fill="none"/>`,
+    split: `<path d="M50 12v52" stroke="rgba(255,255,255,.58)" stroke-width="4" stroke-dasharray="6 5"/><path d="M23 45c10-18 24-19 31-2M46 45c10-18 24-19 31-2" stroke="rgba(255,255,255,.5)" stroke-width="4" fill="none"/>`,
+    bridge: `<path d="M14 55h72M20 55c10-28 50-28 60 0" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="none"/><path d="M32 42h36" stroke="rgba(255,255,255,.44)" stroke-width="4"/>`,
+    fire: `<path d="M50 62c-17-9-8-24 0-34 4 10 16 12 12 27 8-6 9-15 5-24 18 18 9 34-17 31z" fill="rgba(255,255,255,.28)" stroke="rgba(255,255,255,.62)" stroke-width="3"/>`,
+    rocket: `<path d="M52 12c16 12 17 31 5 48H43c-12-17-11-36 5-48z" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.62)" stroke-width="3"/><circle cx="50" cy="31" r="6" fill="rgba(255,255,255,.5)"/><path d="M43 60l-9 8M57 60l9 8" stroke="rgba(255,255,255,.58)" stroke-width="4"/>`,
+    queue: `<path d="M23 56h54" stroke="rgba(255,255,255,.58)" stroke-width="4"/><circle cx="30" cy="31" r="7" fill="rgba(255,255,255,.3)"/><circle cx="50" cy="31" r="7" fill="rgba(255,255,255,.3)"/><circle cx="70" cy="31" r="7" fill="rgba(255,255,255,.3)"/><path d="M30 38v17M50 38v17M70 38v17" stroke="rgba(255,255,255,.56)" stroke-width="4"/>`,
+    hammer: `<path d="M30 22h34l9 10H38zM52 31l-25 31" stroke="rgba(255,255,255,.68)" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M69 50c-12 12-31 8-37-7 12 7 25 5 37-7" fill="rgba(255,255,255,.2)"/>`,
+    barbed: `<path d="M18 32h64M18 48h64" stroke="rgba(255,255,255,.56)" stroke-width="4"/><path d="M28 24v32M50 24v32M72 24v32" stroke="rgba(255,255,255,.34)" stroke-width="3"/><path d="M22 28l8 8M43 44l8 8M66 28l8 8" stroke="rgba(255,255,255,.66)" stroke-width="3"/>`,
+    capitol: `<path d="M20 61h60M27 55h46M31 55V35h38v20M37 35c4-14 22-14 26 0" stroke="rgba(255,255,255,.66)" stroke-width="4" fill="none"/><path d="M28 35h44" stroke="rgba(255,255,255,.46)" stroke-width="5"/>`,
+    money: `<rect x="20" y="24" width="60" height="34" rx="6" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><circle cx="50" cy="41" r="10" fill="rgba(255,255,255,.24)"/>${commonText}`,
+    map: `<path d="M21 22l18-6 21 8 19-6v40l-19 6-21-8-18 6z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M39 16v40M60 24v40" stroke="rgba(255,255,255,.42)" stroke-width="3"/>`,
+    seal: `<rect x="24" y="20" width="52" height="38" rx="8" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.6)" stroke-width="3"/><path d="M25 29h50M25 49h50" stroke="rgba(255,255,255,.55)" stroke-width="4"/>${commonText}`,
+    file: `<path d="M26 14h34l14 14v38H26z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M60 14v15h14M36 38h28M36 50h22" stroke="rgba(255,255,255,.58)" stroke-width="4"/>`,
+    box: `<path d="M22 26h56v37H22zM30 18h40l8 8H22z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M38 42h24" stroke="rgba(255,255,255,.62)" stroke-width="5"/>`,
+    horn: `<path d="M23 44h13l29-17v34L36 44M23 44v10h13" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.62)" stroke-width="3"/><path d="M70 33c7 5 7 17 0 22" stroke="rgba(255,255,255,.56)" stroke-width="4" fill="none"/>`,
+    camera: `<rect x="21" y="25" width="58" height="36" rx="7" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><circle cx="50" cy="43" r="11" fill="rgba(255,255,255,.26)" stroke="rgba(255,255,255,.62)" stroke-width="3"/><path d="M35 25l6-8h18l6 8" stroke="rgba(255,255,255,.58)" stroke-width="4" fill="none"/>`,
+    mask: `<path d="M22 34c13-13 43-13 56 0v13c-13 13-43 13-56 0z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M34 42h32M34 50h32" stroke="rgba(255,255,255,.58)" stroke-width="3"/>`,
+    chives: `<path d="M30 62c2-23 0-33-8-48M43 62c1-25 5-36 1-50M57 62c-1-22 4-34 14-47M70 62c-1-18 5-27 14-36" stroke="rgba(255,255,255,.68)" stroke-width="4" fill="none"/>`,
+    ship: `<path d="M20 47h60l-9 15H30z" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.58)" stroke-width="3"/><path d="M50 18v29M50 20l24 19H50z" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="none"/>`,
+    glasses: `<circle cx="36" cy="39" r="13" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.68)" stroke-width="4"/><circle cx="64" cy="39" r="13" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.68)" stroke-width="4"/><path d="M49 39h2" stroke="rgba(255,255,255,.7)" stroke-width="5"/>`,
+    mic: `<rect x="41" y="15" width="18" height="31" rx="9" fill="rgba(255,255,255,.25)" stroke="rgba(255,255,255,.62)" stroke-width="3"/><path d="M32 36c0 14 36 14 36 0M50 50v13M38 63h24" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    assembly: `<path d="M16 62h68M23 55h54M28 55V31h44v24M20 31h60l-7-10H27z" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="rgba(255,255,255,.14)"/><path d="M36 36v18M48 36v18M60 36v18" stroke="rgba(255,255,255,.5)" stroke-width="3"/><path d="M34 21c8-9 24-9 32 0" stroke="rgba(255,255,255,.5)" stroke-width="3" fill="none"/>`,
+    gatehouse: `<path d="M18 62h64M24 55V33h52v22M28 33l8-14h28l8 14" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="rgba(255,255,255,.14)"/><path d="M34 55V42h10v13M56 55V42h10v13M42 28h16" stroke="rgba(255,255,255,.56)" stroke-width="3"/><circle cx="50" cy="24" r="4" fill="rgba(255,255,255,.5)"/>`,
+    monument: `<path d="M50 14l11 16H39zM43 30h14l5 24H38zM30 62h40M35 54h30" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="rgba(255,255,255,.14)"/><path d="M50 34v16" stroke="rgba(255,255,255,.55)" stroke-width="3"/>`,
+    museum: `<path d="M17 61h66M24 53h52M28 53V29h44v24M22 29l28-13 28 13" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M36 35v17M47 35v17M58 35v17M33 24h34" stroke="rgba(255,255,255,.52)" stroke-width="3"/>`,
+    court: `<path d="M16 62h68M23 55h54M27 55V35h46v20M19 35l31-17 31 17" stroke="rgba(255,255,255,.65)" stroke-width="4" fill="rgba(255,255,255,.12)"/><path d="M35 38v16M45 38v16M55 38v16M65 38v16" stroke="rgba(255,255,255,.55)" stroke-width="3"/>`,
+    memorial: `<path d="M21 62h58M27 55h46M31 55V34h38v21M50 16c14 9 18 17 18 18H32c0-1 4-9 18-18z" stroke="rgba(255,255,255,.63)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M38 44h24M50 34v21" stroke="rgba(255,255,255,.52)" stroke-width="3"/>`,
+    towerClose: `<path d="M47 14h6l9 48H38z" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="rgba(255,255,255,.14)"/><path d="M35 33h30M32 47h36M27 62h46" stroke="rgba(255,255,255,.54)" stroke-width="3"/><circle cx="50" cy="25" r="5" fill="rgba(255,255,255,.34)"/>`,
+    mausoleum: `<path d="M18 60h64M26 52h48M31 52V35h38v17M24 35h52l-8-12H32z" stroke="rgba(255,255,255,.63)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M38 40h24M43 23v-8h14v8" stroke="rgba(255,255,255,.52)" stroke-width="3"/>`,
+    redWall: `<path d="M15 60h70V24H15z" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.6)" stroke-width="4"/><path d="M15 36h70M15 48h70M27 24v12M50 24v12M73 24v12M38 36v12M62 36v12M27 48v12M50 48v12M73 48v12" stroke="rgba(255,255,255,.42)" stroke-width="3"/><path d="M19 24c11-11 51-11 62 0" stroke="rgba(255,255,255,.52)" stroke-width="4" fill="none"/>`,
+    glassHall: `<path d="M19 61h62M25 55V25h50v30" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="rgba(255,255,255,.1)"/><path d="M25 36h50M25 47h50M37 25v30M50 25v30M63 25v30" stroke="rgba(255,255,255,.36)" stroke-width="3"/><path d="M25 25l25-10 25 10" stroke="rgba(255,255,255,.5)" stroke-width="4" fill="none"/>`,
+    dataCenter: `<rect x="22" y="18" width="56" height="44" rx="4" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.6)" stroke-width="4"/><path d="M33 28h34M33 39h34M33 50h34" stroke="rgba(255,255,255,.54)" stroke-width="3"/><circle cx="36" cy="28" r="2" fill="rgba(255,255,255,.8)"/><circle cx="36" cy="39" r="2" fill="rgba(255,255,255,.8)"/><circle cx="36" cy="50" r="2" fill="rgba(255,255,255,.8)"/>`,
+    checkpoint: `<path d="M18 58h64M24 58V31h52v27M24 31l26-14 26 14" stroke="rgba(255,255,255,.63)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M35 58V42h30v16M39 42l22 16M61 42 39 58" stroke="rgba(255,255,255,.5)" stroke-width="3"/>`,
+    streetBlock: `<path d="M17 58h66M23 49h54M27 49V31h18v18M55 49V25h18v24" stroke="rgba(255,255,255,.58)" stroke-width="4" fill="rgba(255,255,255,.12)"/><path d="M20 38h60M32 31v18M64 25v24" stroke="rgba(255,255,255,.38)" stroke-width="3"/><path d="M28 60l48-34" stroke="rgba(255,255,255,.34)" stroke-width="5"/>`,
+    factoryStack: `<path d="M18 60h64M24 60V39l16 8V35l17 9V27h15v33" stroke="rgba(255,255,255,.62)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M63 18c5-5 13-1 13 6M47 26c4-5 11-2 12 4" stroke="rgba(255,255,255,.42)" stroke-width="3" fill="none"/>`,
+    island: `<path d="M22 52c10-20 44-28 58-7-10 18-39 23-58 7z" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.62)" stroke-width="4"/><path d="M36 45c9-7 20-9 31-4M50 29v31" stroke="rgba(255,255,255,.48)" stroke-width="3" fill="none"/><circle cx="34" cy="28" r="5" fill="rgba(255,255,255,.28)"/>`,
+    bridgeDetail: `<path d="M14 58h72M19 58c9-28 53-28 62 0M28 46h44M35 36h30" stroke="rgba(255,255,255,.63)" stroke-width="4" fill="none"/><path d="M28 58V46M72 58V46M50 58V36" stroke="rgba(255,255,255,.46)" stroke-width="3"/>`,
+    skyline: `<path d="M15 60h70M22 60V33h12v27M40 60V22h14v38M61 60V29h17v31" stroke="rgba(255,255,255,.6)" stroke-width="4" fill="rgba(255,255,255,.12)"/><path d="M27 40h4M45 31h4M66 38h7M45 43h4M66 49h7" stroke="rgba(255,255,255,.48)" stroke-width="3"/>`,
+    rostrum: `<path d="M17 61h66M24 55V34h52v21M29 34l10-15h22l10 15" stroke="rgba(255,255,255,.64)" stroke-width="4" fill="rgba(255,255,255,.13)"/><path d="M34 55V43h9v12M57 55V43h9v12M40 28h20" stroke="rgba(255,255,255,.52)" stroke-width="3"/><circle cx="50" cy="25" r="4" fill="rgba(255,255,255,.34)"/>`
+  };
+  return scenes[scene] || `${commonText}<circle cx="50" cy="38" r="26" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.48)" stroke-width="4"/>`;
+}
+
+function cardImageUrl(art) {
+  const key = `${art.scene}|${art.glyph}|${art.a}|${art.b}`;
+  if (CARD_ART_CACHE.has(key)) return CARD_ART_CACHE.get(key);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 76"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${svgEscape(art.a)}"/><stop offset="1" stop-color="${svgEscape(art.b)}"/></linearGradient><radialGradient id="r" cx=".22" cy=".18" r=".7"><stop offset="0" stop-color="rgba(255,255,255,.32)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100" height="76" rx="10" fill="url(#g)"/><rect width="100" height="76" rx="10" fill="url(#r)"/><path d="M4 8c22 10 46 10 92 0M7 68c28-8 57-8 86 0" stroke="rgba(255,255,255,.14)" stroke-width="3" fill="none"/>${sceneSvg(art.scene, art.glyph)}</svg>`;
+  const value = `url(data:image/svg+xml,${encodeURIComponent(svg)})`;
+  CARD_ART_CACHE.set(key, value);
+  return value;
+}
+
+function compactLabel(value, limit = state.lang === "en" ? 14 : 6) {
+  const text = String(value || "").replace(/\s+/g, state.lang === "en" ? " " : "").trim();
+  if (!text) return "";
+  return text.length > limit ? text.slice(0, limit) : text;
+}
+
+function pushUnique(list, value, limit = 28) {
+  const clean = String(value || "").replace(/[“”"'\[\]{}()（）:：;；,.，。!?！？、]/g, " ").replace(/\s+/g, " ").trim();
+  const label = compactLabel(clean);
+  if (!label || label.length < 2) return;
+  if (!list.includes(label)) list.push(label);
+  if (list.length > limit) list.length = limit;
+}
+
+function collectContextParts(item) {
+  const override = CONTEXT_OVERRIDES[item.en];
+  const lang = state.lang;
+  if (override) return override[lang] || override.en || override.cn || [];
+  const context = lang === "tw" ? item.contextTw : lang === "cn" ? item.contextCn : item.contextEn;
+  return context ? [context] : [];
+}
+
+function getForbiddenAnswerParts(item = state.entry) {
+  const values = new Set();
+  [item.tw, item.cn, item.en].forEach((term) => {
+    const compact = String(term || "").replace(/\s+/g, "");
+    String(term || "")
+      .split(/[\s/-]+/)
+      .filter(Boolean)
+      .forEach((part) => values.add(part.toLowerCase()));
+    tokenize(term).forEach((part) => values.add(String(part).toLowerCase()));
+    values.add(compact.toLowerCase());
+    for (let size = 2; size <= Math.min(4, compact.length); size += 1) {
+      for (let index = 0; index <= compact.length - size; index += 1) {
+        values.add(compact.slice(index, index + size).toLowerCase());
+      }
+    }
+  });
+  return [...values].filter((part) => part.length >= 2);
+}
+
+function containsForbiddenAnswer(label, forbidden) {
+  const normalized = String(label || "").replace(/\s+/g, "").toLowerCase();
+  return forbidden.some((part) => normalized.includes(part.replace(/\s+/g, "").toLowerCase()));
+}
+
+function extractEvidenceLabels(item = state.entry) {
+  const labels = [];
+  const lang = state.lang;
+  const forbidden = getForbiddenAnswerParts(item);
+  const clue = getClue(item);
+  const contextParts = collectContextParts(item);
+  const year = item.year ? String(item.year).match(/\d{4}/)?.[0] : "";
+  if (year) pushUnique(labels, year, 16);
+  if (lang === "en") {
+    [clue, ...contextParts].join(" ").match(/[A-Za-z][A-Za-z-]{3,}/g)?.forEach((word) => {
+      const lower = word.toLowerCase();
+      if (!EN_STOP_WORDS.has(lower) && !containsForbiddenAnswer(word, forbidden)) pushUnique(labels, word, 24);
+    });
+  } else {
+    const quoted = [clue, ...contextParts].join(" ").match(/[「“][^」”]{2,8}[」”]/g) || [];
+    quoted.forEach((text) => {
+      const label = text.replace(/[「」“”]/g, "");
+      if (!containsForbiddenAnswer(label, forbidden)) pushUnique(labels, label, 24);
+    });
+    [clue, ...contextParts].forEach((part) => {
+      String(part)
+        .split(/[，。；：、,.!?！？\s]/)
+        .map((piece) => piece.replace(CJK_STOP_CHARS, "").trim())
+        .filter((piece) => piece.length >= 2)
+        .forEach((piece) => {
+          const head = piece.slice(0, piece.length > 6 ? 6 : piece.length);
+          const tail = piece.slice(-6);
+          if (!containsForbiddenAnswer(head, forbidden)) pushUnique(labels, head, 24);
+          if (piece.length > 6 && !containsForbiddenAnswer(tail, forbidden)) pushUnique(labels, tail, 24);
+        });
     });
   }
-  return shuffle([...correct, ...decoys], seed + 193);
+  const fallback = getMergeTileSet().map((tile) => tile[lang] || tile.en);
+  fallback.forEach((label) => pushUnique(labels, label, 24));
+  return labels;
 }
 
-function getTilePalette(difficulty) {
-  const count = Math.min(TILE_TYPES.length, 4 + Math.max(0, difficulty - 1));
-  return TILE_TYPES.slice(0, count);
+function labelsFromText(text, forbidden, limit = 5) {
+  const labels = [];
+  const lang = state.lang;
+  if (lang === "en") {
+    String(text || "").match(/[A-Za-z][A-Za-z-]{3,}/g)?.forEach((word) => {
+      const lower = word.toLowerCase();
+      if (!EN_STOP_WORDS.has(lower) && !containsForbiddenAnswer(word, forbidden)) pushUnique(labels, word, limit);
+    });
+  } else {
+    String(text || "")
+      .split(/[，。；：、,.!?！？\s]/)
+      .map((piece) => piece.replace(CJK_STOP_CHARS, "").trim())
+      .filter((piece) => piece.length >= 2)
+      .forEach((piece) => {
+        const label = compactLabel(piece, piece.length > 5 ? 5 : piece.length);
+        if (!containsForbiddenAnswer(label, forbidden)) pushUnique(labels, label, limit);
+      });
+  }
+  return labels;
 }
 
-function tileLabel(typeId) {
-  const tile = TILE_TYPES.find((item) => item.id === typeId) || TILE_TYPES[0];
-  return tile[state.lang] || tile.en;
-}
-
-function makeCell(random, palette, row, col) {
-  const type = palette[Math.floor(random() * palette.length)].id;
+function makeCell(rank, row, col, id = "", extra = {}) {
   const cell = {
-    id: `cell-${state.level}-${state.cellSerial}`,
-    type,
+    id: id || `cell-${state.level}-${state.cellSerial}`,
+    rank,
     row,
-    col
+    col,
+    ...extra
   };
-  state.cellSerial += 1;
+  if (!id) state.cellSerial += 1;
   return cell;
+}
+
+function getUnitPoolFromText(text) {
+  if (state.lang === "en") {
+    return Array.from(String(text || "").replace(/[^A-Za-z0-9]/g, "").toUpperCase());
+  }
+  return Array.from(String(text || "").replace(/[^\u3400-\u9fffA-Za-z0-9]/g, ""));
+}
+
+function buildSheepDecoys(item = state.entry) {
+  const sourceText = [
+    getClue(item),
+    ...collectContextParts(item),
+    ...getMergeTileSet().map((tile) => tile[state.lang] || tile.en),
+    ...(TRACE_DECOYS[state.lang] || TRACE_DECOYS.en)
+  ].join(" ");
+  const answerSet = new Set(state.answerUnits);
+  const pool = getUnitPoolFromText(sourceText).filter(Boolean);
+  const fallback = state.lang === "en"
+    ? Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    : Array.from(`${EXTRA_DECOYS[state.lang]}${(TRACE_DECOYS[state.lang] || []).join("")}`);
+  const unique = [...new Set((pool.length ? pool : fallback).concat(fallback))].filter((unit) => !answerSet.has(unit));
+  return unique.length ? unique : fallback.filter((unit) => !answerSet.has(unit));
+}
+
+function getTargetTileGroupCount(unitCount, pressure) {
+  const answerGroups = Math.max(1, unitCount);
+  const decoyGroups = Math.max(7, Math.min(26, 5 + pressure * 4 + Math.ceil(unitCount / 2)));
+  return Math.max(answerGroups + 3, Math.min(39, answerGroups + decoyGroups));
+}
+
+function difficultyFromTileGroups(groupCount) {
+  if (groupCount <= 17) return 1;
+  if (groupCount <= 23) return 2;
+  if (groupCount <= 30) return 3;
+  if (groupCount <= 38) return 4;
+  return 5;
+}
+
+function computeTimeFromTileGroups(groupCount, difficulty, mode, lap, random) {
+  const tileCount = groupCount * 3;
+  const modePressure = mode === "purge" ? 18 : mode === "pressure" ? 12 : mode === "echo" ? 6 : 0;
+  const lapPressure = Math.min(28, lap * 6);
+  const jitter = Math.floor(random() * 19) - 9;
+  return Math.max(120, Math.round(72 + tileCount * 3.2 + difficulty * 16 - modePressure - lapPressure + jitter));
+}
+
+function countAnswerUnits(units = state.answerUnits) {
+  return units.reduce((map, unit) => {
+    map[unit] = (map[unit] || 0) + 1;
+    return map;
+  }, {});
+}
+
+function getAnswerClearCount(unit) {
+  return state.clearedAnswerCounts[unit] || 0;
+}
+
+function getClearedAnswerTotal() {
+  return Object.values(state.clearedAnswerCounts).reduce((sum, value) => sum + value, 0);
+}
+
+function isAnswerUnitRevealed(index) {
+  const unit = state.answerUnits[index];
+  const occurrence = state.answerUnits.slice(0, index + 1).filter((value) => value === unit).length;
+  return getAnswerClearCount(unit) >= occurrence;
+}
+
+function makeSheepTile(group, layer, x, y) {
+  const row = Math.round(y * 2);
+  const col = Math.round(x * 2);
+  return makeCell(0, row, col, "", {
+    label: group.label,
+    displayLabel: group.displayLabel || group.label,
+    groupKey: group.groupKey,
+    groupIndex: group.groupIndex,
+    answer: group.answer,
+    visualArt: group.visualArt || null,
+    layer,
+    x,
+    y,
+    status: "board",
+    removed: false
+  });
+}
+
+function resolveCardAsset(assetKey) {
+  if (!assetKey) return "";
+  return REAL_CARD_ASSETS[assetKey] || assetKey;
+}
+
+function cardArtImageUrl(art) {
+  const asset = resolveCardAsset(art?.asset);
+  if (asset) return `url(${asset})`;
+  return cardImageUrl(art);
+}
+
+function getEntryPhotoAsset(item = state.entry) {
+  const direct = ENTRY_ASSET_KEYS[item?.en];
+  if (direct) return direct;
+  const categoryAsset = CATEGORY_ASSET_KEYS[item?.category];
+  if (categoryAsset) return categoryAsset;
+  const tags = ENTRY_TAGS[item?.en] || [];
+  return ["xi", "mao", "deng", "jiang"].find((tag) => tags.includes(tag)) || "";
+}
+
+function getEntryArtProfile(item = state.entry) {
+  const tags = ENTRY_TAGS[item?.en] || [];
+  const leaderTag = ["xi", "mao", "deng", "jiang"].find((tag) => tags.includes(tag));
+  if (leaderTag) return LEADER_ART_PROFILES[leaderTag];
+  return CARD_ART_PROFILES[item?.category] || CARD_ART_PROFILES.ccp;
+}
+
+function getTileArtProfile(tile) {
+  const entryAsset = getEntryPhotoAsset();
+  if (tile?.visualArt) {
+    const base = getEntryArtProfile();
+    return {
+      scene: "file",
+      ...base,
+      ...tile.visualArt,
+      a: tile.visualArt.a || base.a,
+      b: tile.visualArt.b || base.b,
+      asset: tile.visualArt.asset || entryAsset
+    };
+  }
+  return {
+    scene: "file",
+    ...getEntryArtProfile(),
+    asset: entryAsset
+  };
+}
+
+function getTileDisplayLabel(tile) {
+  return tile?.displayLabel || tile?.label || "";
+}
+
+function getArtVisualTuning(art) {
+  const assetKey = art?.asset && REAL_CARD_ASSETS[art.asset] ? art.asset : "";
+  const sceneKey = art?.scene || "";
+  const exact = ASSET_VISUAL_TUNING[assetKey] || SCENE_VISUAL_TUNING[sceneKey];
+  if (exact) return exact;
+  const random = mulberry32(hashString(`${assetKey}-${sceneKey}-${art?.glyph || ""}`));
+  const focusX = 38 + Math.round(random() * 24);
+  const focusY = 28 + Math.round(random() * 28);
+  const zoom = 148 + Math.round(random() * 36);
+  const shade = random() > 0.5 ? "rgba(5, 6, 6, 0.64)" : "rgba(10, 8, 7, 0.64)";
+  return {
+    focus: `${focusX}% ${focusY}%`,
+    zoom: `${zoom}%`,
+    shade
+  };
+}
+
+function tileStyle(tile) {
+  const art = getTileArtProfile(tile);
+  const tuning = getArtVisualTuning(art);
+  const random = mulberry32(hashString(`${tile.id}-${tile.groupIndex}-${tile.x}-${tile.y}-${tile.layer}`));
+  const jitterX = (random() - 0.5) * (tile.layer >= 2 ? 3.2 : 4.8);
+  const jitterY = (random() - 0.5) * (tile.layer >= 2 ? 3.6 : 5.2);
+  const left = Math.max(2, Math.min(88, 4 + tile.x * 12.5 + jitterX));
+  const top = Math.max(3, Math.min(86, 5 + tile.y * 13.5 + jitterY));
+  const rot = (random() * 12 - 6).toFixed(2);
+  const tiltX = (3 + random() * 5).toFixed(2);
+  const tiltY = (-5 + random() * 4).toFixed(2);
+  const scale = (0.96 + random() * 0.08).toFixed(3);
+  const depth = tile.layer * 14;
+  const lockedDepth = tile.layer * 9;
+  const shadowLift = 4 + tile.layer * 3;
+  const shadowDrop = 12 + tile.layer * 5;
+  return `--left:${left}%;--top:${top}%;--depth:${depth}px;--locked-depth:${lockedDepth}px;--shadow-lift:${shadowLift}px;--shadow-drop:${shadowDrop}px;--rot:${rot}deg;--tilt-x:${tiltX}deg;--tilt-y:${tiltY}deg;--tile-scale:${scale};--art-a:${art.a};--art-b:${art.b};--art-img:${cardArtImageUrl(art)};--art-focus:${tuning.focus};--art-zoom:${tuning.zoom};--art-shade:${tuning.shade};z-index:${10 + tile.layer};`;
+}
+
+function getLayerPositions(layer) {
+  const start = layer * 0.5;
+  const endX = 6 - layer * 0.5;
+  const endY = 5 - layer * 0.5;
+  const positions = [];
+  for (let y = start; y <= endY; y += 1) {
+    for (let x = start; x <= endX; x += 1) {
+      positions.push({ x, y, layer });
+    }
+  }
+  return positions;
+}
+
+function rectanglesOverlap(a, b) {
+  const size = 1.05;
+  return Math.abs(a.x - b.x) < size && Math.abs(a.y - b.y) < size;
+}
+
+function isTileAvailable(tile) {
+  if (!tile || tile.status !== "board") return false;
+  return !state.grid.some((other) => other.status === "board" && other.layer > tile.layer && rectanglesOverlap(tile, other));
+}
+
+function getDecoyImageCard(index) {
+  const tags = ENTRY_TAGS[state.entry?.en] || [];
+  const architectureKeys = getArchitectureCardKeys(tags, state.entry?.category);
+  const preferred = CARD_IMAGE_LIBRARY.filter((card) => {
+    if (architectureKeys.has(card.key)) return true;
+    if (tags.includes("xi")) return ["red-code", "pcr", "bun", "crown", "wheat", "wall", "hot-search", "data", "fist", "tower", "seal", "camera", "mask", "party-badge", "red-flag", "prc-emblem", "tiananmen-gate"].includes(card.key);
+    if (tags.includes("mao")) return ["red-book", "sun", "wheat", "fist", "bread", "ship", "seal", "file", "party-badge", "red-flag", "red-guards-rally", "prc-emblem"].includes(card.key);
+    if (tags.includes("deng")) return ["tank", "square", "ship", "land", "data", "seal", "file", "tiananmen-gate"].includes(card.key);
+    if (tags.includes("jiang")) return ["glasses", "microphone", "tea", "apple", "ship", "seal", "file"].includes(card.key);
+    if (state.entry?.category === "hongKong") return ["umbrella", "apple", "hot-search", "deleted", "camera", "seal"].includes(card.key);
+    if (state.entry?.category === "taiwan") return ["ballot", "brawl", "map", "apple", "microphone", "kmt-ccp", "roc-flag", "roc-emblem", "chiang-card", "sun-card"].includes(card.key);
+    if (state.entry?.category === "kmtCcp") return ["kmt-ccp", "chiang-card", "sun-card", "roc-flag", "roc-emblem", "red-flag", "tiananmen-gate"].includes(card.key);
+    if (state.entry?.category === "soviet") return ["hammer", "bread", "gulag", "capitol", "sun", "stalin-card", "wall-card"].includes(card.key);
+    if (state.entry?.category === "northKorea") return ["kim", "kim-jong-il-card", "rocket", "bread", "seal", "camera", "sun"].includes(card.key);
+    if (state.entry?.category === "us") return ["detention", "capitol-card", "trump-card", "capitol", "dollar", "map", "brawl", "tv", "apple"].includes(card.key);
+    if (state.entry?.category === "ww2") return ["bridge", "bombing", "apple", "camera"].includes(card.key);
+    if (state.entry?.category === "current") return ["tower", "data", "delivery", "996", "red-code", "pcr", "mask", "camera"].includes(card.key);
+    if (state.entry?.category === "ccp") return ["party-badge", "red-flag", "prc-emblem", "tiananmen-gate", "red-code", "pcr", "camera", "seal", "file"].includes(card.key);
+    if (state.entry?.category === "ccpMetaphor") return ["party-badge", "red-flag", "prc-emblem", "tiananmen-gate", "hot-search", "deleted", "camera", "tea", "file"].includes(card.key);
+    return false;
+  });
+  const architecturePreferred = CARD_IMAGE_LIBRARY.filter((card) => architectureKeys.has(card.key));
+  const pool = [
+    ...architecturePreferred,
+    ...preferred.filter((card) => !architectureKeys.has(card.key)),
+    ...CARD_IMAGE_LIBRARY.filter((card) => !architecturePreferred.includes(card) && !preferred.includes(card))
+  ];
+  const raw = pool[index % pool.length];
+  const base = getEntryArtProfile();
+  return {
+    ...raw,
+    label: raw[state.lang] || raw.en,
+    a: index % 2 ? base.b : base.a,
+    b: index % 2 ? base.a : base.b,
+    asset: raw.asset || getEntryPhotoAsset()
+  };
+}
+
+function buildTileGroups(difficulty) {
+  const answerCounts = countAnswerUnits();
+  const groups = [];
+  Object.entries(answerCounts).forEach(([unit, count]) => {
+    for (let index = 0; index < count; index += 1) {
+      groups.push({ label: unit, groupKey: unit, answer: true });
+    }
+  });
+  const decoys = buildSheepDecoys(state.entry);
+  const targetGroupCount = state.tileGroupCount || getTargetTileGroupCount(state.answerUnits.length, difficulty);
+  const decoyGroupCount = Math.max(3, targetGroupCount - groups.length);
+  for (let index = 0; index < decoyGroupCount; index += 1) {
+    const useImageCard = index % 3 !== 1;
+    if (useImageCard) {
+      const card = getDecoyImageCard(index);
+      groups.push({
+        label: card.label,
+        displayLabel: card.label,
+        groupKey: `image-${card.key}-${index}`,
+        answer: false,
+        visualArt: card
+      });
+    } else {
+      const label = decoys[index % decoys.length] || (state.lang === "en" ? "X" : "檔");
+      groups.push({ label, groupKey: `decoy-${label}-${index}`, answer: false });
+    }
+  }
+  return groups.map((group, groupIndex) => ({
+    ...group,
+    groupIndex
+  }));
 }
 
 function makeGrid(levelIndex, difficulty) {
   state.cellSerial = 0;
-  const size = state.gridSize;
-  const palette = getTilePalette(difficulty);
-  const random = mulberry32(hashString(`grid-${state.route}-${state.entry.en}-${levelIndex}-${difficulty}`));
-  const grid = [];
-  for (let row = 0; row < size; row += 1) {
-    for (let col = 0; col < size; col += 1) {
-      grid.push(makeCell(random, palette, row, col));
+  const random = mulberry32(hashString(`sheep-${state.route}-${state.leaderMode}-${state.lang}-${state.entry.en}-${levelIndex}-${difficulty}`));
+  const groups = buildTileGroups(difficulty).sort(() => random() - 0.5);
+  const positionsByLayer = [0, 1, 2, 3].reduce((map, layer) => {
+    map[layer] = getLayerPositions(layer).sort(() => random() - 0.5);
+    return map;
+  }, {});
+  const layerSlots = [
+    { layer: 3, groups: Math.min(5, groups.length) },
+    { layer: 2, groups: Math.min(8, Math.max(0, groups.length - 5)) },
+    { layer: 1, groups: Math.min(12, Math.max(0, groups.length - 13)) },
+    { layer: 0, groups: Math.max(0, groups.length - 25) }
+  ];
+  const tiles = [];
+  let groupCursor = 0;
+  layerSlots.forEach(({ layer, groups: groupCount }) => {
+    for (let count = 0; count < groupCount && groupCursor < groups.length; count += 1) {
+      const group = groups[groupCursor];
+      groupCursor += 1;
+      for (let copy = 0; copy < 3; copy += 1) {
+        const position = positionsByLayer[layer].shift() || getLayerPositions(layer)[copy];
+        tiles.push(makeSheepTile(group, layer, position.x, position.y));
+      }
     }
-  }
-  return grid;
+  });
+  return tiles;
 }
 
 function computeDecryptGoal(units, difficulty, mode) {
-  const unitWeight = state.lang === "en" ? units.length * 10 : units.length * 8;
-  const modeBoost = mode === "purge" ? 34 : mode === "pressure" ? 24 : mode === "echo" ? 16 : 8;
-  return 72 + difficulty * 24 + unitWeight + modeBoost;
+  const unitWeight = state.lang === "en" ? units.length * 9 : units.length * 7;
+  const modeBoost = mode === "purge" ? 38 : mode === "pressure" ? 28 : mode === "echo" ? 18 : 10;
+  const leaderBoost = state.leaderMode === "all" ? 0 : 18;
+  return 92 + difficulty * 25 + unitWeight + modeBoost + leaderBoost;
 }
 
 function updateRevealCount() {
-  const ratio = Math.max(0, Math.min(1, state.decryptProgress / state.decryptGoal));
-  state.revealedCount = Math.min(state.answerUnits.length, Math.floor(ratio * state.answerUnits.length));
-  if (state.decryptProgress >= state.decryptGoal) {
-    state.revealedCount = state.answerUnits.length;
-  }
+  state.clearedAnswerTotal = getClearedAnswerTotal();
+  state.revealedCount = Math.min(state.answerUnits.length, state.clearedAnswerTotal);
+  state.decryptProgress = Math.round((state.revealedCount / Math.max(1, state.answerUnits.length)) * state.decryptGoal);
 }
 
-function getCellByPosition(row, col) {
-  if (row < 0 || col < 0 || row >= state.gridSize || col >= state.gridSize) return null;
-  return state.grid[row * state.gridSize + col] || null;
+function allEvidenceComplete() {
+  return state.grid.length > 0 && state.grid.every((tile) => tile.status === "cleared");
+}
+
+function getTrayTiles() {
+  return state.tray.map((id) => getCellById(id)).filter(Boolean);
+}
+
+function getAvailableTiles() {
+  return state.grid.filter((tile) => isTileAvailable(tile));
+}
+
+function findHintCell() {
+  const available = getAvailableTiles();
+  if (!available.length) return null;
+  const trayCounts = getTrayTiles().reduce((map, tile) => {
+    map[tile.groupKey] = (map[tile.groupKey] || 0) + 1;
+    return map;
+  }, {});
+  const availableCounts = available.reduce((map, tile) => {
+    map[tile.groupKey] = (map[tile.groupKey] || 0) + 1;
+    return map;
+  }, {});
+  const readyGroup = Object.entries(availableCounts)
+    .filter(([, count]) => count >= 3)
+    .map(([groupKey]) => groupKey)
+    .sort((a, b) => {
+      const tileA = available.find((tile) => tile.groupKey === a);
+      const tileB = available.find((tile) => tile.groupKey === b);
+      return Number(tileB?.answer || false) - Number(tileA?.answer || false);
+    })[0];
+  return available.find((tile) => trayCounts[tile.groupKey] >= 2)
+    || available.find((tile) => trayCounts[tile.groupKey] >= 1 && trayCounts[tile.groupKey] + availableCounts[tile.groupKey] >= 3)
+    || available.find((tile) => tile.groupKey === readyGroup)
+    || available
+      .slice()
+      .sort((a, b) => (availableCounts[b.groupKey] - availableCounts[a.groupKey]) || Number(b.answer) - Number(a.answer))[0]
+    || available[0];
 }
 
 function getCellById(id) {
   return state.grid.find((cell) => cell && cell.id === id) || null;
 }
 
-function getNeighborCells(cell) {
-  return [
-    getCellByPosition(cell.row - 1, cell.col),
-    getCellByPosition(cell.row + 1, cell.col),
-    getCellByPosition(cell.row, cell.col - 1),
-    getCellByPosition(cell.row, cell.col + 1)
-  ].filter(Boolean);
-}
-
-function findGroup(startCell) {
-  if (!startCell) return [];
-  const visited = new Set([startCell.id]);
-  const queue = [startCell];
-  for (let index = 0; index < queue.length; index += 1) {
-    const cell = queue[index];
-    getNeighborCells(cell).forEach((next) => {
-      if (next.type === startCell.type && !visited.has(next.id)) {
-        visited.add(next.id);
-        queue.push(next);
-      }
-    });
-  }
-  return queue;
-}
-
-function findBestGroup() {
-  let best = [];
-  const seen = new Set();
-  state.grid.forEach((cell) => {
-    if (!cell || seen.has(cell.id)) return;
-    const group = findGroup(cell);
-    group.forEach((item) => seen.add(item.id));
-    if (group.length > best.length) best = group;
+function pushMatchBurst(matching, representative) {
+  const averageX = matching.reduce((sum, tile) => sum + tile.x, 0) / matching.length;
+  const averageY = matching.reduce((sum, tile) => sum + tile.y, 0) / matching.length;
+  const art = getTileArtProfile(representative);
+  const tuning = getArtVisualTuning(art);
+  const id = `burst-${state.matchBurstSerial}`;
+  state.matchBurstSerial += 1;
+  state.matchBursts = state.matchBursts.slice(-2).concat({
+    id,
+    label: getTileDisplayLabel(representative),
+    glyph: art.glyph,
+    image: cardArtImageUrl(art),
+    x: Math.max(8, Math.min(88, 4 + averageX * 12.5)),
+    y: Math.max(8, Math.min(82, 5 + averageY * 13.5)),
+    a: art.a,
+    b: art.b,
+    focus: tuning.focus,
+    zoom: tuning.zoom
   });
-  return best;
-}
-
-function applyGravity() {
-  const size = state.gridSize;
-  const palette = getTilePalette(state.difficulty);
-  const random = Math.random;
-  for (let col = 0; col < size; col += 1) {
-    const survivors = [];
-    for (let row = size - 1; row >= 0; row -= 1) {
-      const cell = getCellByPosition(row, col);
-      if (cell) survivors.push(cell);
-    }
-    let targetRow = size - 1;
-    survivors.forEach((cell) => {
-      cell.row = targetRow;
-      cell.col = col;
-      state.grid[targetRow * size + col] = cell;
-      targetRow -= 1;
-    });
-    for (let row = targetRow; row >= 0; row -= 1) {
-      state.grid[row * size + col] = makeCell(random, palette, row, col);
-    }
-  }
+  window.setTimeout(() => {
+    state.matchBursts = state.matchBursts.filter((burst) => burst.id !== id);
+    if (state.started && !state.modal) render();
+  }, 1040);
 }
 
 function ensurePlayableGrid() {
-  let attempts = 0;
-  while (findBestGroup().length < 2 && attempts < 8) {
-    state.grid = makeGrid(state.level + attempts + Date.now(), state.difficulty);
-    attempts += 1;
+  const broken = state.grid.some((tile) => !tile.groupKey || !tile.label);
+  if (broken) {
+    state.grid = makeGrid(state.level + Date.now(), state.difficulty);
+    state.tray = [];
   }
 }
 
-function addDecryptProgress(amount) {
-  state.decryptProgress = Math.min(state.decryptGoal, state.decryptProgress + amount);
-  updateRevealCount();
-  if (state.decryptProgress >= state.decryptGoal) {
-    completeLevel();
+function clearTrayTriple(groupKey) {
+  const matching = getTrayTiles().filter((tile) => tile.groupKey === groupKey).slice(0, 3);
+  if (matching.length < 3) return false;
+  matching.forEach((tile) => {
+    tile.status = "cleared";
+  });
+  const removed = new Set(matching.map((tile) => tile.id));
+  state.tray = state.tray.filter((id) => !removed.has(id));
+  const representative = matching[0];
+  if (representative.answer) {
+    const limits = countAnswerUnits();
+    state.clearedAnswerCounts[representative.label] = Math.min(
+      limits[representative.label] || 0,
+      (state.clearedAnswerCounts[representative.label] || 0) + 1
+    );
   }
+  state.combo += 1;
+  const displayLabel = getTileDisplayLabel(representative);
+  state.lastEvidenceHits = [{ rank: state.combo, label: displayLabel }];
+  pushMatchBurst(matching, representative);
+  const answerBonus = representative.answer ? 38 : 0;
+  state.score += 42 + state.combo * 8 + answerBonus;
+  if (state.leaderMode === "jiang" && state.combo % 4 === 0) {
+    state.timeLeft = Math.min(state.maxTime, state.timeLeft + 1.2);
+  }
+  if (state.leaderMode === "mao" && representative.answer) {
+    state.timeLeft = Math.max(0, state.timeLeft - 0.8);
+    state.score += 20;
+  }
+  updateRevealCount();
+  return true;
+}
+
+function countsFromClearedTotal(total) {
+  const counts = {};
+  for (let index = 0; index < Math.min(total, state.answerUnits.length); index += 1) {
+    const unit = state.answerUnits[index];
+    counts[unit] = (counts[unit] || 0) + 1;
+  }
+  return counts;
+}
+
+function applyClearedAnswerCounts(counts) {
+  state.clearedAnswerCounts = { ...counts };
+  Object.entries(state.clearedAnswerCounts).forEach(([unit, count]) => {
+    state.grid
+      .filter((tile) => tile.answer && tile.label === unit)
+      .slice(0, count * 3)
+      .forEach((tile) => {
+        tile.status = "cleared";
+      });
+  });
+  updateRevealCount();
+}
+
+function rebuildSheepGridPreservingProgress(counts = state.clearedAnswerCounts) {
+  state.tray = [];
+  state.grid = makeGrid(state.level + Date.now(), state.difficulty);
+  state.hintCellId = null;
+  state.wrongCellId = null;
+  applyClearedAnswerCounts(counts);
 }
 
 function parseYear(value) {
@@ -1920,7 +3665,11 @@ function parseYear(value) {
 }
 
 function getOrderedBank(route = state.route) {
-  return WORD_BANK.map((item, index) => ({ item, index })).sort((a, b) => {
+  const scoped = state.leaderMode === "all"
+    ? WORD_BANK
+    : WORD_BANK.filter((item) => ENTRY_TAGS[item.en]?.includes(state.leaderMode));
+  const bank = scoped.length ? scoped : WORD_BANK;
+  return bank.map((item, index) => ({ item, index })).sort((a, b) => {
     if (route === "time") {
       return parseYear(a.item.year) - parseYear(b.item.year) || a.item.difficulty - b.item.difficulty || a.index - b.index;
     }
@@ -1933,49 +3682,56 @@ function getLevelEntry(levelIndex) {
   return ordered[levelIndex % ordered.length];
 }
 
+function getActiveBankSize() {
+  return getOrderedBank().length;
+}
+
 function getLevelConfig(levelIndex) {
-  const item = getLevelEntry(levelIndex);
-  const lap = Math.floor(levelIndex / WORD_BANK.length);
+  const ordered = getOrderedBank();
+  const item = ordered[levelIndex % ordered.length];
+  const lap = Math.floor(levelIndex / ordered.length);
   const seed = hashString(`${state.route}-${item.en}-${levelIndex}`);
   const random = mulberry32(seed);
   const randomDifficulty = 1 + Math.floor(random() * 5);
-  const difficulty = Math.max(1, Math.min(5, Math.round((randomDifficulty * 2 + item.difficulty) / 3) + Math.min(1, lap)));
+  const pressure = Math.max(1, Math.min(5, Math.round((randomDifficulty * 2 + item.difficulty) / 3) + Math.min(1, lap)));
+  const units = tokenize(item[state.lang]);
+  const groupCount = getTargetTileGroupCount(units.length, pressure);
+  const difficulty = difficultyFromTileGroups(groupCount);
   const modePool = difficulty <= 2 ? ["blackout", "scramble", "echo"] : MODE_SEQUENCE;
   const mode = modePool[Math.floor(random() * modePool.length)];
-  const units = tokenize(item[state.lang]);
-  const unitWeight = state.lang === "en" ? units.length * 4 : units.length * 1.6;
-  const timeJitter = Math.floor(random() * 17) - 8;
-  const maxTime = Math.max(28, Math.round(106 - difficulty * 12 + unitWeight - lap * 4 + timeJitter));
+  const maxTime = computeTimeFromTileGroups(groupCount, difficulty, mode, lap, random);
   const hintJitter = random() > 0.72 ? -1 : random() > 0.28 ? 0 : 1;
-  const hints = Math.max(1, Math.min(4, 4 - difficulty + (mode === "blackout" ? 1 : 0) + hintJitter));
-  return { item, difficulty, mode, maxTime, hints, lap };
+  const hints = Math.max(1, Math.min(5, 5 - difficulty + (mode === "blackout" ? 1 : 0) + hintJitter));
+  return { item, difficulty, mode, maxTime, hints, lap, groupCount };
 }
 
 function setupLevel(levelIndex) {
   const config = getLevelConfig(levelIndex);
   state.entry = config.item;
   state.answerUnits = tokenize(getTerm(config.item));
-  state.selected = [];
+  state.lastEvidenceHits = [];
+  state.matchBursts = [];
   state.revealedCount = 0;
   state.decryptProgress = 0;
+  state.difficulty = config.difficulty;
+  state.mode = config.mode;
   state.decryptGoal = computeDecryptGoal(state.answerUnits, config.difficulty, config.mode);
   state.combo = 0;
   state.moves = 0;
-  state.gridSize = 7;
+  state.gridSize = 0;
+  state.tray = [];
+  state.tileGroupCount = config.groupCount;
+  state.clearedAnswerCounts = {};
+  state.clearedAnswerTotal = 0;
   state.grid = makeGrid(levelIndex, config.difficulty);
-  state.tokens = [];
   state.maxTime = config.maxTime;
   state.timeLeft = config.maxTime;
   state.mistakes = 0;
   state.hintsLeft = config.hints;
-  state.difficulty = config.difficulty;
-  state.mode = config.mode;
   state.locked = false;
   state.modal = null;
-  state.hintTokenId = null;
-  state.wrongTokenId = null;
-  state.highlightedCellIds = [];
   state.wrongCellId = null;
+  state.hintCellId = null;
   state.endlessLap = config.lap;
   ensurePlayableGrid();
   updateRevealCount();
@@ -1989,7 +3745,7 @@ function startTimer() {
     if (state.timeLeft <= 0) {
       failLevel();
     } else {
-      render();
+      updateTimerDisplay();
     }
   }, 200);
 }
@@ -2004,6 +3760,7 @@ function stopTimer() {
 async function beginGame() {
   state.started = true;
   await audio.start();
+  audio.setTrack(state.musicTrack, false);
   audio.setVolume(state.volume);
   audio.setMuted(state.muted);
   startTimer();
@@ -2011,39 +3768,63 @@ async function beginGame() {
   render();
 }
 
+function registerTraceMistake(cellId) {
+  state.mistakes += 1;
+  state.combo = 0;
+  state.lastEvidenceHits = [];
+  const penalty = state.mode === "purge" ? 6 : state.mode === "pressure" ? 5 : 3.5;
+  state.timeLeft = Math.max(0, state.timeLeft - penalty);
+  state.wrongCellId = cellId;
+  audio.wrong();
+  window.setTimeout(() => {
+    if (state.wrongCellId === cellId) {
+      state.wrongCellId = null;
+      render();
+    }
+  }, 320);
+  if (state.timeLeft <= 0) failLevel();
+}
+
 function handleCellClick(id) {
   if (!state.started || state.locked || state.modal) return;
   const cell = getCellById(id);
-  if (!cell) return;
-  const group = findGroup(cell);
-  if (group.length >= 2) {
-    const groupIds = new Set(group.map((item) => item.id));
-    state.grid = state.grid.map((item) => (item && groupIds.has(item.id) ? null : item));
-    state.moves += 1;
-    state.combo += 1;
-    state.highlightedCellIds = [];
-    const sizeBonus = group.length * group.length;
-    const comboBonus = state.combo * (3 + state.difficulty);
-    const progressGain = group.length * (5 + state.difficulty) + comboBonus + (group.length >= 5 ? 18 : 0);
-    state.score += sizeBonus + comboBonus + Math.max(0, Math.round(state.timeLeft / 12));
-    if (group.length >= 6) {
-      state.timeLeft = Math.min(state.maxTime, state.timeLeft + 3);
-    }
+  if (!cell || cell.status !== "board") return;
+  if (!isTileAvailable(cell)) {
+    registerTraceMistake(cell?.id || id);
+    saveGame();
+    render();
+    return;
+  }
+
+  cell.status = "tray";
+  state.tray.push(cell.id);
+  state.moves += 1;
+  state.hintCellId = null;
+  state.lastEvidenceHits = [];
+  state.score += 6 + Math.max(0, Math.round(state.timeLeft / 35));
+  if (state.leaderMode === "xi" && state.moves % 4 === 0) {
+    state.timeLeft = Math.max(0, state.timeLeft - 0.8);
+  }
+  if (state.leaderMode === "deng" && state.tray.length <= 3) {
+    state.score += 6;
+  }
+
+  const matched = clearTrayTriple(cell.groupKey);
+  if (matched) {
     audio.correct();
-    applyGravity();
-    ensurePlayableGrid();
-    addDecryptProgress(progressGain);
   } else {
-    state.mistakes += 1;
     state.combo = 0;
-    const penalty = state.mode === "purge" ? 5 : state.mode === "pressure" ? 4 : 3;
-    state.timeLeft = Math.max(0, state.timeLeft - penalty);
-    state.wrongCellId = id;
-    audio.wrong();
-    window.setTimeout(() => {
-      state.wrongCellId = null;
-      render();
-    }, 260);
+    audio.correct();
+  }
+  if (allEvidenceComplete()) {
+    state.decryptProgress = state.decryptGoal;
+    updateRevealCount();
+    completeLevel();
+    return;
+  }
+  if (state.tray.length >= state.trayLimit) {
+    failLevel();
+    return;
   }
   saveGame();
   render();
@@ -2055,20 +3836,23 @@ function useHint() {
     flashNoHints();
     return;
   }
-  const group = findBestGroup();
-  if (group.length < 2) {
+  const cell = findHintCell();
+  if (!cell) {
     flashNoHints();
     return;
   }
   state.hintsLeft -= 1;
-  state.score = Math.max(0, state.score - 12);
-  state.highlightedCellIds = group.map((cell) => cell.id);
-  window.setTimeout(() => {
-    state.highlightedCellIds = [];
-    render();
-  }, 1400);
+  state.score = Math.max(0, state.score - 10);
+  state.hintCellId = cell.id;
+  state.lastEvidenceHits = [];
   saveGame();
   render();
+  window.setTimeout(() => {
+    if (state.hintCellId === cell.id) {
+      state.hintCellId = null;
+      render();
+    }
+  }, 1400);
 }
 
 function flashNoHints() {
@@ -2080,11 +3864,21 @@ function flashNoHints() {
 
 function shuffleTokens() {
   if (!state.started || state.locked || state.modal) return;
+  state.tray = [];
+  state.clearedAnswerCounts = {};
+  state.clearedAnswerTotal = 0;
+  state.lastEvidenceHits = [];
+  state.matchBursts = [];
+  state.decryptProgress = 0;
+  state.revealedCount = 0;
   state.grid = makeGrid(state.level + Date.now(), state.difficulty);
-  state.highlightedCellIds = [];
+  state.hintCellId = null;
+  state.wrongCellId = null;
   state.combo = 0;
-  state.score = Math.max(0, state.score - 15);
+  state.score = Math.max(0, state.score - 25);
   ensurePlayableGrid();
+  updateRevealCount();
+  saveGame();
   render();
 }
 
@@ -2109,6 +3903,7 @@ function calculateStars() {
 
 function completeLevel() {
   state.locked = true;
+  state.revealedCount = state.answerUnits.length;
   const stars = calculateStars();
   const bonus = stars * 90 + Math.round(state.timeLeft * 3);
   state.score += bonus;
@@ -2123,6 +3918,7 @@ function completeLevel() {
     context: getContext(),
     score: bonus
   };
+  recordRanking(stars, bonus);
   audio.complete();
   saveGame();
   render();
@@ -2158,36 +3954,46 @@ function retryLevel() {
   render();
 }
 
-function markSelectedTokensUsed() {
-  state.tokens.forEach((token) => {
-    token.used = false;
-  });
-  state.selected.forEach((unit) => {
-    const token = state.tokens.find((item) => !item.used && item.answer && item.value === unit);
-    if (token) token.used = true;
-  });
-}
-
 function setRoute(route) {
   if (route !== "time" && route !== "difficulty") return;
   if (state.route === route) return;
+  saveGame();
   state.route = route;
-  if (!state.started) {
-    setupLevel(state.level);
-  }
+  loadCurrentModeProfile();
+  saveGame();
+  render();
+}
+
+function setLeaderMode(mode) {
+  if (!LEADER_MODE_COPY.en[mode]) return;
+  if (state.leaderMode === mode) return;
+  saveGame();
+  state.leaderMode = mode;
+  loadCurrentModeProfile();
   saveGame();
   render();
 }
 
 function setLanguage(lang) {
   if (!TEXT[lang]) return;
-  const oldProgressRatio = state.decryptGoal > 0 ? state.decryptProgress / state.decryptGoal : 0;
   state.lang = lang;
   document.documentElement.lang = lang === "en" ? "en" : lang === "cn" ? "zh-Hans" : "zh-Hant";
   if (state.entry && state.started) {
+    const clearedTotal = state.clearedAnswerTotal;
+    const remainingRatio = state.maxTime > 0 ? state.timeLeft / state.maxTime : 1;
     state.answerUnits = tokenize(getTerm(state.entry));
+    state.tileGroupCount = getTargetTileGroupCount(state.answerUnits.length, state.difficulty);
+    state.difficulty = difficultyFromTileGroups(state.tileGroupCount);
+    state.maxTime = computeTimeFromTileGroups(
+      state.tileGroupCount,
+      state.difficulty,
+      state.mode,
+      state.endlessLap,
+      mulberry32(hashString(`lang-time-${state.route}-${state.lang}-${state.entry.en}-${state.level}`))
+    );
+    state.timeLeft = Math.max(20, Math.min(state.maxTime, Math.round(state.maxTime * remainingRatio)));
     state.decryptGoal = computeDecryptGoal(state.answerUnits, state.difficulty, state.mode);
-    state.decryptProgress = Math.min(state.decryptGoal, Math.round(state.decryptGoal * oldProgressRatio));
+    rebuildSheepGridPreservingProgress(countsFromClearedTotal(clearedTotal));
     updateRevealCount();
     if (state.modal) {
       state.modal.answer = getTerm();
@@ -2217,6 +4023,17 @@ function setVolume(value) {
   renderTopbar();
 }
 
+async function setMusicTrack(trackId) {
+  if (!MUSIC_TRACK_IDS.includes(trackId)) return;
+  state.musicTrack = trackId;
+  if (!state.muted) {
+    await audio.start();
+  }
+  audio.setTrack(trackId, !state.muted);
+  saveGame();
+  render();
+}
+
 function starText(count) {
   return "★".repeat(count) + "☆".repeat(Math.max(0, 3 - count));
 }
@@ -2242,6 +4059,14 @@ function renderTopbar() {
   });
 }
 
+function updateTimerDisplay() {
+  const timePercent = Math.max(0, Math.min(100, (state.timeLeft / state.maxTime) * 100));
+  const timeNode = document.querySelector(".meter-time");
+  const fillNode = document.querySelector(".meter-fill");
+  if (timeNode) timeNode.textContent = `${Math.ceil(state.timeLeft)}s`;
+  if (fillNode) fillNode.style.width = `${timePercent}%`;
+}
+
 function renderRouteSwitch(compact = false) {
   const routeCopy = ROUTE_COPY[state.lang];
   return `
@@ -2261,21 +4086,67 @@ function renderRouteSwitch(compact = false) {
   `;
 }
 
+function renderLeaderModeSwitch(compact = false) {
+  const modeCopy = LEADER_MODE_COPY[state.lang];
+  const entries = ["all", "xi", "mao", "deng", "jiang"];
+  return `
+    <div class="route-block leader-block ${compact ? "compact" : ""}">
+      <div class="panel-kicker">${escapeHtml(modeCopy[state.leaderMode].name)}</div>
+      <div class="leader-switch" role="group" aria-label="${escapeHtml(modeCopy[state.leaderMode].name)}">
+        ${entries
+          .map((mode) => `
+            <button class="leader-option ${state.leaderMode === mode ? "active" : ""}" type="button" data-leader-mode="${mode}">
+              <span class="route-title">${escapeHtml(modeCopy[mode].name)}</span>
+              ${compact ? "" : `<span class="route-copy">${escapeHtml(modeCopy[mode].desc)}</span>`}
+            </button>
+          `)
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderMusicSwitch(compact = false) {
+  const musicCopy = MUSIC_TRACK_COPY[state.lang];
+  return `
+    <div class="route-block music-block ${compact ? "compact" : ""}">
+      <div class="panel-kicker">${escapeHtml(musicCopy.label)}</div>
+      <div class="music-switch" role="group" aria-label="${escapeHtml(musicCopy.label)}">
+        ${MUSIC_TRACK_IDS
+          .map((trackId) => {
+            const track = musicCopy[trackId];
+            return `
+              <button class="music-option ${state.musicTrack === trackId ? "active" : ""}" type="button" data-music-track="${trackId}">
+                <span class="route-title">${escapeHtml(track.name)}</span>
+                ${compact ? "" : `<span class="route-copy">${escapeHtml(track.desc)}</span>`}
+              </button>
+            `;
+          })
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
 function renderStart() {
   const copy = getCopy();
   const hasProgress = state.bestLevel > 0 || state.level > 0;
+  const activeBankSize = getActiveBankSize();
   root.innerHTML = `
     <section class="empty-state">
       <div class="start-panel">
-        <div class="panel-kicker">${escapeHtml(copy.unlocked)} ${WORD_BANK.length}</div>
+        <div class="panel-kicker">${escapeHtml(copy.unlocked)} ${activeBankSize} / ${WORD_BANK.length}</div>
         <h2 class="start-title">${escapeHtml(copy.startTitle)}</h2>
         <p class="start-copy">${escapeHtml(copy.startCopy)}</p>
         <div class="reward-row">
           <span class="reward-chip">${escapeHtml(copy.level)} ${state.level + 1}</span>
           <span class="reward-chip">${escapeHtml(copy.score)} ${state.score}</span>
           <span class="reward-chip">${escapeHtml(copy.streak)} ${state.streak}</span>
+          <span class="reward-chip">${escapeHtml(copy.modeRecord)} ${escapeHtml(modeLabel())}</span>
         </div>
         ${renderRouteSwitch(false)}
+        ${renderLeaderModeSwitch(false)}
+        ${renderMusicSwitch(false)}
         <div class="puzzle-actions">
           <button class="primary-button" type="button" data-action="begin">${escapeHtml(hasProgress ? copy.continue : copy.start)}</button>
           <button class="ghost-button" type="button" data-action="reset">${escapeHtml(copy.reset)}</button>
@@ -2309,6 +4180,7 @@ function renderStatusPanel() {
   const chapterStart = Math.floor(state.level / 6) * 6;
   const levelInChapter = state.level - chapterStart;
   const timePercent = Math.max(0, Math.min(100, (state.timeLeft / state.maxTime) * 100));
+  const activeBankSize = getActiveBankSize();
   return `
     <aside class="panel status-panel">
       <div class="panel-kicker">${escapeHtml(copy.chapter)} ${Math.floor(state.level / 6) + 1}</div>
@@ -2328,7 +4200,7 @@ function renderStatusPanel() {
       </div>
       <div class="chapter-row">
         <span class="panel-kicker">${escapeHtml(copy.solved)} ${state.bestLevel}</span>
-        <span class="panel-kicker">${escapeHtml(copy.remaining)} ${Math.max(0, WORD_BANK.length - (state.level % WORD_BANK.length))}</span>
+        <span class="panel-kicker">${escapeHtml(copy.remaining)} ${Math.max(0, activeBankSize - (state.level % activeBankSize))}</span>
       </div>
       <div class="chapter-track" aria-hidden="true">
         ${Array.from({ length: 6 }, (_, index) => {
@@ -2338,27 +4210,54 @@ function renderStatusPanel() {
         }).join("")}
       </div>
       ${renderRouteSwitch(true)}
+      ${renderLeaderModeSwitch(true)}
       <div class="volume-row">
         <span class="stat-label">${escapeHtml(copy.sound)}</span>
         <input type="range" min="0" max="1" step="0.01" value="${state.muted ? 0 : state.volume}" data-action="volume" aria-label="${escapeHtml(copy.sound)}" />
       </div>
+      ${renderMusicSwitch(true)}
     </aside>
+  `;
+}
+
+function renderMatchBurst(burst) {
+  const style = `--burst-x:${burst.x}%;--burst-y:${burst.y}%;--burst-a:${burst.a};--burst-b:${burst.b};--burst-img:${burst.image};--burst-focus:${burst.focus || "center"};--burst-zoom:${burst.zoom || "cover"};`;
+  return `
+    <div class="match-burst-3d" style="${style}" aria-hidden="true">
+      <span class="burst-wave wave-a"></span>
+      <span class="burst-wave wave-b"></span>
+      <span class="burst-ring"></span>
+      <span class="burst-core">${escapeHtml(burst.label)}</span>
+      <span class="burst-shard shard-a">${escapeHtml(burst.label)}</span>
+      <span class="burst-shard shard-b">${escapeHtml(burst.glyph)}</span>
+      <span class="burst-shard shard-c"></span>
+      <span class="burst-spark spark-a"></span>
+      <span class="burst-spark spark-b"></span>
+      <span class="burst-spark spark-c"></span>
+      <span class="burst-spark spark-d"></span>
+      <span class="burst-spark spark-e"></span>
+    </div>
   `;
 }
 
 function renderPuzzlePanel() {
   const copy = getCopy();
   const gameCopy = GAME_COPY[state.lang];
+  const leaderCopy = LEADER_MODE_COPY[state.lang][state.leaderMode];
   const category = copy.categories[state.entry.category];
   const difficulty = "◆".repeat(state.difficulty);
   const isEnglish = state.lang === "en";
   const progressPercent = Math.max(0, Math.min(100, (state.decryptProgress / state.decryptGoal) * 100));
+  const trayTiles = getTrayTiles();
+  const openTiles = getAvailableTiles().length;
+  const boardLeft = state.grid.filter((tile) => tile.status === "board").length;
+  const firstHiddenIndex = state.answerUnits.findIndex((_, index) => !isAnswerUnitRevealed(index));
   return `
     <section class="panel puzzle-panel">
       <div class="puzzle-head">
         <div>
           <div class="panel-kicker">${escapeHtml(copy.mode)}</div>
-          <h2 class="archive-title">${escapeHtml(copy.modeNames[state.mode])}</h2>
+          <h2 class="archive-title">${escapeHtml(leaderCopy.name)} · ${escapeHtml(copy.modeNames[state.mode])}</h2>
         </div>
         <div class="puzzle-tags">
           <span class="category-pill">${escapeHtml(category)}</span>
@@ -2369,6 +4268,17 @@ function renderPuzzlePanel() {
         <div class="panel-kicker">${escapeHtml(copy.clue)}</div>
         <p class="clue-text">${escapeHtml(getClue())}</p>
         ${state.entry.year ? `<span class="year-chip">${escapeHtml(copy.historyTag)} ${escapeHtml(state.entry.year)}</span>` : ""}
+      </div>
+      <div class="evidence-section">
+        <div class="evidence-head">
+          <span class="token-label">${escapeHtml(copy.currentLead)}</span>
+          <span>${escapeHtml(copy.traceHint)}</span>
+        </div>
+        <div class="evidence-row">
+          <span class="evidence-chip current"><small>${trayTiles.length}/${state.trayLimit}</small>${escapeHtml(gameCopy.chain)}</span>
+          <span class="evidence-chip"><small>${state.clearedAnswerTotal}/${state.answerUnits.length}</small>${escapeHtml(gameCopy.next)}</span>
+          <span class="evidence-chip"><small>${openTiles}</small>${escapeHtml(gameCopy.adjacent)}</span>
+        </div>
       </div>
       <div class="slot-section">
         <div class="slot-label">${escapeHtml(copy.target)}</div>
@@ -2382,8 +4292,8 @@ function renderPuzzlePanel() {
         <div class="slot-row">
           ${state.answerUnits
             .map((unit, index) => {
-              const filled = index < state.revealedCount;
-              const next = index === state.revealedCount;
+              const filled = isAnswerUnitRevealed(index);
+              const next = index === firstHiddenIndex;
               return `<div class="slot ${isEnglish ? "word-slot" : ""} ${filled ? "filled" : ""} ${next ? "next" : ""}">${escapeHtml(filled ? unit : "?")}</div>`;
             })
             .join("")}
@@ -2391,24 +4301,45 @@ function renderPuzzlePanel() {
       </div>
       <div class="token-section">
         <div class="token-label">${escapeHtml(gameCopy.matrix)}</div>
-        <div class="matrix-help">${escapeHtml(gameCopy.playHint)} ${escapeHtml(gameCopy.autoReveal)}</div>
-        <div class="matrix-grid" style="grid-template-columns: repeat(${state.gridSize}, minmax(0, 1fr));">
+        <div class="matrix-help">${escapeHtml(copy.traceHint)}</div>
+        <div class="merge-summary">
+          <span>${escapeHtml(copy.currentLead)} ${boardLeft}</span>
+          <span>${state.lastEvidenceHits.length ? `${escapeHtml(gameCopy.evidenceBoost)} ${escapeHtml(state.lastEvidenceHits.map((hit) => hit.label).join(" / "))}` : escapeHtml(leaderCopy.desc)}</span>
+        </div>
+        <div class="sheep-board">
           ${state.grid
             .map((cell) => {
-              if (!cell) return `<span class="matrix-cell empty"></span>`;
+              if (!cell || cell.status !== "board") return "";
+              const available = isTileAvailable(cell);
+              const art = getTileArtProfile(cell);
+              const artYear = state.entry.year ? String(state.entry.year).slice(0, 11) : "";
+              const displayLabel = getTileDisplayLabel(cell);
               const classes = [
-                "matrix-cell",
-                `tile-${cell.type}`,
+                "sheep-tile",
                 isEnglish ? "word-token" : "",
-                state.highlightedCellIds.includes(cell.id) ? "hint" : "",
-                cell.id === state.wrongCellId ? "wrong" : ""
+                resolveCardAsset(art.asset) ? "photo-tile" : "",
+                cell.visualArt ? "image-tile" : "",
+                cell.answer ? "key-tile" : "decoy-tile",
+                available ? "available" : "locked",
+                state.hintCellId === cell.id ? "hint" : "",
+                state.wrongCellId === cell.id ? "wrong" : ""
               ]
                 .filter(Boolean)
                 .join(" ");
-              return `<button class="${classes}" type="button" data-cell="${escapeHtml(cell.id)}">${escapeHtml(tileLabel(cell.type))}</button>`;
+              return `<button class="${classes}" type="button" data-cell="${escapeHtml(cell.id)}" data-art="${escapeHtml(art.glyph)}" data-caption="${escapeHtml(displayLabel)}" data-year="${escapeHtml(artYear)}" style="${tileStyle(cell)}" ${available ? "" : "disabled"}>
+                <span>${escapeHtml(displayLabel)}</span>
+              </button>`;
             })
             .join("")}
+          ${state.matchBursts.map(renderMatchBurst).join("")}
         </div>
+        <div class="sheep-tray" aria-label="${escapeHtml(gameCopy.chain)}">
+          ${Array.from({ length: state.trayLimit }, (_, index) => {
+            const tile = trayTiles[index];
+            return `<div class="tray-slot ${tile ? "filled" : ""} ${tile?.visualArt ? "image-slot" : ""}">${tile ? `<span>${escapeHtml(getTileDisplayLabel(tile))}</span>` : ""}</div>`;
+          }).join("")}
+        </div>
+        ${state.lastEvidenceHits.length ? `<div class="match-flash">${escapeHtml(gameCopy.evidenceBoost)} · ${escapeHtml(state.lastEvidenceHits.map((hit) => hit.label).join(" / "))}</div>` : ""}
       </div>
       <div class="puzzle-actions">
         <button class="primary-button" type="button" data-action="hint">${escapeHtml(gameCopy.scan)} ${state.hintsLeft}</button>
@@ -2416,7 +4347,7 @@ function renderPuzzlePanel() {
         <button class="danger-button" type="button" data-action="skip">${escapeHtml(gameCopy.skip)}</button>
       </div>
       <div class="level-footer">
-        <span>${escapeHtml(copy.unlocked)} ${WORD_BANK.length}</span>
+        <span>${escapeHtml(copy.unlocked)} ${getActiveBankSize()} / ${WORD_BANK.length}</span>
         <span>${state.endlessLap > 0 ? escapeHtml(copy.campaignDone) : ""}</span>
       </div>
     </section>
@@ -2425,6 +4356,7 @@ function renderPuzzlePanel() {
 
 function renderQueuePanel() {
   const copy = getCopy();
+  const rankings = getRankings().slice(0, 6);
   const rows = Array.from({ length: 8 }, (_, index) => {
     const levelNumber = state.level + index;
     const item = index === 0 ? state.entry : getLevelEntry(levelNumber);
@@ -2446,6 +4378,23 @@ function renderQueuePanel() {
     <aside class="panel queue-panel">
       <h2 class="archive-title">${escapeHtml(copy.archive)}</h2>
       <div class="archive-list">${rows}</div>
+      <div class="rank-section">
+        <h3 class="rank-title">${escapeHtml(copy.leaderboard)}</h3>
+        <div class="rank-list">
+          ${rankings.length
+            ? rankings.map((rank, index) => `
+              <div class="rank-row ${rank.route === state.route && rank.leaderMode === state.leaderMode ? "current" : ""}">
+                <span class="rank-index">#${index + 1}</span>
+                <div class="rank-body">
+                  <strong>${escapeHtml(rank.score)}</strong>
+                  <small>${escapeHtml(modeLabel(rank.route, rank.leaderMode))} · ${escapeHtml(copy.level)} ${rank.level}</small>
+                </div>
+                <span class="rank-stars">${starText(rank.stars || 1)}</span>
+              </div>
+            `).join("")
+            : `<div class="rank-empty">${escapeHtml(copy.rankEmpty)}</div>`}
+        </div>
+      </div>
     </aside>
   `;
 }
@@ -2461,7 +4410,11 @@ function renderModal() {
         <div class="modal-answer">${escapeHtml(copy.answer)}: ${escapeHtml(state.modal.answer)}</div>
         ${isComplete ? `<div class="reward-row"><span class="reward-chip">${escapeHtml(copy.stars)} ${starText(state.modal.stars)}</span><span class="reward-chip">+${state.modal.score}</span></div>` : ""}
         <p class="modal-copy">${escapeHtml(isComplete ? state.modal.clue : copy.failedCopy)}</p>
-        ${isComplete ? `<div class="context-block"><div class="modal-kicker">${escapeHtml(copy.contextLabel)}</div><p>${escapeHtml(state.modal.context)}</p></div>` : ""}
+        <div class="context-block">
+          <div class="modal-kicker">${escapeHtml(copy.contextLabel)}</div>
+          <p><strong>${escapeHtml(state.modal.clue)}</strong></p>
+          <p>${escapeHtml(state.modal.context)}</p>
+        </div>
         <div class="modal-actions">
           <button class="primary-button" type="button" data-action="${isComplete ? "next" : "retry"}">${escapeHtml(isComplete ? copy.next : copy.retry)}</button>
         </div>
@@ -2491,10 +4444,22 @@ function bindDynamicEvents() {
   document.querySelectorAll("[data-route]").forEach((button) => {
     button.addEventListener("click", () => setRoute(button.dataset.route));
   });
+  document.querySelectorAll("[data-leader-mode]").forEach((button) => {
+    button.addEventListener("click", () => setLeaderMode(button.dataset.leaderMode));
+  });
+  document.querySelectorAll("[data-music-track]").forEach((button) => {
+    button.addEventListener("click", () => setMusicTrack(button.dataset.musicTrack));
+  });
 }
 
 document.querySelectorAll(".lang-btn").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.lang));
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.code !== "KeyH") return;
+  event.preventDefault();
+  useHint();
 });
 
 soundToggle.addEventListener("click", async () => {
@@ -2555,6 +4520,7 @@ function drawBackground() {
 }
 
 loadSave();
+audio.setTrack(state.musicTrack);
 audio.setVolume(state.volume);
 audio.setMuted(state.muted);
 setupLevel(state.level);
